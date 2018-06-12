@@ -1,13 +1,15 @@
 require("babel-register");
 module.exports = {
   development: {
-    client: "mysql",
+    client: "pg",
     connection: {
-      host: "localhost",
-      user: "root",
-      password: "root",
-      socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
-      database: "tangram_crm"
+      database: process.env.PG_DATABASE_NAME || "mydeben",
+      user: process.env.PG_DATABASE_USER,
+      password: process.env.PG_DATABASE_PASSWORD
+    },
+    pool: {
+      min: process.env.PG_DATABASE_POOL_MIN || 2,
+      max: process.env.PG_DATABASE_POOL_MAX || 10
     },
     migrations: {
       directory: __dirname + "/db/migrations"
@@ -17,13 +19,15 @@ module.exports = {
     }
   },
   test: {
-    client: "mysql",
+    client: "pg",
     connection: {
-      host: "localhost",
-      user: "root",
-      password: "root",
-      socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
-      database: "tangram_crm_test"
+      database: process.env.PG_DATABASE_NAME || "mydeben_test",
+      user: process.env.PG_DATABASE_USER,
+      password: process.env.PG_DATABASE_PASSWORD
+    },
+    pool: {
+      min: process.env.PG_DATABASE_POOL_MIN || 2,
+      max: process.env.PG_DATABASE_POOL_MAX || 10
     },
     migrations: {
       directory: __dirname + "/db/migrations"
@@ -35,7 +39,15 @@ module.exports = {
   production: {
     client: "pg",
     debug: true,
-    connection: process.env.DATABASE_URL,
+    connection: {
+      database: process.env.PG_DATABASE_NAME,
+      user: process.env.PG_DATABASE_USER,
+      password: process.env.PG_DATABASE_PASSWORD
+    },
+    pool: {
+      min: process.env.PG_DATABASE_POOL_MIN,
+      max: process.env.PG_DATABASE_POOL_MAX
+    },
     migrations: {
       directory: __dirname + "/db/migrations"
     },

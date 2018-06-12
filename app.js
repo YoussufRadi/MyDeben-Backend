@@ -1,12 +1,17 @@
 import express from "express";
-import routes from "./routes";
-import user from "./user/routes";
 import bodyParser from "body-parser";
 import morgan from "morgan";
+import dotenv from "dotenv";
+
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
-const PORT = process.env.PORT || 5000;
+import routes from "./routes";
+import user from "./user/routes";
+
+dotenv.config();
+
+const PORT = process.env.PORT || 80;
 const app = express();
 
 //Swagger Setup
@@ -24,7 +29,7 @@ app.use("/", routes);
 app.use("/users", user);
 
 app.listen(PORT, () => {
-  console.log("Tangram CRM Listening on: " + PORT);
+  console.log("myDeben Listening on: " + PORT);
 });
 
 export default app;
