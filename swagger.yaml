@@ -1,0 +1,36 @@
+swagger: "2.0"
+
+info:
+  version: 1.0.0
+  title: CRM API
+  description: An API documentation for Tangram CRM v2
+
+schemes:
+  - http
+host: localhost:5000
+basePath: /
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        200:
+          description: A list of users
+          schema:
+            type: object
+            properties: 
+              users:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string
+                      format: email
+
+                

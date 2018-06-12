@@ -1,7 +1,7 @@
 import knex from "../../knex";
 import users from "../json_records/users";
 
-export const insertion = function(limit = Number.MAX_SAFE_INTEGER) {
+export const insertion = (limit = Number.MAX_SAFE_INTEGER) => {
   // Inserts seed entries
 
   users.splice(limit);
@@ -10,7 +10,7 @@ export const insertion = function(limit = Number.MAX_SAFE_INTEGER) {
     .catch(error => console.log("ERR: ", error));
 };
 
-export const deletion = function() {
+export const deletion = () => {
   return knex("users")
     .del()
     .catch(error => console.log("ERR: ", error));
@@ -20,10 +20,10 @@ export function seed(knex, Promise) {
   // Deletes ALL existing entries
   return knex("users")
     .del()
-    .then(function() {
+    .then(() => {
       return insertion();
     })
-    .catch(function(err) {
+    .catch(err => {
       console.log(err);
     });
 }
