@@ -6,8 +6,8 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
-import routes from "./routes";
 import user from "./user/routes";
+import auth from "./auth/routes";
 
 dotenv.config();
 
@@ -25,8 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 //Routes
-app.use("/", routes);
-app.use("/users", user);
+app.use("/user", user);
+app.use("/auth", auth);
 
 app.listen(PORT, () => {
   console.log("myDeben Listening on: " + PORT);

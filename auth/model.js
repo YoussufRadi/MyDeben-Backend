@@ -5,10 +5,9 @@ export const create = user =>
     .insert({
       ...user
     })
-    .returning("*");
+    .returning("email");
+
 export const getByEmail = email =>
   knex("users")
     .where("email", email)
     .then(users => users[0]);
-export const retrieveAll = () =>
-  knex.select("id", "name", "email").table("users");
