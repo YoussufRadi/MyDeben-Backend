@@ -4,30 +4,31 @@ import jwt from "jsonwebtoken";
 
 const ensureAuthenticated = (req, res, next) => {
   var token = req.headers["x-access-token"];
-  if (token) {
-    jwt.verify(token, config.jwtSecret, (err, decoded) => {
-      if (err)
-        res.status(400).json({
-          msg: "Error decoding your token!"
-        });
-      else {
-        req.currentUser = decoded;
-        next();
-      }
-    });
-  } else {
-    res.status(400).json({
+  if (!token)
+    res.status(403).json({
       msg: "No token provided!"
     });
-  }
+  jwt.verify(token, config.jwtSecret, (err, decoded) => {
+    if (err)
+      res.status(500).json({
+        msg: "Failed to authenticate token!"
+      });
+    req.userId = decoded.id;
+    next();
+  });
 };
 
 export const fetchAllUsers = (req, res, next) => {
-  retrieveAll().then(users => {
-    res.status(200).json({
-      users
+  retrieveAll()
+    .then(users => {
+      req.users = users;
+      next();
+    })
+    .catch(err => {
+      res.status(500).json({
+        err
+      });
     });
-  });
 };
 
 export const getUsers = [ensureAuthenticated, fetchAllUsers];
