@@ -8,11 +8,13 @@ export const signUp = (req, res, next) => {
   create(req.body.user)
     .then(email => {
       res.status(200).json({
+        success: true,
         msg: "Success Registered"
       });
     })
     .catch(err => {
       res.status(400).json({
+        success: false,
         err
       });
     });
@@ -35,7 +37,8 @@ export const signIn = (req, res, next) => {
         });
       } else {
         res.status(401).json({
-          msg: "unauthorized"
+          msg: "unauthorized",
+          auth: false
         });
       }
     })

@@ -8,7 +8,6 @@ const ensureAuthenticated = (req, res, next) => {
     jwt.verify(token, config.jwtSecret, (err, decoded) => {
       if (err)
         res.status(400).json({
-          success: false,
           msg: "Error decoding your token!"
         });
       else {
