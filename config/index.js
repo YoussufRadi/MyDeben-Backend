@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   jwtSecret: process.env.JWT_SECRET || "secret",
   knex: {
     connection: {
@@ -11,12 +11,6 @@ export default {
     pool: {
       min: process.env.PG_DATABASE_POOL_MIN || 2,
       max: process.env.PG_DATABASE_POOL_MAX || 10
-    },
-    migrations: {
-      directory: __dirname + "/db/migrations"
-    },
-    seeds: {
-      directory: __dirname + "/db/seeds"
     }
   }
 };

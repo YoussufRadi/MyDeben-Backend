@@ -8,6 +8,7 @@ import YAML from "yamljs";
 
 import user from "./user/routes";
 import auth from "./auth/routes";
+import store from "./store/routes";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(morgan("dev"));
 //Routes
 app.use("/user", user);
 app.use("/auth", auth);
+app.use("/store", store);
 
 app.listen(PORT, () => {
   console.log("myDeben Listening on: " + PORT);
