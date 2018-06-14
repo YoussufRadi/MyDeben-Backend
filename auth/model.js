@@ -1,13 +1,13 @@
 import knex from "../knex";
 
 export const create = user =>
-  knex("users")
+  knex("user")
     .insert({
       ...user
     })
     .returning("email");
 
 export const getByEmail = email =>
-  knex("users")
+  knex("user")
     .where("email", email)
     .then(users => users[0]);

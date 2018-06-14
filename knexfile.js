@@ -5,10 +5,10 @@ module.exports = {
     connection: config.knex.connection,
     pool: config.knex.pool,
     migrations: {
-      directory: __dirname + "../db/migrations"
+      directory: __dirname + "/db/migrations"
     },
     seeds: {
-      directory: __dirname + "../db/seeds"
+      directory: __dirname + "/db/seeds"
     }
   },
   test: {
@@ -16,10 +16,10 @@ module.exports = {
     connection: config.knex.connection,
     pool: config.knex.pool,
     migrations: {
-      directory: __dirname + "../db/migrations"
+      directory: __dirname + "/db/migrations"
     },
     seeds: {
-      directory: __dirname + "../db/seeds"
+      directory: __dirname + "/db/seeds"
     }
   },
   production: {
@@ -28,7 +28,7 @@ module.exports = {
     connection: config.knex.connection,
     pool: config.knex.pool,
     migrations: {
-      directory: __dirname + "../db/migrations"
+      directory: __dirname + "/db/migrations"
     },
     ssl: true
   }
