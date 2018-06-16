@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import expressValidation from "express-validation";
 
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -30,6 +31,16 @@ app.use("/user", user);
 app.use("/auth", auth);
 app.use("/store", store);
 
+app.use((err, req, res, next) => {
+  if (err instanceof expressValidation.ValidationError) {
+    res.status(err.status).json(err);
+  } else {
+    res.status(500).json({
+      status: err.status,
+      message: err.message
+    });
+  }
+});
 app.listen(PORT, () => {
   console.log("myDeben Listening on: " + PORT);
 });
