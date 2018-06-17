@@ -29,17 +29,19 @@ exports.up = function(knex, Promise) {
     }),
     knex.schema.createTable("category", function(table) {
       table.increments();
-      table.string("name");
+      table.string("name").notNullable();
       table.string("picture");
       table.string("description");
       table
         .integer("store_id")
         .references("id")
-        .inTable("store");
+        .inTable("store")
+        .notNullable();
     }),
     knex.schema.createTable("product", function(table) {
       table.increments();
-      table.string("name");
+      table.string("name").notNullable();
+      table.float("price").notNullable();
       table.string("picture");
       table.string("description");
       table
@@ -49,20 +51,26 @@ exports.up = function(knex, Promise) {
       table
         .integer("category_id")
         .references("id")
-        .inTable("category");
+        .inTable("category")
+        .notNullable();
     }),
     knex.schema.createTable("order", function(table) {
       table.increments();
-      table.float("price");
-      table.integer("quantity");
+      table.float("price").notNullable();
+      table
+        .integer("quantity")
+        .notNullable()
+        .defaultTo(1);
       table
         .integer("store_id")
         .references("id")
-        .inTable("store");
+        .inTable("store")
+        .notNullable();
       table
         .integer("user_id")
         .references("id")
-        .inTable("user");
+        .inTable("user")
+        .notNullable();
     })
   ]);
 };

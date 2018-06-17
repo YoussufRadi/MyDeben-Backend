@@ -1,11 +1,11 @@
-var stores = require("../json_records/stores");
+var orders = require("../json_records/orders");
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex("store")
+  return knex("order")
     .del()
     .then(function() {
       // Inserts seed entries
-      return knex("store").insert(stores);
+      // return knex("order").insert(orders);
     });
 };
