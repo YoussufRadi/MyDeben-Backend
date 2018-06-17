@@ -1,34 +1,41 @@
-import { retrieveAll } from "./model";
-import config from "../config";
-import jwt from "jsonwebtoken";
+import { retrieveAll, getUserById, insertCheckIn } from "./model";
+import { ensureAuthenticated } from "../auth/controller";
 
-const ensureAuthenticated = (req, res, next) => {
-  var token = req.headers["x-access-token"];
-  if (!token)
-    res.status(403).json({
-      msg: "No token provided!"
+const verfiyUser = (req, res, next) => {
+  if (req.model !== "user")
+    return res.status(403).json({
+      detail: "Permision Denied"
     });
-  jwt.verify(token, config.jwtSecret, (err, decoded) => {
-    if (err)
-      res.status(500).json({
-        msg: "Failed to authenticate token!"
-      });
-    req.userId = decoded.id;
-    next();
-  });
+  getUserById(req.id)
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => {
+      res.status(403).json({ detail: err });
+    });
 };
 
-export const fetchAllUsers = (req, res, next) => {
+const checkIn = (req, res, next) => {
+  insertCheckIn(req.user, req.body.store_name, req.body.store_id)
+    .then(_ => {
+      next();
+    })
+    .catch(err => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const fetchAllUsers = (req, res, next) => {
   retrieveAll()
     .then(users => {
       req.users = users;
       next();
     })
     .catch(err => {
-      res.status(500).json({
-        err
-      });
+      res.status(400).json({ detail: err.detail });
     });
 };
 
-export const getUsers = [ensureAuthenticated, fetchAllUsers];
+export const getUsers = [ensureAuthenticated, verfiyUser, fetchAllUsers];
+export const userCheckIn = [ensureAuthenticated, verfiyUser, checkIn];

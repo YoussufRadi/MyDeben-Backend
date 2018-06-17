@@ -1,9 +1,15 @@
+import knex from "../knex";
 import QRCode from "qrcode";
 
 export const generateQR = async (text, cb) => {
   try {
-    cb(await QRCode.toDataURL(text));
+    cb(null, await QRCode.toDataURL(text));
   } catch (err) {
-    console.error(err);
+    cb(err);
   }
 };
+
+export const getStoreById = id =>
+  knex("store")
+    .where("id", id)
+    .then(stores => stores[0]);
