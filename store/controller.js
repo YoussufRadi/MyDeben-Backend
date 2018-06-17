@@ -1,10 +1,34 @@
-import { generateQR } from "./model";
+import { generateQR, getStoreById } from "./model";
+import { ensureAuthenticated } from "../auth/controller";
 
-export const generateQRcode = (req, res, next) => {
-  generateQR("https://www.npmjs.com/package/qrcode-generator", code => {
-    console.log(code);
+const verfiyStore = (req, res, next) => {
+  if (req.model !== "store")
+    return res.status(403).json({
+      detail: "Permision Denied"
+    });
 
-    req.code = code;
-    next();
-  });
+  getStoreById(req.id)
+    .then(store => {
+      req.store = store;
+      next();
+    })
+    .catch(err => {
+      res.status(403).json({ detail: err });
+    });
 };
+
+const qRcode = (req, res, next) => {
+  generateQR(
+    "{id: " + req.id + ", name: " + req.store.name + "}",
+    (err, code) => {
+      if (err)
+        return res.status(400).json({
+          detail: err
+        });
+      req.code = code;
+      next();
+    }
+  );
+};
+
+export const generateQRcode = [ensureAuthenticated, verfiyStore, qRcode];

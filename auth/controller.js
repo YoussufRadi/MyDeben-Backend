@@ -10,7 +10,7 @@ import {
   getStoreByEmail
 } from "./model";
 
-export const userCreate = (req, res, next) => {
+const userCreate = (req, res, next) => {
   req.body.password = bcrypt.hashSync(req.body.password, 10);
   createUser(req.body)
     .then(_ => {
@@ -24,7 +24,7 @@ export const userCreate = (req, res, next) => {
     });
 };
 
-export const userVerify = (req, res, next) => {
+const userVerify = (req, res, next) => {
   getUserByEmail(req.body.email)
     .then(user => {
       console.log(req.body.password);
@@ -41,7 +41,7 @@ export const userVerify = (req, res, next) => {
           token: null,
           auth: false
         });
-      req.token = jwt.sign({ id: user._id, model: "user" }, config.jwtSecret, {
+      req.token = jwt.sign({ id: user.id, model: "user" }, config.jwtSecret, {
         expiresIn: config.jwtExpiry
       });
       next();
@@ -51,7 +51,7 @@ export const userVerify = (req, res, next) => {
     });
 };
 
-export const storeCreate = (req, res, next) => {
+const storeCreate = (req, res, next) => {
   req.body.password = bcrypt.hashSync(req.body.password, 10);
   createStore(req.body)
     .then(_ => {
@@ -65,7 +65,7 @@ export const storeCreate = (req, res, next) => {
     });
 };
 
-export const storeVerify = (req, res, next) => {
+const storeVerify = (req, res, next) => {
   getStoreByEmail(req.body.email)
     .then(store => {
       console.log(req.body.password);
@@ -82,11 +82,9 @@ export const storeVerify = (req, res, next) => {
           token: null,
           auth: false
         });
-      req.token = jwt.sign(
-        { id: store._id, model: "store" },
-        config.jwtSecret,
-        { expiresIn: config.jwtExpiry }
-      );
+      req.token = jwt.sign({ id: store.id, model: "store" }, config.jwtSecret, {
+        expiresIn: config.jwtExpiry
+      });
       next();
     })
     .catch(err => {
@@ -102,7 +100,8 @@ export const ensureAuthenticated = (req, res, next) => {
     });
   jwt.verify(token, config.jwtSecret, (err, decoded) => {
     if (err) return res.status(500).json({ detail: err.message });
-    req.userId = decoded.id;
+    req.id = decoded.id;
+    req.model = decoded.model;
     next();
   });
 };

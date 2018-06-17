@@ -26,4 +26,4 @@ export const createStore = store =>
 export const getStoreByEmail = email =>
   knex("store")
     .where("email", email)
-    .then(users => users[0]);
+    .then(stores => stores[0]);
