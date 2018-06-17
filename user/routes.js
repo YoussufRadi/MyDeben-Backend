@@ -1,18 +1,29 @@
 import express from "express";
-import { getUsers, userCheckIn } from "./controller";
+import { userCheckIn, addOrder, viewHistory } from "./controller";
 
 const router = express.Router();
-
-router.get("/", getUsers, (req, res) => {
-  res.status(200).json({
-    users: req.users
-  });
-});
 
 router.post("/checkin", userCheckIn, (req, res) => {
   res.status(200).json({
     success: true,
     detail: "Checked In Successfully"
+  });
+});
+
+router.post("/order", addOrder, (req, res) => {
+  res.status(200).json({
+    success: true,
+    detail:
+      "Order id : " +
+      req.order.id +
+      " Issued Successfully, total Price : " +
+      req.order.total_price
+  });
+});
+
+router.get("/order", viewHistory, (req, res) => {
+  res.status(200).json({
+    oredrs: req.orders
   });
 });
 

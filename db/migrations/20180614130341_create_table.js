@@ -61,7 +61,8 @@ exports.up = function(knex, Promise) {
     knex.schema.createTable("order", function(table) {
       table.increments();
       table.boolean("done").defaultTo(false);
-      table.float("price").notNullable();
+      table.boolean("current").defaultTo(true);
+      table.float("total_price").notNullable();
       table
         .integer("quantity")
         .notNullable()
@@ -75,6 +76,11 @@ exports.up = function(knex, Promise) {
         .integer("user_id")
         .references("id")
         .inTable("user")
+        .notNullable();
+      table
+        .integer("product_id")
+        .references("id")
+        .inTable("product")
         .notNullable();
     })
   ]);

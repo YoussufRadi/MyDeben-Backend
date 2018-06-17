@@ -34,7 +34,7 @@ const userVerify = (req, res, next) => {
           auth: false
         });
       const passIsValid = bcrypt.compareSync(req.body.password, user.password);
-      if (!passIsValid || !user)
+      if (!passIsValid)
         return res.status(400).json({
           detail: "Invalid Username/Password",
           token: null,

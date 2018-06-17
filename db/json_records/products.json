@@ -1,20 +1,17 @@
 [
   {
-    "id": 1,
     "description": "full",
     "name": "cleaning",
     "store_id": "1",
     "category_id": "1"
   },
   {
-    "id": 2,
     "description": "full",
     "name": "drinks",
     "store_id": "1",
     "category_id": "2"
   },
   {
-    "id": 3,
     "description": "full",
     "name": "food",
     "store_id": "2",

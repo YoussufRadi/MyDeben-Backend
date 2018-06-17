@@ -1,19 +1,16 @@
 [
   {
-    "id": 1,
-    "password": "test123",
+    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
     "name": "Hazem",
     "email": "hazem@gmail"
   },
   {
-    "id": 2,
-    "password": "test123",
+    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
     "name": "Mohab",
     "email": "mohab@gmail"
   },
   {
-    "id": 3,
-    "password": "test123",
+    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
     "name": "Radi",
     "email": "radi@gmail"
   }
