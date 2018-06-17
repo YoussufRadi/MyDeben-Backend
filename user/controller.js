@@ -32,25 +32,10 @@ const checkIn = (req, res, next) => {
       res.status(400).json({ detail: err.detail, success: false });
     });
 };
-const mapOrderRequest = orders => {
-  mapped = [];
-  orders.forEach(order => {
-    mapped.push({
-      total_price: product[0].price * order.quantity,
-      quantity: order.quantity,
-      store_id: order.store_id,
-      product_id: order.product_id,
-      user_id: userId
-    });
-  });
-};
-
-const newOrder = (req, res, next) => {
-  insertOrder(req.body, req.id)
-    .then(order => {
-      console.log(order);
-
-      req.order = order[0];
+const newOrder = async (req, res, next) => {
+  req.order = await insertOrder(req.body.order, req.id)
+    .then(orders => {
+      req.orders = orders;
       next();
     })
     .catch(err => {
@@ -76,7 +61,7 @@ export const userCheckIn = [
   checkIn
 ];
 export const addOrder = [
-  validate(validation.makeOrder),
+  // validate(validation.makeOrder),
   ensureAuthenticated,
   verfiyUser,
   newOrder

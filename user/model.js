@@ -16,28 +16,30 @@ export const insertCheckIn = (user, store) =>
       checkin_store_name: store.store_name
     });
 
-const mapOrderRequest = (orders, product, userId) => {
-  mapped = [];
-  orders.forEach(order => {
+const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+};
+
+export const insertOrder = async (orders, userId) => {
+  const mapped = [];
+  await asyncForEach(orders, async order => {
+    const price = await knex("product")
+      .where("id", order.product_id)
+      .then(product => product[0].price);
     mapped.push({
-      total_price: product[0].price * order.quantity,
+      total_price: price * order.quantity,
       quantity: order.quantity,
       store_id: order.store_id,
       product_id: order.product_id,
       user_id: userId
     });
   });
-  console.log(mapped);
+  return knex("order")
+    .insert(mapped)
+    .returning("id");
 };
-
-export const insertOrder = (order, userId) =>
-  knex("product")
-    .where("id", order.product_id)
-    .then(product =>
-      knex("order")
-        .insert(mapOrderRequest(orders, product, userId))
-        .returning(["id", "total_price"])
-    );
 
 export const retrieveAllOrders = userId =>
   knex

@@ -13,11 +13,7 @@ router.post("/checkin", userCheckIn, (req, res) => {
 router.post("/order", addOrder, (req, res) => {
   res.status(200).json({
     success: true,
-    detail:
-      "Order id : " +
-      req.order.id +
-      " Issued Successfully, total Price : " +
-      req.order.total_price
+    detail: "Orders: " + req.orders + " Issued Successfully"
   });
 });
 
