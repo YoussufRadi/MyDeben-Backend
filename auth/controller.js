@@ -3,11 +3,16 @@ import jwt from "jsonwebtoken";
 import validate from "express-validation";
 import config from "../config";
 import validation from "./validation";
-import { create, getByEmail } from "./model";
+import {
+  createUser,
+  getUserByEmail,
+  createStore,
+  getStoreByEmail
+} from "./model";
 
 export const userCreate = (req, res, next) => {
   req.body.password = bcrypt.hashSync(req.body.password, 10);
-  create(req.body)
+  createUser(req.body)
     .then(_ => {
       next();
     })
@@ -20,7 +25,7 @@ export const userCreate = (req, res, next) => {
 };
 
 export const userVerify = (req, res, next) => {
-  getByEmail(req.body.email)
+  getUserByEmail(req.body.email)
     .then(user => {
       console.log(req.body.password);
       if (!user)
@@ -42,11 +47,50 @@ export const userVerify = (req, res, next) => {
       next();
     })
     .catch(err => {
+      res.status(400).json({ detail: err, auth: false, token: null });
+    });
+};
+
+export const storeCreate = (req, res, next) => {
+  req.body.password = bcrypt.hashSync(req.body.password, 10);
+  createStore(req.body)
+    .then(_ => {
+      next();
+    })
+    .catch(err => {
       res.status(400).json({
-        detail: err,
-        auth: false,
-        token: null
+        success: false,
+        detail: err.detail
       });
+    });
+};
+
+export const storeVerify = (req, res, next) => {
+  getStoreByEmail(req.body.email)
+    .then(store => {
+      console.log(req.body.password);
+      if (!store)
+        return res.status(400).json({
+          detail: "Invalid Username/Password",
+          token: null,
+          auth: false
+        });
+      const passIsValid = bcrypt.compareSync(req.body.password, store.password);
+      if (!passIsValid)
+        return res.status(400).json({
+          detail: "Invalid Username/Password",
+          token: null,
+          auth: false
+        });
+      req.token = jwt.sign(
+        { id: store._id, model: "store" },
+        config.jwtSecret,
+        { expiresIn: config.jwtExpiry }
+      );
+      next();
+    })
+    .catch(err => {
+      res.status(400).json({ detail: err, auth: false, token: null });
     });
 };
 
@@ -65,3 +109,5 @@ export const ensureAuthenticated = (req, res, next) => {
 
 export const userSignUp = [validate(validation.signUp), userCreate];
 export const userSignIn = [validate(validation.signIn), userVerify];
+export const storeSignUp = [validate(validation.signUp), storeCreate];
+export const storeSignIn = [validate(validation.signIn), storeVerify];
