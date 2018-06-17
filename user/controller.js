@@ -15,6 +15,7 @@ const verfiyUser = (req, res, next) => {
     });
   getUserById(req.id)
     .then(user => {
+      if (!user) return res.status(400).json({ detail: "User doesnot exist" });
       req.user = user;
       next();
     })
@@ -32,8 +33,12 @@ const checkIn = (req, res, next) => {
       res.status(400).json({ detail: err.detail, success: false });
     });
 };
+
 const newOrder = async (req, res, next) => {
-  req.order = await insertOrder(req.body.order, req.id)
+  const storeId = req.user.checkin_store_id;
+  if (!storeId || req.body.store_id !== storeId)
+    return res.status(400).json({ detail: "User didnot checkin into store" });
+  req.order = await insertOrder(req.body.order, req.id, storeId)
     .then(orders => {
       req.orders = orders;
       next();
@@ -61,7 +66,7 @@ export const userCheckIn = [
   checkIn
 ];
 export const addOrder = [
-  // validate(validation.makeOrder),
+  validate(validation.makeOrder),
   ensureAuthenticated,
   verfiyUser,
   newOrder

@@ -23,7 +23,8 @@ const verfiyStore = (req, res, next) => {
     });
   getStoreById(req.id)
     .then(store => {
-      //TODO is it needed to check if store exists ??!
+      if (!store)
+        return res.status(400).json({ detail: "Store doesnot exist" });
       req.store = store;
       next();
     })

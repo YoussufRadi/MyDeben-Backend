@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
-    res.status(err.status).json(err);
+    res.status(err.status).json({ detail: err.message });
   } else {
     //TODO Remove
     console.log(err);

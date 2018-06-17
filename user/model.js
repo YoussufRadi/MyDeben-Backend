@@ -22,7 +22,7 @@ const asyncForEach = async (array, callback) => {
   }
 };
 
-export const insertOrder = async (orders, userId) => {
+export const insertOrder = async (orders, userId, storeId) => {
   const mapped = [];
   await asyncForEach(orders, async order => {
     const price = await knex("product")
@@ -31,7 +31,7 @@ export const insertOrder = async (orders, userId) => {
     mapped.push({
       total_price: price * order.quantity,
       quantity: order.quantity,
-      store_id: order.store_id,
+      store_id: storeId,
       product_id: order.product_id,
       user_id: userId
     });

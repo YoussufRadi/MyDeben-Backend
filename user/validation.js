@@ -9,9 +9,13 @@ export default {
   },
   makeOrder: {
     body: {
-      quantity: Joi.number().required(),
       store_id: Joi.number().required(),
-      product_id: Joi.number().required()
+      order: Joi.array().items(
+        Joi.object({
+          quantity: Joi.number().required(),
+          product_id: Joi.number().required()
+        })
+      )
     }
   }
 };
