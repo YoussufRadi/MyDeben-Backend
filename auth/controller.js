@@ -27,7 +27,6 @@ const userCreate = (req, res, next) => {
 const userVerify = (req, res, next) => {
   getUserByEmail(req.body.email)
     .then(user => {
-      console.log(req.body.password);
       if (!user)
         return res.status(400).json({
           detail: "Invalid Username/Password",
@@ -68,7 +67,6 @@ const storeCreate = (req, res, next) => {
 const storeVerify = (req, res, next) => {
   getStoreByEmail(req.body.email)
     .then(store => {
-      console.log(req.body.password);
       if (!store)
         return res.status(400).json({
           detail: "Invalid Username/Password",
@@ -95,7 +93,7 @@ const storeVerify = (req, res, next) => {
 export const ensureAuthenticated = (req, res, next) => {
   var token = req.headers["x-access-token"];
   if (!token)
-    res.status(403).json({
+    return res.status(403).json({
       detail: "No token provided!"
     });
   jwt.verify(token, config.jwtSecret, (err, decoded) => {

@@ -29,7 +29,10 @@ exports.up = function(knex, Promise) {
     }),
     knex.schema.createTable("category", function(table) {
       table.increments();
-      table.string("name").notNullable();
+      table
+        .string("name")
+        .notNullable()
+        .unique();
       table.string("picture");
       table.string("description");
       table
