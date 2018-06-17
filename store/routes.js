@@ -3,7 +3,7 @@ import { generateQRcode } from "./controller";
 
 const router = express.Router();
 
-router.get("/", generateQRcode, (req, res) => {
+router.get("/generate/code", generateQRcode, (req, res) => {
   res.status(200).json({
     code: req.code
   });

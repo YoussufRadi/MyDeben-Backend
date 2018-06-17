@@ -6,7 +6,6 @@ const verfiyStore = (req, res, next) => {
     return res.status(403).json({
       detail: "Permision Denied"
     });
-
   getStoreById(req.id)
     .then(store => {
       req.store = store;

@@ -1,5 +1,16 @@
 exports.up = function(knex, Promise) {
   return Promise.all([
+    knex.schema.createTable("store", function(table) {
+      table.increments();
+      table
+        .string("email")
+        .unique()
+        .notNullable();
+      table.string("name");
+      table.string("password").notNullable();
+      table.timestamp("createdAt").defaultTo(knex.fn.now());
+      table.timestamp("updatedAt").defaultTo(knex.fn.now());
+    }),
     knex.schema.createTable("user", function(table) {
       table.increments();
       table
@@ -13,17 +24,6 @@ exports.up = function(knex, Promise) {
         .integer("checkin_store_id")
         .references("id")
         .inTable("store");
-      table.timestamp("createdAt").defaultTo(knex.fn.now());
-      table.timestamp("updatedAt").defaultTo(knex.fn.now());
-    }),
-    knex.schema.createTable("store", function(table) {
-      table.increments();
-      table
-        .string("email")
-        .unique()
-        .notNullable();
-      table.string("name");
-      table.string("password").notNullable();
       table.timestamp("createdAt").defaultTo(knex.fn.now());
       table.timestamp("updatedAt").defaultTo(knex.fn.now());
     }),
