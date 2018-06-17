@@ -1,5 +1,7 @@
 import { retrieveAll, getUserById, insertCheckIn } from "./model";
 import { ensureAuthenticated } from "../auth/controller";
+import validate from "express-validation";
+import validation from "./validation";
 
 const verfiyUser = (req, res, next) => {
   if (req.model !== "user")
@@ -38,4 +40,9 @@ const fetchAllUsers = (req, res, next) => {
 };
 
 export const getUsers = [ensureAuthenticated, verfiyUser, fetchAllUsers];
-export const userCheckIn = [ensureAuthenticated, verfiyUser, checkIn];
+export const userCheckIn = [
+  validate(validation.checkIn),
+  ensureAuthenticated,
+  verfiyUser,
+  checkIn
+];

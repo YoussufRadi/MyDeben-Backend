@@ -45,12 +45,13 @@ exports.up = function(knex, Promise) {
       table.increments();
       table.string("name").notNullable();
       table.float("price").notNullable();
+      table.boolean("gem").defaultTo(false);
       table.string("picture");
       table.string("description");
       table
         .integer("store_id")
         .references("id")
-        .inTable("store");
+        .inTable("store").notNullable;
       table
         .integer("category_id")
         .references("id")
@@ -59,6 +60,7 @@ exports.up = function(knex, Promise) {
     }),
     knex.schema.createTable("order", function(table) {
       table.increments();
+      table.boolean("done").defaultTo(false);
       table.float("price").notNullable();
       table
         .integer("quantity")

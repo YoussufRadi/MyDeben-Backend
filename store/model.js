@@ -22,7 +22,7 @@ export const insertCategory = (category, storeId) =>
       description: category.description,
       store_id: storeId
     })
-    .returning("name");
+    .returning("id");
 
 export const retrieveStoreCategories = storeId =>
   knex
@@ -49,4 +49,44 @@ export const updateCategory = (storeId, categoryId, category) =>
     .where({ store_id: storeId, id: categoryId })
     .update({
       ...category
+    });
+
+export const insertProduct = (product, storeId) =>
+  knex("product")
+    .insert({
+      name: product.name,
+      picture: product.picture,
+      description: product.description,
+      store_id: storeId,
+      category_id: product.category_id,
+      gem: product.gem,
+      price: product.price
+    })
+    .returning("id");
+
+export const retrieveCategoryProducts = (storeId, categoryId) =>
+  knex
+    .select("id", "name", "picture", "description", "price", "gem")
+    .table("product")
+    .where({ store_id: storeId, category_id: categoryId });
+
+export const getProductById = id =>
+  knex("product")
+    .where("id", id)
+    .then(products => products[0]);
+
+export const delProduct = (storeId, productId) => {
+  return knex("product")
+    .del()
+    .where({
+      store_id: storeId,
+      id: productId
+    });
+};
+
+export const updateProduct = (storeId, productId, product) =>
+  knex("product")
+    .where({ store_id: storeId, id: productId })
+    .update({
+      ...product
     });

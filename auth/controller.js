@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import validate from "express-validation";
-import config from "../config";
 import validation from "./validation";
+import config from "../config";
 import {
   createUser,
   getUserByEmail,
