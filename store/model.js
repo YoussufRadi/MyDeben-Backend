@@ -1,5 +1,5 @@
-import knex from "../knex";
-import QRCode from "qrcode";
+import QRCode from 'qrcode';
+import knex from '../knex';
 
 export const generateQR = async (text, cb) => {
   try {
@@ -10,49 +10,48 @@ export const generateQR = async (text, cb) => {
 };
 
 export const getStoreById = id =>
-  knex("store")
-    .where("id", id)
+  knex('store')
+    .where('id', id)
     .then(stores => stores[0]);
 
 export const insertCategory = (category, storeId) =>
-  knex("category")
+  knex('category')
     .insert({
       name: category.name,
       picture: category.picture,
       description: category.description,
-      store_id: storeId
+      store_id: storeId,
     })
-    .returning("id");
+    .returning('id');
 
 export const retrieveStoreCategories = storeId =>
   knex
-    .select("id", "name", "picture", "description")
-    .table("category")
-    .where("store_id", storeId);
+    .select('id', 'name', 'picture', 'description')
+    .table('category')
+    .where('store_id', storeId);
 
 export const getCategoryById = id =>
-  knex("category")
-    .where("id", id)
+  knex('category')
+    .where('id', id)
     .then(categories => categories[0]);
 
-export const delCategory = (storeId, categoryId) => {
-  return knex("category")
+export const delCategory = (storeId, categoryId) =>
+  knex('category')
     .del()
     .where({
       store_id: storeId,
-      id: categoryId
+      id: categoryId,
     });
-};
 
 export const updateCategory = (storeId, categoryId, category) =>
-  knex("category")
+  knex('category')
     .where({ store_id: storeId, id: categoryId })
     .update({
-      ...category
+      ...category,
     });
 
 export const insertProduct = (product, storeId) =>
-  knex("product")
+  knex('product')
     .insert({
       name: product.name,
       picture: product.picture,
@@ -60,33 +59,32 @@ export const insertProduct = (product, storeId) =>
       store_id: storeId,
       category_id: product.category_id,
       gem: product.gem,
-      price: product.price
+      price: product.price,
     })
-    .returning("id");
+    .returning('id');
 
 export const retrieveCategoryProducts = (storeId, categoryId) =>
   knex
-    .select("id", "name", "picture", "description", "price", "gem")
-    .table("product")
+    .select('id', 'name', 'picture', 'description', 'price', 'gem')
+    .table('product')
     .where({ store_id: storeId, category_id: categoryId });
 
 export const getProductById = id =>
-  knex("product")
-    .where("id", id)
+  knex('product')
+    .where('id', id)
     .then(products => products[0]);
 
-export const delProduct = (storeId, productId) => {
-  return knex("product")
+export const delProduct = (storeId, productId) =>
+  knex('product')
     .del()
     .where({
       store_id: storeId,
-      id: productId
+      id: productId,
     });
-};
 
 export const updateProduct = (storeId, productId, product) =>
-  knex("product")
+  knex('product')
     .where({ store_id: storeId, id: productId })
     .update({
-      ...product
+      ...product,
     });

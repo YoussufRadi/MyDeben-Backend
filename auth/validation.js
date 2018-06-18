@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export default {
   signUp: {
@@ -9,8 +9,8 @@ export default {
       password: Joi.string()
         .regex(/[a-zA-Z0-9]{3,30}/)
         .required(),
-      name: Joi.string().required()
-    }
+      name: Joi.string().required(),
+    },
   },
   signIn: {
     body: {
@@ -19,7 +19,7 @@ export default {
         .required(),
       password: Joi.string()
         .regex(/[a-zA-Z0-9]{3,30}/)
-        .required()
-    }
-  }
+        .required(),
+    },
+  },
 };

@@ -1,5 +1,5 @@
 // Make Sure You execute the script in the scripts directory
-const { exec } = require("child_process");
+const { exec } = require('child_process');
 
 const dir = process.argv[2];
 
@@ -9,12 +9,9 @@ exec(
    touch ../${dir}/model.js;
    touch ../${dir}/routes.js;
    touch ../${dir}/test.spec.js;`,
-  (err, stdout, stderr) => {
+  (err) => {
     if (err) {
-      return;
+      console.log(err);
     }
-    // the *entire* stdout and stderr (buffered)
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
-  }
+  },
 );

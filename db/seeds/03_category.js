@@ -1,11 +1,11 @@
-var categories = require("../json_records/categories");
+const categories = require('../json_records/categories');
 
-exports.seed = function(knex, Promise) {
+exports.seed = function seed(knex) {
   // Deletes ALL existing entries
-  return knex("category")
+  return knex('category')
     .del()
-    .then(function() {
+    .then(() =>
       // Inserts seed entries
-      return knex("category").insert(categories);
-    });
+      knex('category').insert(categories),
+    );
 };

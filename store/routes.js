@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import {
   generateQRcode,
   addCategory,
@@ -8,65 +8,65 @@ import {
   viewProduct,
   addProduct,
   modifyProduct,
-  deleteProduct
-} from "./controller";
+  deleteProduct,
+} from './controller';
 
 const router = express.Router();
 
-router.get("/generate/code", generateQRcode, (req, res) => {
+router.get('/generate/code', generateQRcode, (req, res) =>
   res.status(200).json({
-    code: req.code
-  });
-});
+    code: req.code,
+  }),
+);
 
-router.get("/category", viewCategory, (req, res) => {
-  res.status(200).json({ categories: req.categories });
-});
+router.get('/category', viewCategory, (req, res) =>
+  res.status(200).json({ categories: req.categories }),
+);
 
-router.post("/category", addCategory, (req, res) => {
+router.post('/category', addCategory, (req, res) =>
   res.status(200).json({
-    detail: "Category id: " + req.category + " added successfully",
-    success: true
-  });
-});
+    detail: `Category id: ${req.category} added successfully`,
+    success: true,
+  }),
+);
 
-router.patch("/category/:id", modifyCategory, (req, res) => {
+router.patch('/category/:id', modifyCategory, (req, res) =>
   res.status(200).json({
-    detail: "Category modified successfully",
-    success: true
-  });
-});
+    detail: 'Category modified successfully',
+    success: true,
+  }),
+);
 
-router.delete("/category/:id", deleteCategory, (req, res) => {
+router.delete('/category/:id', deleteCategory, (req, res) =>
   res.status(200).json({
-    detail: "Category Deleted successfully",
-    success: true
-  });
-});
+    detail: 'Category Deleted successfully',
+    success: true,
+  }),
+);
 
-router.get("/product", viewProduct, (req, res) => {
-  res.status(200).json({ products: req.products });
-});
+router.get('/product', viewProduct, (req, res) =>
+  res.status(200).json({ products: req.products }),
+);
 
-router.post("/product", addProduct, (req, res) => {
+router.post('/product', addProduct, (req, res) =>
   res.status(200).json({
-    detail: "Product id: " + req.product + " added successfully",
-    success: true
-  });
-});
+    detail: `Product id: ${req.product} added successfully`,
+    success: true,
+  }),
+);
 
-router.patch("/product/:id", modifyProduct, (req, res) => {
+router.patch('/product/:id', modifyProduct, (req, res) =>
   res.status(200).json({
-    detail: "Product modified successfully",
-    success: true
-  });
-});
+    detail: 'Product modified successfully',
+    success: true,
+  }),
+);
 
-router.delete("/product/:id", deleteProduct, (req, res) => {
+router.delete('/product/:id', deleteProduct, (req, res) =>
   res.status(200).json({
-    detail: "Product Deleted successfully",
-    success: true
-  });
-});
+    detail: 'Product Deleted successfully',
+    success: true,
+  }),
+);
 
 export default router;

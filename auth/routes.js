@@ -1,29 +1,29 @@
-import express from "express";
-import { userSignIn, userSignUp, storeSignIn, storeSignUp } from "./controller";
+import express from 'express';
+import { userSignIn, userSignUp, storeSignIn, storeSignUp } from './controller';
 
 const router = express.Router();
 
-router.post("/user/signup", userSignUp, (req, res) => {
-  res.status(200).json({ success: true, detail: "Sign Up Successfully" });
+router.post('/user/signup', userSignUp, (req, res) => {
+  res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
 });
 
-router.post("/user/signin", userSignIn, (req, res) => {
+router.post('/user/signin', userSignIn, (req, res) => {
   res.status(200).json({
-    detail: "Successfully Logged In",
+    detail: 'Successfully Logged In',
     auth: true,
-    token: req.token
+    token: req.token,
   });
 });
 
-router.post("/store/signup", storeSignUp, (req, res) => {
-  res.status(200).json({ success: true, detail: "Sign Up Successfully" });
+router.post('/store/signup', storeSignUp, (req, res) => {
+  res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
 });
 
-router.post("/store/signin", storeSignIn, (req, res) => {
+router.post('/store/signin', storeSignIn, (req, res) => {
   res.status(200).json({
-    detail: "Successfully Logged In",
+    detail: 'Successfully Logged In',
     auth: true,
-    token: req.token
+    token: req.token,
   });
 });
 

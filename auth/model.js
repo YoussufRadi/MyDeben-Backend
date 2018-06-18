@@ -1,29 +1,29 @@
-import knex from "../knex";
+import knex from '../knex';
 
 export const createUser = user =>
-  knex("user")
+  knex('user')
     .insert({
       email: user.email,
       name: user.name,
-      password: user.password
+      password: user.password,
     })
-    .returning("email");
+    .returning('email');
 
 export const getUserByEmail = email =>
-  knex("user")
-    .where("email", email)
+  knex('user')
+    .where('email', email)
     .then(users => users[0]);
 
 export const createStore = store =>
-  knex("store")
+  knex('store')
     .insert({
       email: store.email,
       name: store.name,
-      password: store.password
+      password: store.password,
     })
-    .returning("email");
+    .returning('email');
 
 export const getStoreByEmail = email =>
-  knex("store")
-    .where("email", email)
+  knex('store')
+    .where('email', email)
     .then(stores => stores[0]);
