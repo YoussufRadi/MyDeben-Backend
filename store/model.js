@@ -86,5 +86,75 @@ export const updateProduct = (storeId, productId, product) =>
   knex('product')
     .where({ store_id: storeId, id: productId })
     .update({
-      ...product,
+      name: product.name,
+      picture: product.picture,
+      description: product.description,
+      store_id: storeId,
+      category_id: product.category_id,
+      gem: product.gem,
+      price: product.price,
+    });
+
+export const retrieveAllOrders = store =>
+  knex
+    .select(
+      'order.id',
+      'product.name',
+      'product.picture',
+      'product.description',
+      'product.price',
+      'order.total_price',
+      'order.quantity',
+      'order.total_price',
+      'order.user_id',
+      'order.checked_out',
+      'order.served',
+    )
+    .from('order')
+    .innerJoin('product', 'order.product_id', 'product.id')
+    .where({ 'order.store_id': store.id });
+
+export const retrieveCurrentOrders = store =>
+  knex
+    .select(
+      'order.id',
+      'product.name',
+      'product.picture',
+      'product.description',
+      'product.price',
+      'order.total_price',
+      'order.quantity',
+      'order.total_price',
+      'order.user_id',
+      'order.checked_out',
+      'order.served',
+    )
+    .from('order')
+    .innerJoin('product', 'order.product_id', 'product.id')
+    .where({ 'order.store_id': store.id, served: false });
+
+export const retrieveCheckInUsers = store =>
+  knex
+    .select('id', 'name', 'email')
+    .table('user')
+    .where('checkin_store_id', store.id)
+    .then(users => users);
+
+export const getOrderById = id =>
+  knex('order')
+    .where('id', id)
+    .then(categories => categories[0]);
+
+export const setServeOrder = (orderId, storeId) =>
+  knex('order')
+    .where({ id: orderId, store_id: storeId })
+    .update({
+      served: true,
+    });
+
+export const setCheckOutOrder = (userId, storeId) =>
+  knex('order')
+    .where({ user_id: userId, store_id: storeId })
+    .update({
+      checked_out: true,
     });

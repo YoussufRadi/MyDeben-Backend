@@ -13,6 +13,12 @@ import {
   getProductById,
   delProduct,
   updateProduct,
+  retrieveAllOrders,
+  retrieveCurrentOrders,
+  retrieveCheckInUsers,
+  setServeOrder,
+  getOrderById,
+  setCheckOutOrder,
 } from './model';
 import { ensureAuthenticated } from '../auth/controller';
 
@@ -189,30 +195,101 @@ const editProduct = (req, res, next) => {
     });
 };
 
+const getAllOrders = (req, res, next) => {
+  retrieveAllOrders(req.store)
+    .then((orders) => {
+      req.orders = orders;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const getCurrentOrders = (req, res, next) => {
+  retrieveCurrentOrders(req.store)
+    .then((orders) => {
+      req.orders = orders;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const getCheckedInUsers = (req, res, next) => {
+  retrieveCheckInUsers(req.store)
+    .then((users) => {
+      req.users = users;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const checkOrder = (req, res, next) => {
+  getOrderById(req.params.id)
+    .then((order) => {
+      if (!order) {
+        res.status(400).json({
+          detail: "Order Id doesn't exist",
+          success: false,
+        });
+        return;
+      }
+      if (order.store_id !== req.id) {
+        res.status(403).json({
+          detail: 'Permission Denied',
+          success: false,
+        });
+        return;
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({
+        detail: err.detail,
+        success: false,
+      });
+    });
+};
+
+const orderServe = (req, res, next) => {
+  setServeOrder(req.params.id, req.id)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const userCheckOut = (req, res, next) => {
+  setCheckOutOrder(req.params.id, req.id)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
 export const generateQRcode = [ensureAuthenticated, verfiyStore, qRcode];
 export const addCategory = [
-  // validate(validation.addCategory),
+  validate(validation.addCategory),
   ensureAuthenticated,
   verfiyStore,
   newCategory,
 ];
-export const viewCategory = [
-  ensureAuthenticated,
-  verfiyStore,
-  getStoreCategories,
-];
+export const viewCategory = [ensureAuthenticated, verfiyStore, getStoreCategories];
 export const deleteCategory = [
   ensureAuthenticated,
   verfiyStore,
   checkCategory,
   removeStoreCategory,
 ];
-export const modifyCategory = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkCategory,
-  editStoreCategory,
-];
+export const modifyCategory = [ensureAuthenticated, verfiyStore, checkCategory, editStoreCategory];
 export const addProduct = [
   validate(validation.addProduct),
   ensureAuthenticated,
@@ -225,15 +302,10 @@ export const viewProduct = [
   verfiyStore,
   getCategoryProducts,
 ];
-export const deleteProduct = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkProduct,
-  removeProduct,
-];
-export const modifyProduct = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkProduct,
-  editProduct,
-];
+export const deleteProduct = [ensureAuthenticated, verfiyStore, checkProduct, removeProduct];
+export const modifyProduct = [ensureAuthenticated, verfiyStore, checkProduct, editProduct];
+export const viewOrders = [ensureAuthenticated, verfiyStore, getAllOrders];
+export const viewCurrentOrders = [ensureAuthenticated, verfiyStore, getCurrentOrders];
+export const viewCheckedInUsers = [ensureAuthenticated, verfiyStore, getCheckedInUsers];
+export const serveOrder = [ensureAuthenticated, verfiyStore, checkOrder, orderServe];
+export const checkOut = [ensureAuthenticated, verfiyStore, userCheckOut];

@@ -1,5 +1,5 @@
 import express from 'express';
-import { userCheckIn, addOrder, viewHistory } from './controller';
+import { userCheckIn, addOrder, viewHistory, profile, discover } from './controller';
 
 const router = express.Router();
 
@@ -20,6 +20,20 @@ router.post('/order', addOrder, (req, res) => {
 router.get('/order', viewHistory, (req, res) => {
   res.status(200).json({
     oredrs: req.orders,
+  });
+});
+
+router.get('/profile', profile, (req, res) => {
+  res.status(200).json({
+    user: req.user,
+    total: req.total,
+    oredrs: req.orders,
+  });
+});
+
+router.get('/discover', discover, (req, res) => {
+  res.status(200).json({
+    gems: req.gems,
   });
 });
 

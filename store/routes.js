@@ -9,6 +9,11 @@ import {
   addProduct,
   modifyProduct,
   deleteProduct,
+  viewOrders,
+  viewCurrentOrders,
+  viewCheckedInUsers,
+  serveOrder,
+  checkOut,
 } from './controller';
 
 const router = express.Router();
@@ -44,9 +49,7 @@ router.delete('/category/:id', deleteCategory, (req, res) =>
   }),
 );
 
-router.get('/product', viewProduct, (req, res) =>
-  res.status(200).json({ products: req.products }),
-);
+router.get('/product', viewProduct, (req, res) => res.status(200).json({ products: req.products }));
 
 router.post('/product', addProduct, (req, res) =>
   res.status(200).json({
@@ -67,6 +70,22 @@ router.delete('/product/:id', deleteProduct, (req, res) =>
     detail: 'Product Deleted successfully',
     success: true,
   }),
+);
+
+router.get('/users', viewCheckedInUsers, (req, res) => res.status(200).json({ users: req.users }));
+
+router.get('/order', viewOrders, (req, res) => res.status(200).json({ orders: req.orders }));
+
+router.get('/order/serve/:id', serveOrder, (req, res) =>
+  res.status(200).json({ detail: 'Order Served', success: true }),
+);
+
+router.get('/order/checkout/:id', checkOut, (req, res) =>
+  res.status(200).json({ detail: 'User Checked Out Successfully', success: true }),
+);
+
+router.get('/order/current', viewCurrentOrders, (req, res) =>
+  res.status(200).json({ orders: req.orders }),
 );
 
 export default router;

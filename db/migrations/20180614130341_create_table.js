@@ -61,8 +61,8 @@ exports.up = function (knex, Promise) {
     }),
     knex.schema.createTable('order', (table) => {
       table.increments();
-      table.boolean('done').defaultTo(false);
-      table.boolean('current').defaultTo(true);
+      table.boolean('checked_out').defaultTo(false);
+      table.boolean('served').defaultTo(false);
       table.float('total_price').notNullable();
       table
         .integer('quantity')
