@@ -5,7 +5,7 @@
   "repository": "private",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js --exec babel-node",
+    "start": "NODE_ENV=production nodemon app.js --exec babel-node",
     "test": "NODE_ENV=test mocha --compilers js:babel-core/register ./*/*.spec.js",
     "pretest": "eslint --ignore-path .gitignore .",
     "generate": "node scripts/generate.js"
@@ -29,9 +29,7 @@
     "pg": "^7.4.3",
     "qrcode": "^1.2.0",
     "swagger-ui-express": "^3.0.9",
-    "yamljs": "^0.3.0"
-  },
-  "devDependencies": {
+    "yamljs": "^0.3.0",
     "babel-cli": "^6.18.0",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
@@ -44,10 +42,14 @@
     "prettier": "^1.5.3",
     "should": "^13.2.1"
   },
+  "devDependencies": {},
   "lint-staged": {
     "*.js": [
       "prettier --single-quote --trailing-comma all --write",
       "git add"
     ]
+  },
+  "engines": {
+    "node": "9.11.1"
   }
 }

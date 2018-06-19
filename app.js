@@ -13,8 +13,18 @@ import store from './store/routes';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 80;
+console.log(process.env);
+
 const app = express();
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+  if (isNaN(port)) return val;
+  if (port >= 0) return port;
+  return false;
+}
 
 // Swagger Setup
 const swaggerDocument = YAML.load('./swagger.yaml');
@@ -46,8 +56,8 @@ app.use((err, req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`myDeben Listening on: ${PORT}`);
+app.listen(port, () => {
+  console.log(`myDeben Listening on: ${port}`);
 });
 
 export default app;
