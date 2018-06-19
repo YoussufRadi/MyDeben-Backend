@@ -1,5 +1,5 @@
 module.exports = {
-  jwtSecret: process.env.JWT_SECRET || 'secret',
+  jwtSecret: process.env.JWT_SECRET || 'supersecret',
   jwtExpiry: process.env.JWT_EXPIRY || 60 * 60 * 24,
   knex: {
     connection: {
