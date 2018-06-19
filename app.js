@@ -28,7 +28,7 @@ function normalizePort(val) {
 
 // Swagger Setup
 const swaggerDocument = YAML.load('./swagger.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
