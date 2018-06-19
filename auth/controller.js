@@ -3,12 +3,7 @@ import jwt from 'jsonwebtoken';
 import validate from 'express-validation';
 import validation from './validation';
 import config from '../config';
-import {
-  createUser,
-  getUserByEmail,
-  createStore,
-  getStoreByEmail,
-} from './model';
+import { createUser, getUserByEmail, createStore, getStoreByEmail } from './model';
 
 const userCreate = (req, res, next) => {
   req.body.password = bcrypt.hashSync(req.body.password, 10);
@@ -17,6 +12,8 @@ const userCreate = (req, res, next) => {
       next();
     })
     .catch((err) => {
+      console.log(err);
+
       res.status(400).json({
         success: false,
         detail: err.detail,
@@ -49,9 +46,7 @@ const userVerify = (req, res, next) => {
       });
       next();
     })
-    .catch(err =>
-      res.status(400).json({ detail: err, auth: false, token: null }),
-    );
+    .catch(err => res.status(400).json({ detail: err, auth: false, token: null }));
 };
 
 const storeCreate = (req, res, next) => {

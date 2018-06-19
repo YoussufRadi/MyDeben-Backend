@@ -13,7 +13,7 @@ import store from './store/routes';
 
 dotenv.config();
 
-console.log(process.env);
+// console.log(process.env);
 
 const app = express();
 const port = normalizePort(process.env.PORT || '3000');
