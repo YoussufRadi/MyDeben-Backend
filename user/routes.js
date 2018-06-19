@@ -3,6 +3,13 @@ import { userCheckIn, addOrder, viewHistory, profile, discover } from './control
 
 const router = express.Router();
 
+router.get('/', userCheckIn, (req, res) => {
+  res.status(200).json({
+    success: true,
+    detail: 'Get Working',
+  });
+});
+
 router.post('/checkin', userCheckIn, (req, res) => {
   res.status(200).json({
     success: true,
