@@ -26,7 +26,7 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection:
-      'postgres://vwrbzenxmtrilo:cdc22fedb71c1ef6318d6a5afcdedbe468f0edacff8df249c463cb61bc6b7fd6@ec2-23-23-226-190.compute-1.amazonaws.com:5432/d4ecbvnntrg1s4',
+      'postgres://gukivlbo:oJhM5Xv1mGq81i39Xb1fvWpftMVtU5_l@stampy.db.elephantsql.com:5432/gukivlbo',
     pool: config.knex.pool,
     migrations: {
       directory: `${__dirname}/db/migrations`,
