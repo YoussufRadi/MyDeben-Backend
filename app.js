@@ -24,9 +24,13 @@ function normalizePort(val) {
   return false;
 }
 
+const options = {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+};
 // Swagger Setup
 const swaggerDocument = YAML.load('./swagger.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,11 +47,9 @@ app.use((req, res) => {
   res.status(404).json({ detail: "route doesn't exist" });
 });
 
-app.use((err, req, res) => {
-  console.log('pipeline not reached');
-
+app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
-    res.status(err.status).json({ detail: err.message });
+    res.status(err.status).json({ detail: err.errors });
   } else {
     res.status(500).json({
       status: err.status,

@@ -12,7 +12,9 @@ const verfiyUser = (req, res, next) => {
   }
   getUserById(req.id)
     .then((user) => {
-      user.password = '';
+      delete user.password;
+      delete user.createdAt;
+      delete user.updatedAt;
       if (!user) {
         res.status(400).json({ detail: 'User doesnot exist' });
         return;

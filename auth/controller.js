@@ -12,7 +12,7 @@ const userCreate = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      res.status(400).json({
+      res.status(409).json({
         success: false,
         detail: err.detail,
       });
@@ -54,7 +54,7 @@ const storeCreate = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      res.status(400).json({
+      res.status(409).json({
         success: false,
         detail: err.detail,
       });
@@ -101,7 +101,7 @@ export const ensureAuthenticated = (req, res, next) => {
   }
   jwt.verify(token, config.jwtSecret, (err, decoded) => {
     if (err) {
-      res.status(500).json({ detail: err.message });
+      res.status(401).json({ detail: err.message });
       return;
     }
     req.id = decoded.id;
