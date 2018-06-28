@@ -47,8 +47,6 @@ const newOrder = async (req, res, next) => {
       next();
     })
     .catch((err) => {
-      console.log(err);
-
       res.status(400).json({ detail: 'Product ID not valid', success: false });
     });
 };

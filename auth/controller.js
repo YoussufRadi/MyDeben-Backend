@@ -12,8 +12,6 @@ const userCreate = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      console.log(err);
-
       res.status(400).json({
         success: false,
         detail: err.detail,
@@ -25,7 +23,7 @@ const userVerify = (req, res, next) => {
   getUserByEmail(req.body.email)
     .then((user) => {
       if (!user) {
-        res.status(400).json({
+        res.status(401).json({
           detail: 'Invalid Username/Password',
           token: null,
           auth: false,
@@ -34,7 +32,7 @@ const userVerify = (req, res, next) => {
       }
       const passIsValid = bcrypt.compareSync(req.body.password, user.password);
       if (!passIsValid) {
-        res.status(400).json({
+        res.status(401).json({
           detail: 'Invalid Username/Password',
           token: null,
           auth: false,
@@ -46,7 +44,7 @@ const userVerify = (req, res, next) => {
       });
       next();
     })
-    .catch(err => res.status(400).json({ detail: err, auth: false, token: null }));
+    .catch(err => res.status(500).json({ detail: err, auth: false, token: null }));
 };
 
 const storeCreate = (req, res, next) => {
@@ -67,7 +65,7 @@ const storeVerify = (req, res, next) => {
   getStoreByEmail(req.body.email)
     .then((store) => {
       if (!store) {
-        res.status(400).json({
+        res.status(401).json({
           detail: 'Invalid Username/Password',
           token: null,
           auth: false,
@@ -76,7 +74,7 @@ const storeVerify = (req, res, next) => {
       }
       const passIsValid = bcrypt.compareSync(req.body.password, store.password);
       if (!passIsValid) {
-        res.status(400).json({
+        res.status(401).json({
           detail: 'Invalid Username/Password',
           token: null,
           auth: false,
@@ -89,7 +87,7 @@ const storeVerify = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      res.status(400).json({ detail: err, auth: false, token: null });
+      res.status(500).json({ detail: err, auth: false, token: null });
     });
 };
 

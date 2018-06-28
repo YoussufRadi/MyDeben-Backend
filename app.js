@@ -13,8 +13,6 @@ import store from './store/routes';
 
 dotenv.config();
 
-// console.log(process.env);
-
 const app = express();
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -28,7 +26,7 @@ function normalizePort(val) {
 
 // Swagger Setup
 const swaggerDocument = YAML.load('./swagger.yaml');
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,15 +35,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Routes
-app.use('/user', user);
-app.use('/auth', auth);
-app.use('/store', store);
+app.use('/api/user', user);
+app.use('/api/auth', auth);
+app.use('/api/store', store);
 
 app.use((req, res) => {
   res.status(404).json({ detail: "route doesn't exist" });
 });
 
 app.use((err, req, res) => {
+  console.log('pipeline not reached');
+
   if (err instanceof expressValidation.ValidationError) {
     res.status(err.status).json({ detail: err.message });
   } else {
