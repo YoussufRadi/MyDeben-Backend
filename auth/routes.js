@@ -4,7 +4,7 @@ import { userSignIn, userSignUp, storeSignIn, storeSignUp, forgetPassword } from
 const router = express.Router();
 
 router.post('/reset/:model', forgetPassword, (req, res) => {
-  res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
+  res.status(200).json({ success: true, detail: 'Mail for reset Sent Successfully' });
 });
 
 router.post('/user/signup', userSignUp, (req, res) => {

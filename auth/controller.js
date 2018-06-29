@@ -4,7 +4,13 @@ import jwt from 'jsonwebtoken';
 import validate from 'express-validation';
 import validation from './validation';
 import config from '../config';
-import { createUser, getUserByEmail, createStore, getStoreByEmail } from './model';
+import {
+  createUser,
+  getUserByEmail,
+  createStore,
+  getStoreByEmail,
+  createResetToken,
+} from './model';
 import { sendMail, resetMail } from './mailer';
 
 const userCreate = (req, res, next) => {
@@ -150,19 +156,44 @@ const findByEmail = (req, res, next) => {
   } else res.status(404).json({ detail: 'Model Not found', success: false });
 };
 
-const sendMailReset = (req, res, next) => {
-  sendMail(resetMail({ email: req.email, name: req.name }), (error, info) => {
+const generateResetToken = (req, res, next) => {
+  crypto.randomBytes(20, (err, buffer) => {
+    req.token = buffer.toString('hex');
+    console.log(req.token);
     next();
   });
-  // crypto.randomBytes(20, (err, buffer) => {
-  //   const token = buffer.toString('hex');
-  //   console.log(token);
-  //   next();
-  // });
+};
+
+const insertResetToken = (req, res, next) => {
+  createResetToken(req.email, req.params.model, req.token)
+    .then((email) => {
+      if (!email) {
+        res.status(400).json({
+          detail: 'Token cannot be generated',
+          success: false,
+        });
+        return;
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(500).json({ detail: err, success: false });
+    });
+};
+
+const sendMailReset = (req, res, next) => {
+  sendMail(resetMail({ email: req.email, name: req.name, token: req.token }), (err, info) => {
+    if (err) {
+      res.status(500).json({ detail: err, success: false });
+    } else {
+      console.log(`Email sent: ${info.response}`);
+    }
+    next();
+  });
 };
 
 export const userSignUp = [validate(validation.signUp), userCreate];
 export const userSignIn = [validate(validation.signIn), userVerify];
 export const storeSignUp = [validate(validation.signUp), storeCreate];
 export const storeSignIn = [validate(validation.signIn), storeVerify];
-export const forgetPassword = [findByEmail, sendMailReset];
+export const forgetPassword = [findByEmail, generateResetToken, insertResetToken, sendMailReset];

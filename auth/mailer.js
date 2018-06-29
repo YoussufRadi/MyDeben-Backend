@@ -1,12 +1,7 @@
 import nodemailer from 'nodemailer';
+import config from '../config';
 
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: 'deben.reset@gmail.com',
-    pass: 'test123.',
-  },
-});
+const transporter = nodemailer.createTransport(config.mailReset);
 
 export const resetMail = reciever => ({
   from: 'deben.reset@gmail.com',
@@ -23,7 +18,9 @@ export const resetMail = reciever => ({
           <body>
               <div>
                   <h3>Dear ${reciever.name},</h3>
-                  <p>You requested for a password reset, kindly use this <a href="{{url}}">link</a> to reset your password</p>
+                  <p>You requested for a password reset, kindly use this token <b>${
+                    reciever.token
+                  } </b> to reset your password</p>
                   <br>
                   <p>Cheers!</p>
               </div>
@@ -63,10 +60,5 @@ export const sucessMail = reciever => ({
 
 export const sendMail = (mailOptions, cb) =>
   transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(`Email sent: ${info.response}`);
-    }
     cb(error, info);
   });

@@ -27,3 +27,21 @@ export const getStoreByEmail = email =>
   knex('store')
     .where('email', email)
     .then(stores => stores[0]);
+
+export const createResetToken = (email, model, token) => {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  return knex('reset-token')
+    .where('email', email)
+    .del()
+    .then(() =>
+      knex('reset-token')
+        .insert({
+          email,
+          model,
+          token,
+          expires_at: date,
+        })
+        .returning('email'),
+    );
+};
