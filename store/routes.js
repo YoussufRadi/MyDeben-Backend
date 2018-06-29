@@ -14,6 +14,7 @@ import {
   viewCheckedInUsers,
   serveOrder,
   checkOut,
+  cancelOrder,
 } from './controller';
 
 const router = express.Router();
@@ -62,6 +63,10 @@ router.get('/order', viewOrders, (req, res) => res.status(200).json({ orders: re
 
 router.get('/order/serve/:id', serveOrder, (req, res) =>
   res.status(200).json({ detail: 'Order Served', success: true }),
+);
+
+router.get('/order/cancel/:id', cancelOrder, (req, res) =>
+  res.status(200).json({ detail: 'Order Cancelled', success: true }),
 );
 
 router.get('/order/current', viewCurrentOrders, (req, res) =>

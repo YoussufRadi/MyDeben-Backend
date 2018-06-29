@@ -645,6 +645,16 @@ paths:
       operationId: "storeCurrentOrders"
       produces:
       - "application/json"
+      parameters:
+      - name: "sort"
+        in: "query"
+        description: "Sort parameter to return sorted results could be 'user', 'category or 'date"
+        required: false
+        type: "string"
+        enum:
+        - "user"
+        - "category"
+        - "date"
       security:
         - ApiKeyAuth: [store]
       responses:
@@ -673,6 +683,16 @@ paths:
       operationId: "storeOrders"
       produces:
       - "application/json"
+      parameters:
+      - name: "sort"
+        in: "query"
+        description: "Sort parameter to return sorted results could be 'user', 'category or 'date"
+        required: false
+        type: "string"
+        enum:
+        - "user"
+        - "category"
+        - "date"
       security:
         - ApiKeyAuth: [store]
       responses:
@@ -696,8 +716,8 @@ paths:
     get:
       tags:
       - "Store"
-      summary: "Returns all orders made to the store"
-      description: "Store could see all the order history by all the users"
+      summary: "Serves a pending order"
+      description: "Store can serve a pending order to the user"
       operationId: "storeServeOrder"
       produces:
       - "application/json"
@@ -719,27 +739,28 @@ paths:
         401:
           description: "Token expired or Malformed"
         403:
-          description: "Permission Denied / Order already served / Old order"
+          description: "Permission Denied / Order already served / Order already cancelled / Old order"
 
-  /store/checkout:
+  /store/order/cancel/{orderId}:
     get:
       tags:
       - "Store"
-      summary: "Checks out user from a store"
-      operationId: "storeCheckOut"
+      summary: "Cancels a pending order"
+      description: "Store could cancel pending orders"
+      operationId: "storeCancelOrder"
       produces:
       - "application/json"
       parameters:
-      - name: "userId"
-        in: "query"
-        description: "User Id to check out"
+      - name: "orderId"
+        in: "path"
+        description: "Order Id to cancel"
         required: true
         type: "string"
       security:
         - ApiKeyAuth: [store]
       responses:
         200:
-          description: "User Checked Out Successfully"
+          description: "Order Cancelled"
           schema:
             $ref: "#/definitions/Success"
         400:
@@ -747,7 +768,7 @@ paths:
         401:
           description: "Token expired or Malformed"
         403:
-          description: "Permission Denied"
+          description: "Permission Denied / Order already served / Order already cancelled / Old order"
 
   /store/users:
     get:
@@ -783,6 +804,35 @@ paths:
           description: "Token expired or Malformed"
         403:
           description: "Permission Denied"
+
+  /store/checkout:
+    get:
+      tags:
+      - "Store"
+      summary: "Checks out user from a store"
+      operationId: "storeCheckOut"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: "User Id to check out"
+        required: true
+        type: "string"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "User Checked Out Successfully"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
 definitions:
   Success:
     type: "object"

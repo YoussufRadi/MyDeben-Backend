@@ -8,8 +8,7 @@ exports.up = function (knex, Promise) {
         .notNullable();
       table.string('name');
       table.string('password').notNullable();
-      table.timestamp('createdAt').defaultTo(knex.fn.now());
-      table.timestamp('updatedAt').defaultTo(knex.fn.now());
+      table.timestamps(false, true);
     }),
     knex.schema.createTable('user', (table) => {
       table.increments();
@@ -18,14 +17,15 @@ exports.up = function (knex, Promise) {
         .unique()
         .notNullable();
       table.string('name');
+      table.string('facebook_id');
+      table.string('gmail_id');
       table.string('password').notNullable();
       table.string('checkin_store_name');
       table
         .integer('checkin_store_id')
         .references('id')
         .inTable('store');
-      table.timestamp('createdAt').defaultTo(knex.fn.now());
-      table.timestamp('updatedAt').defaultTo(knex.fn.now());
+      table.timestamps(false, true);
     }),
     knex.schema.createTable('category', (table) => {
       table.increments();
@@ -63,6 +63,7 @@ exports.up = function (knex, Promise) {
       table.increments();
       table.boolean('checked_out').defaultTo(false);
       table.boolean('served').defaultTo(false);
+      table.boolean('cancelled').defaultTo(false);
       table.float('total_price').notNullable();
       table
         .integer('quantity')
@@ -83,6 +84,7 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('product')
         .notNullable();
+      table.timestamps(false, true);
     }),
   ]);
 };

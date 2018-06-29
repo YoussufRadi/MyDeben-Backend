@@ -103,12 +103,15 @@ export const retrieveAllOrders = store =>
       'product.picture',
       'product.description',
       'product.price',
+      'product.category_id',
       'order.total_price',
       'order.quantity',
       'order.total_price',
       'order.user_id',
       'order.checked_out',
       'order.served',
+      'order.cancelled',
+      'order.created_at',
     )
     .from('order')
     .innerJoin('product', 'order.product_id', 'product.id')
@@ -122,16 +125,19 @@ export const retrieveCurrentOrders = store =>
       'product.picture',
       'product.description',
       'product.price',
+      'product.category_id',
       'order.total_price',
       'order.quantity',
       'order.total_price',
       'order.user_id',
       'order.checked_out',
       'order.served',
+      'order.cancelled',
+      'order.created_at',
     )
     .from('order')
     .innerJoin('product', 'order.product_id', 'product.id')
-    .where({ 'order.store_id': store.id, served: false });
+    .where({ 'order.store_id': store.id, served: false, cancelled: false });
 
 export const retrieveCheckInUsers = store =>
   knex
@@ -150,6 +156,13 @@ export const setServeOrder = (orderId, storeId) =>
     .where({ id: orderId, store_id: storeId })
     .update({
       served: true,
+    });
+
+export const setCancelOrder = (orderId, storeId) =>
+  knex('order')
+    .where({ id: orderId, store_id: storeId })
+    .update({
+      cancelled: true,
     });
 
 export const setCheckOutOrder = (userId, storeId) =>

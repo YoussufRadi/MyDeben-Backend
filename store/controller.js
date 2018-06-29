@@ -20,6 +20,7 @@ import {
   getOrderById,
   setCheckOutOrder,
   setCheckOutUser,
+  setCancelOrder,
 } from './model';
 import { getUserById } from '../user/model';
 import { ensureAuthenticated } from '../auth/controller';
@@ -220,6 +221,13 @@ const getCurrentOrders = (req, res, next) => {
     });
 };
 
+const sortOrders = (req, res, next) => {
+  if (req.query.sort === 'date') req.orders.sort((a, b) => a.created_at - b.created_at);
+  if (req.query.sort === 'category') req.orders.sort((a, b) => a.category_id - b.category_id);
+  if (req.query.sort === 'user') req.orders.sort((a, b) => a.user_id - b.user_id);
+  next();
+};
+
 const getCheckedInUsers = (req, res, next) => {
   retrieveCheckInUsers(req.store)
     .then((users) => {
@@ -255,6 +263,13 @@ const checkOrder = (req, res, next) => {
         });
         return;
       }
+      if (order.cancelled) {
+        res.status(400).json({
+          detail: 'This is order is previously cancelled',
+          success: false,
+        });
+        return;
+      }
       if (order.store_id !== req.id) {
         res.status(403).json({
           detail: 'Permission Denied',
@@ -274,6 +289,16 @@ const checkOrder = (req, res, next) => {
 
 const orderServe = (req, res, next) => {
   setServeOrder(req.params.id, req.id)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const orderCancel = (req, res, next) => {
+  setCancelOrder(req.params.id, req.id)
     .then(() => {
       next();
     })
@@ -359,10 +384,11 @@ export const modifyProduct = [
   checkProduct,
   editProduct,
 ];
-export const viewOrders = [ensureAuthenticated, verfiyStore, getAllOrders];
-export const viewCurrentOrders = [ensureAuthenticated, verfiyStore, getCurrentOrders];
+export const viewOrders = [ensureAuthenticated, verfiyStore, getAllOrders, sortOrders];
+export const viewCurrentOrders = [ensureAuthenticated, verfiyStore, getCurrentOrders, sortOrders];
 export const viewCheckedInUsers = [ensureAuthenticated, verfiyStore, getCheckedInUsers];
 export const serveOrder = [ensureAuthenticated, verfiyStore, checkOrder, orderServe];
+export const cancelOrder = [ensureAuthenticated, verfiyStore, checkOrder, orderCancel];
 export const checkOut = [
   validate(validation.checkOut),
   ensureAuthenticated,
