@@ -73,7 +73,7 @@ paths:
       responses:
         200:
           description: "Successfully Signed Up"
-          scheme:
+          schema:
             $ref: "#/definitions/Success"
         400:
           description: "Required fields not satisfied"
@@ -137,7 +137,7 @@ paths:
       responses:
         200:
           description: "Successfully Signed Up"
-          scheme:
+          schema:
             $ref: "#/definitions/Success"
         400:
           description: "Required fields not satisfied"
@@ -145,6 +145,79 @@ paths:
           description: "Wrong Username or Password used"
         409:
           description: "Email entered not available - already registered -"
+
+  /auth/reset:
+    post:
+      tags:
+      - "Auth"
+      summary: "Resets password"
+      description: "Takes a token for reseting password and allows user to enter a new password"
+      operationId: "resetPassword"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Reset Token and new Password"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            token:
+              type: "string"
+            token:
+              password: "string"
+      responses:
+        200:
+          description: "Password reset successfully"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Required fields not satisfied"
+        403:
+          description: "Token expired"
+
+  /auth/forget/{model}:
+    post:
+      tags:
+      - "Auth"
+      summary: "Forget password"
+      description: "Issues a token for user to use in reseting password"
+      operationId: "forgetPassword"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Email to reset password"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+              format: "email"
+      - name: "model"
+        in: "path"
+        description: "Whether this is store or user email"
+        required: true
+        type: "string"
+        enum:
+        - "user"
+        - "store"
+      responses:
+        200:
+          description: "Mail for reset Sent Successfully"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Required fields not satisfied"
+        404:
+          description: "Model or email not found"
 
   /user/profile:
     get:
@@ -242,7 +315,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Checks user into a certain store with id and name"
+        description: "Takes order of a user to order"
         required: true
         schema:
           type: "object"
@@ -265,8 +338,8 @@ paths:
         - ApiKeyAuth: [user]
       responses:
         200:
-          description: "Checked In Successfully"
-          scheme:
+          description: "Ordered Successfully"
+          schema:
             $ref: "#/definitions/Success"
         400:
           description: "Wrong User token Used or store doesnot exist"
@@ -308,7 +381,7 @@ paths:
       responses:
         200:
           description: "Checked In Successfully"
-          scheme:
+          schema:
             $ref: "#/definitions/Success"
         400:
           description: "Wrong User token Used or Already checked_in"
@@ -466,7 +539,7 @@ paths:
       responses:
         200:
           description: "Catgory Added Successfully"
-          scheme:
+          schema:
             $ref: "#/definitions/Success"
         400:
           description: "Wrong User token Used or store doesnot exist"
@@ -615,7 +688,7 @@ paths:
       responses:
         200:
           description: "Product Added Successfully"
-          scheme:
+          schema:
             $ref: "#/definitions/Success"
         400:
           description: "Wrong Store token Used"

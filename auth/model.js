@@ -9,6 +9,11 @@ export const createUser = user =>
     })
     .returning('email');
 
+export const createUserWithService = service =>
+  knex('user')
+    .insert(service)
+    .returning('email');
+
 export const getUserByEmail = email =>
   knex('user')
     .where('email', email)
@@ -28,7 +33,7 @@ export const getStoreByEmail = email =>
     .where('email', email)
     .then(stores => stores[0]);
 
-export const createResetToken = (email, model, token) => {
+export const createResetToken = (email, name, model, token) => {
   const date = new Date();
   date.setDate(date.getDate() + 1);
   return knex('reset-token')
@@ -38,6 +43,7 @@ export const createResetToken = (email, model, token) => {
       knex('reset-token')
         .insert({
           email,
+          name,
           model,
           token,
           expires_at: date,
@@ -45,6 +51,11 @@ export const createResetToken = (email, model, token) => {
         .returning('email'),
     );
 };
+
+export const deleteToken = token =>
+  knex('reset-token')
+    .where('token', token)
+    .del();
 
 export const getTokenObject = token =>
   knex('reset-token')

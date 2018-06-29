@@ -12,12 +12,37 @@ import {
   createResetToken,
   getTokenObject,
   changePassword,
+  deleteToken,
+  createUserWithService,
 } from './model';
-import { sendMail, resetMail } from './mailer';
+import { sendMail, resetMail, sucessMail } from './mailer';
 
 const userCreate = (req, res, next) => {
   req.body.password = bcrypt.hashSync(req.body.password, 10);
   createUser(req.body)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(409).json({
+        success: false,
+        detail: err.detail,
+      });
+    });
+};
+
+const userCreateWithService = (req, res, next) => {
+  const value = req.params.service;
+  if (value !== 'gmail' && value !== 'facebook') {
+    res.status(404).json({
+      success: false,
+      detail: 'Service not found',
+    });
+    return;
+  }
+  const service = {};
+  service[req.params.service] = req.params.id;
+  createUserWithService(service)
     .then(() => {
       next();
     })
@@ -125,13 +150,14 @@ const findByEmail = (req, res, next) => {
     getStoreByEmail(req.body.email)
       .then((store) => {
         if (!store) {
-          res.status(401).json({
+          res.status(404).json({
             detail: 'Invalid Email',
             success: false,
           });
           return;
         }
         req.email = store.email;
+        req.name = store.name;
         req.id = store.id;
         req.name = store.name;
         next();
@@ -143,13 +169,14 @@ const findByEmail = (req, res, next) => {
     getUserByEmail(req.body.email)
       .then((user) => {
         if (!user) {
-          res.status(401).json({
+          res.status(404).json({
             detail: 'Invalid Email',
             success: false,
           });
           return;
         }
         req.email = user.email;
+        req.name = user.name;
         req.id = user.id;
         req.name = user.name;
         next();
@@ -161,13 +188,12 @@ const findByEmail = (req, res, next) => {
 const generateResetToken = (req, res, next) => {
   crypto.randomBytes(20, (err, buffer) => {
     req.token = buffer.toString('hex');
-    console.log(req.token);
     next();
   });
 };
 
 const insertResetToken = (req, res, next) => {
-  createResetToken(req.email, req.params.model, req.token)
+  createResetToken(req.email, req.name, req.params.model, req.token)
     .then((email) => {
       if (!email) {
         res.status(400).json({
@@ -220,6 +246,19 @@ const getModelFromToken = (req, res, next) => {
     });
 };
 
+const consumeToken = (req, res, next) => {
+  deleteToken(req.body.token)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({
+        success: false,
+        detail: err.detail,
+      });
+    });
+};
+
 const updatePassword = (req, res, next) => {
   req.body.password = bcrypt.hashSync(req.body.password, 10);
   changePassword(req.model.email, req.body.password, req.model.model)
@@ -227,14 +266,27 @@ const updatePassword = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      res.status(409).json({
+      res.status(400).json({
         success: false,
         detail: err.detail,
       });
     });
 };
 
+const sendMailSuccess = (req, res, next) => {
+  const props = { email: req.model.email, name: req.model.name };
+  sendMail(sucessMail(props), (err, info) => {
+    if (err) {
+      res.status(500).json({ detail: err, success: false });
+    } else {
+      console.log(`Email sent: ${info.response}`);
+      next();
+    }
+  });
+};
+
 export const userSignUp = [validate(validation.signUp), userCreate];
+export const userSignUpWithService = [validate(validation.signUp), userCreateWithService];
 export const userSignIn = [validate(validation.signIn), userVerify];
 export const storeSignUp = [validate(validation.signUp), storeCreate];
 export const storeSignIn = [validate(validation.signIn), storeVerify];
@@ -245,4 +297,10 @@ export const forgetPassword = [
   insertResetToken,
   sendMailReset,
 ];
-export const resetPassword = [validate(validation.reset), getModelFromToken, updatePassword];
+export const resetPassword = [
+  validate(validation.reset),
+  getModelFromToken,
+  consumeToken,
+  updatePassword,
+  sendMailSuccess,
+];

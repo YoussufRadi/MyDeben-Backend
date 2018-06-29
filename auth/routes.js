@@ -6,6 +6,7 @@ import {
   storeSignUp,
   forgetPassword,
   resetPassword,
+  userSignUpWithService,
 } from './controller';
 
 const router = express.Router();
@@ -19,6 +20,10 @@ router.post('/reset', resetPassword, (req, res) => {
 });
 
 router.post('/user/signup', userSignUp, (req, res) => {
+  res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
+});
+
+router.get('/user/signup/:service/:id', userSignUpWithService, (req, res) => {
   res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
 });
 

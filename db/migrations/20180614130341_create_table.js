@@ -12,14 +12,11 @@ exports.up = function (knex, Promise) {
     }),
     knex.schema.createTable('user', (table) => {
       table.increments();
-      table
-        .string('email')
-        .unique()
-        .notNullable();
+      table.string('facebook').unique();
+      table.string('gmail').unique();
+      table.string('email').unique();
       table.string('name');
-      table.string('facebook_id');
-      table.string('gmail_id');
-      table.string('password').notNullable();
+      table.string('password');
       table.string('checkin_store_name');
       table
         .integer('checkin_store_id')
@@ -30,6 +27,7 @@ exports.up = function (knex, Promise) {
     knex.schema.createTable('reset-token', (table) => {
       table.increments();
       table.string('email').notNullable();
+      table.string('name').notNullable();
       table.string('model').notNullable();
       table.string('token').notNullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
