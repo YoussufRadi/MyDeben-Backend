@@ -7,6 +7,11 @@ export default {
       store_id: Joi.number().required(),
     },
   },
+  viewProduct: {
+    query: {
+      categoryId: Joi.number().required(),
+    },
+  },
   makeOrder: {
     body: {
       store_id: Joi.number().required(),

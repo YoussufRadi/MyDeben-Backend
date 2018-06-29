@@ -2,6 +2,7 @@ import validate from 'express-validation';
 import validation from './validation';
 import { ensureAuthenticated } from '../auth/controller';
 import { getUserById, insertCheckIn, insertOrder, retrieveAllOrders, retrieveGems } from './model';
+import { retrieveStoreCategories, getCategoryById, retrieveCategoryProducts } from '../store/model';
 
 const verfiyUser = (req, res, next) => {
   if (req.model !== 'user') {
@@ -86,8 +87,70 @@ const getGems = (req, res, next) => {
       res.status(400).json({ detail: err.detail });
     });
 };
+
+const getStoreCategories = (req, res, next) => {
+  if (!req.user.checkin_store_id) {
+    res.status(400).json({ detail: 'User didnot checkin into store' });
+    return;
+  }
+  retrieveStoreCategories(req.user.checkin_store_id)
+    .then((categories) => {
+      req.categories = categories;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const getCategoryProducts = (req, res, next) => {
+  retrieveCategoryProducts(req.user.checkin_store_id, req.query.categoryId)
+    .then((products) => {
+      req.products = products;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const checkCategory = (req, res, next) => {
+  getCategoryById(req.query.categoryId)
+    .then((category) => {
+      if (!category) {
+        res.status(404).json({
+          detail: 'Category Id not found',
+          success: false,
+        });
+        return;
+      }
+      if (category.store_id !== req.user.checkin_store_id) {
+        res.status(403).json({
+          detail: 'Permission Denied',
+          success: false,
+        });
+        return;
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({
+        detail: err,
+        success: false,
+      });
+    });
+};
+
 export const userCheckIn = [validate(validation.checkIn), ensureAuthenticated, verfiyUser, checkIn];
 export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
 export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
 export const profile = [ensureAuthenticated, verfiyUser, getHistory, getProfile];
 export const discover = [ensureAuthenticated, verfiyUser, getGems];
+export const viewCategory = [ensureAuthenticated, verfiyUser, getStoreCategories];
+export const viewProduct = [
+  validate(validation.viewProduct),
+  ensureAuthenticated,
+  verfiyUser,
+  checkCategory,
+  getCategoryProducts,
+];

@@ -62,3 +62,14 @@ export const retrieveAllOrders = user =>
     .where({ 'order.store_id': user.checkin_store_id, user_id: user.id });
 
 export const retrieveGems = storeId => knex('product').where({ store_id: storeId, gem: true });
+
+export const retrieveStoreCategories = storeId =>
+  knex
+    .select('id', 'name', 'picture', 'description')
+    .table('category')
+    .where('store_id', storeId);
+
+export const getCategoryById = id =>
+  knex('category')
+    .where('id', id)
+    .then(categories => categories[0]);

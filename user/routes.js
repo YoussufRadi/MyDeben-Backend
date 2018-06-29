@@ -1,5 +1,13 @@
 import express from 'express';
-import { userCheckIn, addOrder, viewHistory, profile, discover } from './controller';
+import {
+  userCheckIn,
+  addOrder,
+  viewHistory,
+  profile,
+  discover,
+  viewCategory,
+  viewProduct,
+} from './controller';
 
 const router = express.Router();
 
@@ -43,5 +51,11 @@ router.get('/discover', discover, (req, res) => {
     gems: req.gems,
   });
 });
+
+router.get('/category', viewCategory, (req, res) =>
+  res.status(200).json({ categories: req.categories }),
+);
+
+router.get('/product', viewProduct, (req, res) => res.status(200).json({ products: req.products }));
 
 export default router;

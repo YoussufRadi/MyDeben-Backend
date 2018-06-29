@@ -29,10 +29,7 @@ exports.up = function (knex, Promise) {
     }),
     knex.schema.createTable('category', (table) => {
       table.increments();
-      table
-        .string('name')
-        .notNullable()
-        .unique();
+      table.string('name').notNullable();
       table.string('picture');
       table.string('description');
       table
@@ -40,6 +37,7 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('store')
         .notNullable();
+      table.unique(['name', 'store_id']);
     }),
     knex.schema.createTable('product', (table) => {
       table.increments();
@@ -58,6 +56,7 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('category')
         .notNullable();
+      table.unique(['name', 'store_id']);
     }),
     knex.schema.createTable('order', (table) => {
       table.increments();
