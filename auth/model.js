@@ -45,3 +45,13 @@ export const createResetToken = (email, model, token) => {
         .returning('email'),
     );
 };
+
+export const getTokenObject = token =>
+  knex('reset-token')
+    .where('token', token)
+    .then(model => model[0]);
+
+export const changePassword = (email, password, model) =>
+  knex(model)
+    .where('email', email)
+    .update({ password });

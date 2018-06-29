@@ -10,6 +10,8 @@ import {
   createStore,
   getStoreByEmail,
   createResetToken,
+  getTokenObject,
+  changePassword,
 } from './model';
 import { sendMail, resetMail } from './mailer';
 
@@ -169,7 +171,7 @@ const insertResetToken = (req, res, next) => {
     .then((email) => {
       if (!email) {
         res.status(400).json({
-          detail: 'Token cannot be generated',
+          detail: 'Token cannot be inserted for this mail',
           success: false,
         });
         return;
@@ -182,18 +184,65 @@ const insertResetToken = (req, res, next) => {
 };
 
 const sendMailReset = (req, res, next) => {
-  sendMail(resetMail({ email: req.email, name: req.name, token: req.token }), (err, info) => {
+  const props = { email: req.email, name: req.name, token: req.token };
+  sendMail(resetMail(props), (err, info) => {
     if (err) {
       res.status(500).json({ detail: err, success: false });
     } else {
       console.log(`Email sent: ${info.response}`);
+      next();
     }
-    next();
   });
+};
+
+const getModelFromToken = (req, res, next) => {
+  getTokenObject(req.body.token)
+    .then((model) => {
+      if (!model) {
+        res.status(404).json({
+          detail: 'Token is not correct',
+          success: false,
+        });
+        return;
+      }
+      if (model.expires_at < new Date()) {
+        res.status(403).json({
+          detail: 'Token expired',
+          success: false,
+        });
+        return;
+      }
+      req.model = model;
+      next();
+    })
+    .catch((err) => {
+      res.status(500).json({ detail: err, success: false });
+    });
+};
+
+const updatePassword = (req, res, next) => {
+  req.body.password = bcrypt.hashSync(req.body.password, 10);
+  changePassword(req.model.email, req.body.password, req.model.model)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(409).json({
+        success: false,
+        detail: err.detail,
+      });
+    });
 };
 
 export const userSignUp = [validate(validation.signUp), userCreate];
 export const userSignIn = [validate(validation.signIn), userVerify];
 export const storeSignUp = [validate(validation.signUp), storeCreate];
 export const storeSignIn = [validate(validation.signIn), storeVerify];
-export const forgetPassword = [findByEmail, generateResetToken, insertResetToken, sendMailReset];
+export const forgetPassword = [
+  validate(validation.forget),
+  findByEmail,
+  generateResetToken,
+  insertResetToken,
+  sendMailReset,
+];
+export const resetPassword = [validate(validation.reset), getModelFromToken, updatePassword];

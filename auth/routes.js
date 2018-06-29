@@ -1,10 +1,21 @@
 import express from 'express';
-import { userSignIn, userSignUp, storeSignIn, storeSignUp, forgetPassword } from './controller';
+import {
+  userSignIn,
+  userSignUp,
+  storeSignIn,
+  storeSignUp,
+  forgetPassword,
+  resetPassword,
+} from './controller';
 
 const router = express.Router();
 
-router.post('/reset/:model', forgetPassword, (req, res) => {
+router.post('/forget/:model', forgetPassword, (req, res) => {
   res.status(200).json({ success: true, detail: 'Mail for reset Sent Successfully' });
+});
+
+router.post('/reset', resetPassword, (req, res) => {
+  res.status(200).json({ success: true, detail: 'Password reset successfully' });
 });
 
 router.post('/user/signup', userSignUp, (req, res) => {
