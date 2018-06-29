@@ -1,4 +1,5 @@
 import validate from 'express-validation';
+import nodemailer from 'nodemailer';
 import validation from './validation';
 import { ensureAuthenticated } from '../auth/controller';
 import { getUserById, insertCheckIn, insertOrder, retrieveAllOrders, retrieveGems } from './model';
@@ -104,6 +105,10 @@ const getStoreCategories = (req, res, next) => {
 };
 
 const getCategoryProducts = (req, res, next) => {
+  if (!req.user.checkin_store_id) {
+    res.status(400).json({ detail: 'User didnot checkin into store' });
+    return;
+  }
   retrieveCategoryProducts(req.user.checkin_store_id, req.query.categoryId)
     .then((products) => {
       req.products = products;

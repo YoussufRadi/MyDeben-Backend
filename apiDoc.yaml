@@ -319,6 +319,70 @@ paths:
         404:
           description: "Store doesnot exist"
 
+  /user/category:
+    get:
+      tags:
+      - "User"
+      summary: "Retrives all store categories for current checked in store"
+      description: "Shows all available categories for the store user is currently checked in with all details"
+      operationId: "userShowCategories"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "Array of categories"
+          schema:
+            type: "object"
+            properties:
+              categories:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Category"
+        400:
+          description: "Wrong User token Used / User didnot previously check in"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /user/product:
+    get:
+      tags:
+      - "User"
+      summary: "Retrives all store category products for current checked in store"
+      description: "Shows all available category products for the store user is currently checked in with all details"
+      operationId: "userShowProducts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "categoryId"
+        in: "query"
+        description: "Category Id to retreive products inside"
+        required: true
+        type: "string"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "Array of Products"
+          schema:
+            type: "object"
+            properties:
+              products:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Product"
+        400:
+          description: "Wrong User token Used / User didnot previously check in"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Category Id not found"
+
   /store/generate/code:
     get:
       tags:

@@ -1,7 +1,11 @@
 import express from 'express';
-import { userSignIn, userSignUp, storeSignIn, storeSignUp } from './controller';
+import { userSignIn, userSignUp, storeSignIn, storeSignUp, forgetPassword } from './controller';
 
 const router = express.Router();
+
+router.post('/reset/:model', forgetPassword, (req, res) => {
+  res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
+});
 
 router.post('/user/signup', userSignUp, (req, res) => {
   res.status(200).json({ success: true, detail: 'Sign Up Successfully' });

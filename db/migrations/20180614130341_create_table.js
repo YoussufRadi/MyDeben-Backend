@@ -27,6 +27,15 @@ exports.up = function (knex, Promise) {
         .inTable('store');
       table.timestamps(false, true);
     }),
+    knex.schema.createTable('reset-token', (table) => {
+      table.increments();
+      table.string('email').notNullable();
+      table.string('model').notNullable();
+      table.string('token').notNullable();
+      table.timestamp('created_at').defaultTo(knex.fn.now());
+      table.timestamp('expires_at');
+      table.unique(['email', 'model']);
+    }),
     knex.schema.createTable('category', (table) => {
       table.increments();
       table.string('name').notNullable();
@@ -95,5 +104,6 @@ exports.down = function (knex, Promise) {
     knex.schema.dropTable('category'),
     knex.schema.dropTable('user'),
     knex.schema.dropTable('store'),
+    knex.schema.dropTable('reset-token'),
   ]);
 };
