@@ -19,7 +19,9 @@ import {
   setServeOrder,
   getOrderById,
   setCheckOutOrder,
+  setCheckOutUser,
 } from './model';
+import { getUserById } from '../user/model';
 import { ensureAuthenticated } from '../auth/controller';
 
 const verfiyStore = (req, res, next) => {
@@ -79,11 +81,12 @@ const getStoreCategories = (req, res, next) => {
 };
 
 const checkCategory = (req, res, next) => {
-  getCategoryById(req.params.id)
+  const categoryId = req.params.id || req.query.categoryId || req.body.category_id;
+  getCategoryById(categoryId)
     .then((category) => {
       if (!category) {
-        res.status(400).json({
-          detail: "Category Id doesn't exist",
+        res.status(404).json({
+          detail: 'Category Id not found',
           success: false,
         });
         return;
@@ -99,7 +102,7 @@ const checkCategory = (req, res, next) => {
     })
     .catch((err) => {
       res.status(400).json({
-        detail: err.detail,
+        detail: err,
         success: false,
       });
     });
@@ -137,7 +140,7 @@ const newProduct = (req, res, next) => {
 };
 
 const getCategoryProducts = (req, res, next) => {
-  retrieveCategoryProducts(req.id, req.query.category)
+  retrieveCategoryProducts(req.id, req.query.categoryId)
     .then((products) => {
       req.products = products;
       next();
@@ -151,7 +154,7 @@ const checkProduct = (req, res, next) => {
   getProductById(req.params.id)
     .then((product) => {
       if (!product) {
-        res.status(400).json({
+        res.status(404).json({
           detail: "Product Id doesn't exist",
           success: false,
         });
@@ -232,8 +235,22 @@ const checkOrder = (req, res, next) => {
   getOrderById(req.params.id)
     .then((order) => {
       if (!order) {
-        res.status(400).json({
+        res.status(404).json({
           detail: "Order Id doesn't exist",
+          success: false,
+        });
+        return;
+      }
+      if (order.checked_out) {
+        res.status(400).json({
+          detail: 'This is an old order',
+          success: false,
+        });
+        return;
+      }
+      if (order.served) {
+        res.status(400).json({
+          detail: 'This is order is previously served',
           success: false,
         });
         return;
@@ -265,8 +282,32 @@ const orderServe = (req, res, next) => {
     });
 };
 
+const userConfirmCheckedIn = (req, res, next) => {
+  getUserById(req.query.userId)
+    .then((user) => {
+      if (user.checkin_store_id !== req.id) {
+        res.status(403).json({ detail: 'Permission Denied', success: false });
+        return;
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(404).json({ detail: err.detail, success: false });
+    });
+};
+
 const userCheckOut = (req, res, next) => {
-  setCheckOutOrder(req.params.id, req.id)
+  setCheckOutUser(req.query.userId)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const userOrdersCheckOut = (req, res, next) => {
+  setCheckOutOrder(req.query.userId, req.id)
     .then(() => {
       next();
     })
@@ -294,18 +335,39 @@ export const addProduct = [
   validate(validation.addProduct),
   ensureAuthenticated,
   verfiyStore,
+  checkCategory,
   newProduct,
 ];
 export const viewProduct = [
   validate(validation.viewProduct),
   ensureAuthenticated,
   verfiyStore,
+  checkCategory,
   getCategoryProducts,
 ];
-export const deleteProduct = [ensureAuthenticated, verfiyStore, checkProduct, removeProduct];
-export const modifyProduct = [ensureAuthenticated, verfiyStore, checkProduct, editProduct];
+export const deleteProduct = [
+  ensureAuthenticated,
+  verfiyStore,
+  checkCategory,
+  checkProduct,
+  removeProduct,
+];
+export const modifyProduct = [
+  ensureAuthenticated,
+  verfiyStore,
+  checkCategory,
+  checkProduct,
+  editProduct,
+];
 export const viewOrders = [ensureAuthenticated, verfiyStore, getAllOrders];
 export const viewCurrentOrders = [ensureAuthenticated, verfiyStore, getCurrentOrders];
 export const viewCheckedInUsers = [ensureAuthenticated, verfiyStore, getCheckedInUsers];
 export const serveOrder = [ensureAuthenticated, verfiyStore, checkOrder, orderServe];
-export const checkOut = [ensureAuthenticated, verfiyStore, userCheckOut];
+export const checkOut = [
+  validate(validation.checkOut),
+  ensureAuthenticated,
+  verfiyStore,
+  userConfirmCheckedIn,
+  userCheckOut,
+  userOrdersCheckOut,
+];

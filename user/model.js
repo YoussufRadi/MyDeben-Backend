@@ -33,6 +33,7 @@ export const insertOrder = async (orders, userId, storeId) => {
       store_id: storeId,
       product_id: order.product_id,
       user_id: userId,
+      served: false,
     });
   });
   return knex('order')

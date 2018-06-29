@@ -1,0 +1,928 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: myDeben
+  description: "API Documentation"
+  contact:
+    email: "youssuf.radi@deemalab.com"
+host: "localhost:3000"
+basePath: "/api"
+tags:
+- name: "Auth"
+  description: "Used for user to retrieve access token needed for further identification"
+- name: "User"
+  description: "All APIs related to the user"
+- name: "Store"
+  description: "All APIs related to the web admin"
+schemes:
+- "http"
+paths:
+  
+  /auth/user/signin:
+    post:
+      tags:
+      - "Auth"
+      summary: "User Sign In"
+      description: "Returns a token for user to be used in further identification"
+      operationId: "userSignIn"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User email and password for sign in"
+        required: true
+        schema:
+          $ref: "#/definitions/SignIn"
+      responses:
+        200:
+          description: "Successfully Logged In"
+          type: "object"
+          properties:
+            detail:
+              type: "string" 
+            auth:
+              type: "boolean"
+            token:
+              type: "string"
+        400:
+          description: "Bad request or Required fields not stated"
+        401:
+          description: "Wrong Username or Password used"
+        
+  /auth/user/signup:
+    post:
+      tags:
+      - "Auth"
+      summary: "User Sign Up"
+      description: "Creates a new user in the database"
+      operationId: "userSignUp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User email, name and password to register"
+        required: true
+        schema:
+          $ref: "#/definitions/SignUp"
+      responses:
+        200:
+          description: "Successfully Signed Up"
+          scheme:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Required fields not satisfied"
+        401:
+          description: "Wrong Username or Password used"
+        409:
+          description: "Email entered not available - already registered -"
+
+  /auth/store/signin:
+    post:
+      tags:
+      - "Auth"
+      summary: "Store Sign In"
+      description: "Returns a token for store to be used in further identification"
+      operationId: "storeSignIn"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User email and password for sign in"
+        required: true
+        schema:
+          $ref: "#/definitions/SignIn"
+      responses:
+        200:
+          description: "Successfully Logged In"
+          type: "object"
+          properties:
+            detail:
+              type: "string" 
+            auth:
+              type: "boolean"
+            token:
+              type: "string"
+        400:
+          description: "Bad request or Required fields not stated"
+        401:
+          description: "Wrong Username or Password used"
+
+  /auth/store/signup:
+    post:
+      tags:
+      - "Auth"
+      summary: "Store Sign Up"
+      description: "Creates a new store in the database"
+      operationId: "storeSignUp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Store email, name and password to register"
+        required: true
+        schema:
+          $ref: "#/definitions/SignUp"
+      responses:
+        200:
+          description: "Successfully Signed Up"
+          scheme:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Required fields not satisfied"
+        401:
+          description: "Wrong Username or Password used"
+        409:
+          description: "Email entered not available - already registered -"
+
+  /user/profile:
+    get:
+      tags:
+      - "User"
+      summary: "Returns all user details and orders"
+      description: "View Full details:
+                    - Email
+                    - Name
+                    - Checked In store
+                    - Orders Total Amount
+                    - Order History"
+      operationId: "userProfile"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "Full Profile"
+          schema:
+            $ref: "#/definitions/Profile"
+        400:
+          description: "Wrong User token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /user/discover:
+    get:
+      tags:
+      - "User"
+      summary: "Returns all gems provided by the store"
+      description: "User can see the main services or recommendations by hotel admin"
+      operationId: "userDiscover"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "All gems"
+          schema:
+            type: "object"
+            properties:
+              gems:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Gem"
+        400:
+          description: "Wrong User token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /user/order:
+    get:
+      tags:
+      - "User"
+      summary: "Returns all orders made by the user"
+      description: "User coulde see history of my orders and track current status "
+      operationId: "userOrder"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "All orders"
+          schema:
+            type: "object"
+            properties:
+              oredrs:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Order"
+        400:
+          description: "Wrong User token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+    post:
+      tags:
+      - "User"
+      summary: "User Making Orders"
+      description: "User can pick a certain category then menu item and order"
+      operationId: "userAddOrder"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Checks user into a certain store with id and name"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "store_id"
+          - "order"
+          properties:
+            store_id:
+              type: "integer"
+            order:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  quantity:
+                    type: "integer"
+                  product_id:
+                    type: "integer"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "Checked In Successfully"
+          scheme:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong User token Used or store doesnot exist"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /user/checkin:
+    post:
+      tags:
+      - "User"
+      summary: "User Check in to store"
+      description: "Travellers can scan QR Code once he arrives at hotel so that 
+                he can checkin the hotel services on Deben
+                Output from the QR code is sent to the server for checkin"
+      operationId: "checkIn"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Checks user into a certain store with id and name"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "store_name"
+          - "store_id"
+          properties:
+            store_name:
+              type: "string"
+            store_id:
+              type: "integer"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "Checked In Successfully"
+          scheme:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong User token Used or Already checked_in"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Store doesnot exist"
+
+  /store/generate/code:
+    get:
+      tags:
+      - "Store"
+      summary: "Returns QR code as a PNG for hotel admin representing his store"
+      description: "A hotel manager generates QR code for users to scan"
+      operationId: "storeQR"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "QR image string base64"
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "string"
+                format: "base64"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /store/category:
+    get:
+      tags:
+      - "Store"
+      summary: "Retrives all store categories"
+      description: "Shows all available categories for the store with all details"
+      operationId: "storeShowCategories"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "Array of categories"
+          schema:
+            type: "object"
+            properties:
+              categories:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Category"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+    post:
+      tags:
+      - "Store"
+      summary: "Adds a category to a store"
+      description: "Adds a new category to the store with all it's details"
+      operationId: "storeAddCategories"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Required Fields for a category"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          properties:
+            name:
+              type: "string" 
+            picture:
+              type: "string"
+            description:
+              type: "string"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "Catgory Added Successfully"
+          scheme:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong User token Used or store doesnot exist"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /store/category/{categoryId}:
+    patch:
+      tags:
+      - "Store"
+      summary: "Edits category details in a store"
+      description: "Edits category in the store with all it's details"
+      operationId: "storeEditCategories"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "categoryId"
+        in: "path"
+        description: "Category id to edit"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Optional Fields to edit a category"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            name:
+              type: "string" 
+            picture:
+              type: "string"
+            description:
+              type: "string"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        204:
+          description: "Catgory Edited Successfully"
+        400:
+          description: "Wrong Store token Used "
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Product doesnot exist"
+    delete:
+      tags:
+      - "Store"
+      summary: "Deletes a category in a store"
+      operationId: "storeDeleteCategories"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "categoryId"
+        in: "path"
+        description: "Category id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        204:
+          description: "Catgory Deleted Successfully"
+        400:
+          description: "Wrong Store token Used "
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Product doesnot exist"
+
+  /store/product:
+    get:
+      tags:
+      - "Store"
+      summary: "Retrives all store category products"
+      description: "Shows all available category products for the store with all details"
+      operationId: "storeShowProducts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "categoryId"
+        in: "query"
+        description: "Category Id to retreive products inside"
+        required: true
+        type: "string"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "Array of Products"
+          schema:
+            type: "object"
+            properties:
+              products:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Product"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Category Id not found"
+    post:
+      tags:
+      - "Store"
+      summary: "Adds a Product to a Category in the store"
+      description: "Adds a new product to the category in the store with all it's details"
+      operationId: "storeAddProducts"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Required Fields for a Product"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          - "price"
+          - "category_id"          
+          properties:
+            name:
+              type: "string" 
+            picture:
+              type: "string"
+            description:
+              type: "string"
+            price:
+              type: "integer"
+            gem:
+              type: "boolean"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "Product Added Successfully"
+          scheme:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Category Id not found"
+
+  /store/product/{productId}:
+    patch:
+      tags:
+      - "Store"
+      summary: "Edits Product details in a store"
+      description: "Edits Product in the store with all it's details"
+      operationId: "storeEditProducts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Product id to edit"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Required Fields for a Product"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            name:
+              type: "string" 
+            picture:
+              type: "string"
+            description:
+              type: "string"
+            price:
+              type: "integer"
+            gem:
+              type: "boolean"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        204:
+          description: "Product Edited Successfully"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Product doesnot exist"
+    delete:
+      tags:
+      - "Store"
+      summary: "Deletes a Product in a store"
+      operationId: "storeDeleteProduct"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Product id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        204:
+          description: "Product Deleted Successfully"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Product doesnot exist"
+
+  /store/order/current:
+    get:
+      tags:
+      - "Store"
+      summary: "Returns current orders Only made to the store"
+      description: "Store could see current orders that need to be servered to users or cancel them"
+      operationId: "storeCurrentOrders"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "Current orders"
+          schema:
+            type: "object"
+            properties:
+              oredrs:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Order"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /store/order:
+    get:
+      tags:
+      - "Store"
+      summary: "Returns all orders made to the store"
+      description: "Store could see all the order history by all the users"
+      operationId: "storeOrders"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "All orders"
+          schema:
+            type: "object"
+            properties:
+              oredrs:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Order"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /store/order/serve/{orderId}:
+    get:
+      tags:
+      - "Store"
+      summary: "Returns all orders made to the store"
+      description: "Store could see all the order history by all the users"
+      operationId: "storeServeOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "orderId"
+        in: "path"
+        description: "Order Id to serve"
+        required: true
+        type: "string"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "Order Served"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied / Order already served / Old order"
+
+  /store/checkout:
+    get:
+      tags:
+      - "Store"
+      summary: "Checks out user from a store"
+      operationId: "storeCheckOut"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: "User Id to check out"
+        required: true
+        type: "string"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "User Checked Out Successfully"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /store/users:
+    get:
+      tags:
+      - "Store"
+      summary: "Returns list of Checked in users in stores"
+      operationId: "storeCheckedInUsers"
+      produces:
+      - "application/json"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "Users Checked In Store"
+          schema:
+          type: "object"
+          properties:
+            users:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  id:
+                    type: "integer"
+                  email:
+                    type: "string" 
+                    format: "email"
+                  name:
+                    type: "string"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+definitions:
+  Success:
+    type: "object"
+    properties:
+      detail:
+        type: "string" 
+      success:
+        type: "boolean"
+  SignIn:
+    type: "object"
+    required:
+    - "email"
+    - "password"
+    properties:
+      email:
+        type: "string"
+        format: "email"
+      password:
+        type: "string"
+        format: "password"
+  SignUp:
+    type: "object"
+    required:
+    - "email"
+    - "name"
+    - "password"
+    properties:
+      email:
+        type: "string"
+        format: "email"
+      name:
+        type: "string"
+      password:
+        type: "string"
+        format: "password"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      email:
+        type: "string" 
+        format: "email"
+      name:
+        type: "string"
+      checkin_store_name:
+        type: "string" 
+      checkin_store_id:
+        type: "integer"
+  Order:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string" 
+      picture:
+        type: "string"
+      description:
+        type: "string"
+      price:
+        type: "integer"
+      total_price:
+        type: "integer"
+      quantity:
+        type: "integer"
+      store_id:
+        type: "integer"
+      user_id:
+        type: "integer"
+      checked_out:
+        type: "boolean"
+      served:
+        type: "boolean"
+  Profile:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/User"
+      total:
+        type: "integer"
+      orders:
+        type: "array"
+        items:
+          $ref: "#/definitions/Order"
+  Gem:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string" 
+      price:
+        type: "integer"
+      gem:
+        type: "boolean"
+      picture:
+        type: "string"
+      store_id:
+        type: "integer"
+      description:
+        type: "string"
+      category_id:
+        type: "integer"
+      quantity:
+        type: "integer"
+      user_id:
+        type: "integer"
+      checked_out:
+        type: "boolean"
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string" 
+      picture:
+        type: "string"
+      description:
+        type: "string"
+  Product:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string" 
+      picture:
+        type: "string"
+      description:
+        type: "string"
+      price:
+        type: "integer"
+      gem:
+        type: "boolean"
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: "apiKey"
+    in: header
+    name: "x-access-token"
+                

@@ -8,7 +8,12 @@ export default {
   },
   viewProduct: {
     query: {
-      category: Joi.number().required(),
+      categoryId: Joi.number().required(),
+    },
+  },
+  checkOut: {
+    query: {
+      userId: Joi.number().required(),
     },
   },
   addProduct: {

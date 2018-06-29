@@ -28,12 +28,16 @@ const verfiyUser = (req, res, next) => {
 };
 
 const checkIn = (req, res, next) => {
+  if (req.user.checkin_store_id) {
+    res.status(400).json({ detail: 'Must Checkout from store first', success: false });
+    return;
+  }
   insertCheckIn(req.user, req.body)
     .then(() => {
       next();
     })
     .catch((err) => {
-      res.status(400).json({ detail: err.detail, success: false });
+      res.status(404).json({ detail: err.detail, success: false });
     });
 };
 

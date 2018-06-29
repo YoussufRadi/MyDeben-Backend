@@ -29,7 +29,7 @@ const options = {
   customCss: '.swagger-ui .topbar { display: none }',
 };
 // Swagger Setup
-const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load('./apiDoc.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 app.use(bodyParser.json());

@@ -158,3 +158,11 @@ export const setCheckOutOrder = (userId, storeId) =>
     .update({
       checked_out: true,
     });
+
+export const setCheckOutUser = userId =>
+  knex('user')
+    .where({ id: userId })
+    .update({
+      checkin_store_id: null,
+      checkin_store_name: null,
+    });
