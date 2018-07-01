@@ -9,6 +9,16 @@ export const generateQR = async (text, cb) => {
   }
 };
 
+export const insertRefToken = (store_id, name, ref, token) =>
+  knex('checkin-token')
+    .insert({
+      store_id,
+      name,
+      ref,
+      token,
+    })
+    .returning('id');
+
 export const getStoreById = id =>
   knex('store')
     .where('id', id)

@@ -2,7 +2,16 @@ import validate from 'express-validation';
 import nodemailer from 'nodemailer';
 import validation from './validation';
 import { ensureAuthenticated } from '../auth/controller';
-import { getUserById, insertCheckIn, insertOrder, retrieveAllOrders, retrieveGems } from './model';
+import {
+  getUserById,
+  insertCheckIn,
+  insertOrder,
+  retrieveAllOrders,
+  retrieveGems,
+  getRefByToken,
+  insertRefCheckIn,
+  delToken,
+} from './model';
 import { retrieveStoreCategories, getCategoryById, retrieveCategoryProducts } from '../store/model';
 
 const verfiyUser = (req, res, next) => {
@@ -15,7 +24,7 @@ const verfiyUser = (req, res, next) => {
   getUserById(req.id)
     .then((user) => {
       if (!user) {
-        res.status(400).json({ detail: 'User doesnot exist' });
+        res.status(404).json({ detail: 'User doesnot exist' });
         return;
       }
       req.user = user;
@@ -39,7 +48,45 @@ const checkIn = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      res.status(404).json({ detail: err.detail, success: false });
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const getToken = (req, res, next) => {
+  if (req.user.checkin_store_id) {
+    res.status(400).json({ detail: 'Must Checkout from store first', success: false });
+    return;
+  }
+  getRefByToken(req.params.token)
+    .then((ref) => {
+      if (!ref) {
+        res.status(404).json({ detail: 'Token doesnot exist' });
+        return;
+      }
+      console.log(ref);
+
+      req.ref = ref;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const consumeToken = (req, res, next) => {
+  insertRefCheckIn(req.user, req.ref.store_id, req.ref.name, req.ref.ref)
+    .then(() => {
+      delToken(req.ref.id)
+        .then(() => {
+          delToken();
+          next();
+        })
+        .catch((err) => {
+          res.status(400).json({ detail: err.detail, success: false });
+        });
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
     });
 };
 
@@ -147,6 +194,7 @@ const checkCategory = (req, res, next) => {
 };
 
 export const userCheckIn = [validate(validation.checkIn), ensureAuthenticated, verfiyUser, checkIn];
+export const userCheckInToken = [ensureAuthenticated, verfiyUser, getToken, consumeToken];
 export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
 export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
 export const profile = [ensureAuthenticated, verfiyUser, getHistory, getProfile];

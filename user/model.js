@@ -7,6 +7,27 @@ export const getUserById = id =>
     .where('id', id)
     .then(users => users[0]);
 
+export const getRefByToken = token =>
+  knex('checkin-token')
+    .where('token', token)
+    .then(refs => refs[0]);
+
+export const insertRefCheckIn = (user, store_id, store_name, ref) =>
+  knex('user')
+    .where({ id: user.id })
+    .update({
+      checkin_store_id: store_id,
+      checkin_store_name: store_name,
+      checkin_store_ref: ref,
+    });
+
+export const delToken = id =>
+  knex('checkin-token')
+    .del()
+    .where({
+      id,
+    });
+
 export const insertCheckIn = (user, store) =>
   knex('user')
     .where({ id: user.id })

@@ -1,4 +1,5 @@
 import validate from 'express-validation';
+import crypto from 'crypto';
 import validation from './validation';
 import {
   generateQR,
@@ -21,6 +22,7 @@ import {
   setCheckOutOrder,
   setCheckOutUser,
   setCancelOrder,
+  insertRefToken,
 } from './model';
 import { getUserById } from '../user/model';
 import { ensureAuthenticated } from '../auth/controller';
@@ -47,7 +49,7 @@ const verfiyStore = (req, res, next) => {
 };
 
 const qRcode = (req, res, next) => {
-  generateQR(`{id: ${req.id}, name: ${req.store.name}}`, (err, code) => {
+  generateQR(`{"store_id": "${req.id}", "store_name": "${req.store.name}}"`, (err, code) => {
     if (err) {
       res.status(400).json({
         detail: err,
@@ -56,6 +58,21 @@ const qRcode = (req, res, next) => {
     }
     req.code = code;
     next();
+  });
+};
+
+const refToken = (req, res, next) => {
+  crypto.randomBytes(4, (err, buffer) => {
+    req.token = buffer.toString('hex');
+    insertRefToken(req.id, req.store.name, req.params.ref, req.token)
+      .then((id) => {
+        console.log(id);
+
+        next();
+      })
+      .catch((err) => {
+        res.status(400).json({ detail: err.detail, success: false });
+      });
   });
 };
 
@@ -342,6 +359,7 @@ const userOrdersCheckOut = (req, res, next) => {
 };
 
 export const generateQRcode = [ensureAuthenticated, verfiyStore, qRcode];
+export const generateToken = [ensureAuthenticated, verfiyStore, refToken];
 export const addCategory = [
   validate(validation.addCategory),
   ensureAuthenticated,

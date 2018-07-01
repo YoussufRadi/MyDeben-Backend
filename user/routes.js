@@ -7,18 +7,19 @@ import {
   discover,
   viewCategory,
   viewProduct,
+  userCheckInToken,
 } from './controller';
 
 const router = express.Router();
 
-router.get('/', userCheckIn, (req, res) => {
+router.post('/checkin/', userCheckIn, (req, res) => {
   res.status(200).json({
     success: true,
-    detail: 'Get Working',
+    detail: 'Checked In Successfully',
   });
 });
 
-router.post('/checkin', userCheckIn, (req, res) => {
+router.get('/checkin/:token', userCheckInToken, (req, res) => {
   res.status(200).json({
     success: true,
     detail: 'Checked In Successfully',

@@ -32,10 +32,12 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "User email and password for sign in"
+        description: "2 Scenarios are allowed:
+                      - User email and password for sign in
+                      - service and id to sign in with"
         required: true
         schema:
-          $ref: "#/definitions/SignIn"
+          $ref: "#/definitions/SignInService"
       responses:
         200:
           description: "Successfully Logged In"
@@ -51,6 +53,8 @@ paths:
           description: "Bad request or Required fields not stated"
         401:
           description: "Wrong Username or Password used"
+        404:
+          description: "Service not found"
         
   /auth/user/signup:
     post:
@@ -70,6 +74,43 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/SignUp"
+      responses:
+        200:
+          description: "Successfully Signed Up"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Required fields not satisfied"
+        401:
+          description: "Wrong Username or Password used"
+        409:
+          description: "Email entered not available - already registered -"
+        
+  /auth/user/signup/{service}/{id}:
+    get:
+      tags:
+      - "Auth"
+      summary: "User Sign Up using an external service"
+      description: "Creates a new user in the database using an external service"
+      operationId: "userSignUpService"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "service"
+        description: "Service type used"
+        required: true
+        type: "string"
+        enum:
+          - 'facebook'
+          - 'gmail'
+      - name: "id"
+        in: "path"
+        description: "User id to register"
+        required: true
+        type: "string"
       responses:
         200:
           description: "Successfully Signed Up"
@@ -352,11 +393,11 @@ paths:
     post:
       tags:
       - "User"
-      summary: "User Check in to store"
+      summary: "User Check in to store using QR"
       description: "Travellers can scan QR Code once he arrives at hotel so that 
                 he can checkin the hotel services on Deben
                 Output from the QR code is sent to the server for checkin"
-      operationId: "checkIn"
+      operationId: "checkInQR"
       consumes:
       - "application/json"
       produces:
@@ -391,6 +432,41 @@ paths:
           description: "Permission Denied"
         404:
           description: "Store doesnot exist"
+
+
+  /user/checkin/{token}:
+    get:
+      tags:
+      - "User"
+      summary: "User Check in to store using code"
+      description: "Travellers can enter code given by hotel manager once he arrives at hotel so that 
+                he can checkin the hotel services on Deben"
+      operationId: "checkInCode"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "token"
+        description: "Token given by hotel admin for user to checkin"
+        required: true
+        type: "string"
+      security:
+        - ApiKeyAuth: [user]
+      responses:
+        200:
+          description: "Checked In Successfully"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong User token Used or Already checked_in"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Token doesnot exist"
 
   /user/category:
     get:
@@ -465,6 +541,39 @@ paths:
       operationId: "storeQR"
       produces:
       - "application/json"
+      security:
+        - ApiKeyAuth: [store]
+      responses:
+        200:
+          description: "QR image string base64"
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "string"
+                format: "base64"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /store/generate/token/{ref}:
+    get:
+      tags:
+      - "Store"
+      summary: "Returns Token for hotel admin representing his store and a reference number"
+      description: "A hotel manager generates token for users to enter and check in with"
+      operationId: "storeToken"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "ref"
+        description: "Refrence number to track user with latter"
+        required: true
+        type: "string"
       security:
         - ApiKeyAuth: [store]
       responses:
@@ -990,6 +1099,27 @@ definitions:
       password:
         type: "string"
         format: "password"
+  SignInService:
+    type: "object"
+    required:
+    - "email"
+    - "password"
+    - "id"
+    - "service"
+    properties:
+      email:
+        type: "string"
+        format: "email"
+      password:
+        type: "string"
+        format: "password"
+      id:
+        type: "string"
+      service:
+        type: "string"
+        enum:
+          - 'facebook'
+          - 'gmail'
   SignUp:
     type: "object"
     required:

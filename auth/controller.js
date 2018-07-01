@@ -55,7 +55,26 @@ const userCreateWithService = (req, res, next) => {
 };
 
 const userVerify = (req, res, next) => {
-  getUserByEmail(req.body.email)
+  const service = {};
+  if (req.body.email) service.email = req.body.email;
+  else if (req.body.service) {
+    const value = req.body.service;
+    if (value !== 'gmail' && value !== 'facebook') {
+      res.status(404).json({
+        success: false,
+        detail: 'Service not found',
+      });
+      return;
+    }
+    service[req.body.service] = req.body.id;
+  } else {
+    res.status(400).json({
+      success: false,
+      detail: 'Fields didnot meet either sign in with service or normal sign in',
+    });
+    return;
+  }
+  getUserByEmail(service)
     .then((user) => {
       if (!user) {
         res.status(401).json({
@@ -65,21 +84,25 @@ const userVerify = (req, res, next) => {
         });
         return;
       }
-      const passIsValid = bcrypt.compareSync(req.body.password, user.password);
-      if (!passIsValid) {
-        res.status(401).json({
-          detail: 'Invalid Username/Password',
-          token: null,
-          auth: false,
-        });
-        return;
+      if (req.body.email) {
+        const passIsValid = bcrypt.compareSync(req.body.password, user.password);
+        if (!passIsValid) {
+          res.status(401).json({
+            detail: 'Invalid Username/Password',
+            token: null,
+            auth: false,
+          });
+          return;
+        }
       }
       req.token = jwt.sign({ id: user.id, model: 'user' }, config.jwtSecret, {
         expiresIn: config.jwtExpiry,
       });
       next();
     })
-    .catch(err => res.status(500).json({ detail: err, auth: false, token: null }));
+    .catch((err) => {
+      res.status(500).json({ detail: err, auth: false, token: null });
+    });
 };
 
 const storeCreate = (req, res, next) => {
@@ -286,7 +309,7 @@ const sendMailSuccess = (req, res, next) => {
 };
 
 export const userSignUp = [validate(validation.signUp), userCreate];
-export const userSignUpWithService = [validate(validation.signUp), userCreateWithService];
+export const userSignUpWithService = [userCreateWithService];
 export const userSignIn = [validate(validation.signIn), userVerify];
 export const storeSignUp = [validate(validation.signUp), storeCreate];
 export const storeSignIn = [validate(validation.signIn), storeVerify];

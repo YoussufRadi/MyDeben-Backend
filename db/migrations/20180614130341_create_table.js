@@ -18,6 +18,7 @@ exports.up = function (knex, Promise) {
       table.string('name');
       table.string('password');
       table.string('checkin_store_name');
+      table.string('checkin_store_ref');
       table
         .integer('checkin_store_id')
         .references('id')
@@ -33,6 +34,18 @@ exports.up = function (knex, Promise) {
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('expires_at');
       table.unique(['email', 'model']);
+    }),
+    knex.schema.createTable('checkin-token', (table) => {
+      table.increments();
+      table
+        .integer('store_id')
+        .references('id')
+        .inTable('store')
+        .notNullable();
+      table.string('ref').notNullable();
+      table.string('token').notNullable();
+      table.string('name').notNullable();
+      table.unique(['ref', 'store_id']);
     }),
     knex.schema.createTable('category', (table) => {
       table.increments();
@@ -101,6 +114,7 @@ exports.down = function (knex, Promise) {
     knex.schema.dropTable('product'),
     knex.schema.dropTable('category'),
     knex.schema.dropTable('user'),
+    knex.schema.dropTable('checkin-token'),
     knex.schema.dropTable('store'),
     knex.schema.dropTable('reset-token'),
   ]);

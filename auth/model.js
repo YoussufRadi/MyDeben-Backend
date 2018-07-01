@@ -14,9 +14,9 @@ export const createUserWithService = service =>
     .insert(service)
     .returning('email');
 
-export const getUserByEmail = email =>
+export const getUserByEmail = service =>
   knex('user')
-    .where('email', email)
+    .where(service)
     .then(users => users[0]);
 
 export const createStore = store =>
