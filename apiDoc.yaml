@@ -208,8 +208,8 @@ paths:
           properties:
             token:
               type: "string"
-            token:
-              password: "string"
+            password:
+              string: "string"
       responses:
         200:
           description: "Password reset successfully"
@@ -219,6 +219,8 @@ paths:
           description: "Required fields not satisfied"
         403:
           description: "Token expired"
+        404:
+          description: "Token is not correct"
 
   /auth/forget/{model}:
     post:
@@ -338,7 +340,7 @@ paths:
                 items:
                   $ref: "#/definitions/Order"
         400:
-          description: "Wrong User token Used"
+          description: "Wrong User token Used or Product ID not valid"
         401:
           description: "Token expired or Malformed"
         403:
@@ -578,13 +580,12 @@ paths:
         - ApiKeyAuth: [store]
       responses:
         200:
-          description: "QR image string base64"
+          description: "Token for user to check in"
           schema:
             type: "object"
             properties:
-              code:
+              token:
                 type: "string"
-                format: "base64"
         400:
           description: "Wrong Store token Used"
         401:

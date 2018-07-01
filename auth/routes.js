@@ -20,11 +20,19 @@ router.post('/reset', resetPassword, (req, res) => {
 });
 
 router.post('/user/signup', userSignUp, (req, res) => {
-  res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
+  res.status(200).json({
+    success: true,
+    detail: 'Sign Up Successfully',
+    token: req.token,
+  });
 });
 
 router.get('/user/signup/:service/:id', userSignUpWithService, (req, res) => {
-  res.status(200).json({ success: true, detail: 'Sign Up Successfully' });
+  res.status(200).json({
+    success: true,
+    detail: 'Sign Up Successfully',
+    token: req.token,
+  });
 });
 
 router.post('/user/signin', userSignIn, (req, res) => {

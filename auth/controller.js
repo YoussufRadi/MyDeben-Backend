@@ -18,9 +18,11 @@ import {
 import { sendMail, resetMail, sucessMail } from './mailer';
 
 const userCreate = (req, res, next) => {
+  const password = req.body.password;
   req.body.password = bcrypt.hashSync(req.body.password, 10);
   createUser(req.body)
     .then(() => {
+      req.body.password = password;
       next();
     })
     .catch((err) => {
@@ -44,6 +46,8 @@ const userCreateWithService = (req, res, next) => {
   service[req.params.service] = req.params.id;
   createUserWithService(service)
     .then(() => {
+      req.body.service = req.params.service;
+      req.body.id = req.params.id;
       next();
     })
     .catch((err) => {
@@ -74,6 +78,8 @@ const userVerify = (req, res, next) => {
     });
     return;
   }
+  console.log(service);
+
   getUserByEmail(service)
     .then((user) => {
       if (!user) {
@@ -308,8 +314,8 @@ const sendMailSuccess = (req, res, next) => {
   });
 };
 
-export const userSignUp = [validate(validation.signUp), userCreate];
-export const userSignUpWithService = [userCreateWithService];
+export const userSignUp = [validate(validation.signUp), userCreate, userVerify];
+export const userSignUpWithService = [userCreateWithService, userVerify];
 export const userSignIn = [validate(validation.signIn), userVerify];
 export const storeSignUp = [validate(validation.signUp), storeCreate];
 export const storeSignIn = [validate(validation.signIn), storeVerify];
