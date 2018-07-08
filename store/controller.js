@@ -83,8 +83,6 @@ const refToken = (req, res, next) => {
         next();
       })
       .catch((err) => {
-        console.log(err);
-
         res.status(400).json({ detail: err.detail, success: false });
       });
   });
@@ -124,16 +122,12 @@ const getStoreServices = (req, res, next) => {
 };
 
 const getStoreCategories = (req, res, next) => {
-  console.log(req.id, req.query.providerId);
-
   retrieveStoreCategories(req.id, req.query.providerId)
     .then((categories) => {
       req.categories = categories;
       next();
     })
     .catch((err) => {
-      console.log(err);
-
       res.status(400).json({ detail: err.detail });
     });
 };

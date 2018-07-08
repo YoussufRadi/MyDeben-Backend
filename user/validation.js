@@ -18,6 +18,11 @@ export default {
       categoryId: Joi.number().required(),
     },
   },
+  search: {
+    query: {
+      keyword: Joi.string().required(),
+    },
+  },
   makeOrder: {
     body: {
       store_id: Joi.number().required(),

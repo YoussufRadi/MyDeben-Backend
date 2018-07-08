@@ -9,6 +9,7 @@ import {
   viewProduct,
   userCheckInToken,
   viewService,
+  search,
 } from './controller';
 
 const router = express.Router();
@@ -53,6 +54,8 @@ router.get('/discover', discover, (req, res) => {
     gems: req.gems,
   });
 });
+
+router.get('/search', search, (req, res) => res.status(200).json({ results: req.results }));
 
 router.get('/service', viewService, (req, res) => res.status(200).json({ services: req.services }));
 

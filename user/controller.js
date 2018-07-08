@@ -12,6 +12,7 @@ import {
   insertRefCheckIn,
   delToken,
   retrieveStoreServices,
+  getSearchResutlts,
 } from './model';
 import {
   retrieveStoreCategories,
@@ -69,8 +70,6 @@ const getToken = (req, res, next) => {
         res.status(404).json({ detail: 'Token doesnot exist' });
         return;
       }
-      console.log(ref);
-
       req.ref = ref;
       next();
     })
@@ -80,8 +79,6 @@ const getToken = (req, res, next) => {
 };
 
 const consumeToken = (req, res, next) => {
-  console.log(req.ref);
-
   insertRefCheckIn(req.user, req.ref.store_id, req.ref.name, req.ref.ref, req.ref.checkout_date)
     .then(() => {
       delToken(req.ref.id)
@@ -166,8 +163,6 @@ const getStoreServices = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      console.log(err);
-
       res.status(400).json({ detail: err.detail });
     });
 };
@@ -256,6 +251,20 @@ const groupServices = (req, res, next) => {
   next();
 };
 
+const viewSearchResults = (req, res, next) => {
+  if (!req.user.checkin_store_id) {
+    res.status(400).json({ detail: 'User didnot checkin into store' });
+    return;
+  }
+  getSearchResutlts(req.query.keyword, req.user.checkin_store_id)
+    .then((results) => {
+      req.results = results;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
 export const userCheckIn = [validate(validation.checkIn), ensureAuthenticated, verfiyUser, checkIn];
 export const userCheckInToken = [ensureAuthenticated, verfiyUser, getToken, consumeToken];
 export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
@@ -263,6 +272,12 @@ export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
 export const profile = [ensureAuthenticated, verfiyUser, getHistory, getProfile];
 export const discover = [ensureAuthenticated, verfiyUser, getGems];
 export const viewService = [ensureAuthenticated, verfiyUser, getStoreServices, groupServices];
+export const search = [
+  validate(validation.search),
+  ensureAuthenticated,
+  verfiyUser,
+  viewSearchResults,
+];
 export const viewCategory = [
   validate(validation.viewCategory),
   ensureAuthenticated,

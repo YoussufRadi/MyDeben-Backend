@@ -103,3 +103,8 @@ export const retrieveStoreServices = storeId =>
     .from('service')
     .leftJoin('provider', 'provider.service_id', 'service.id')
     .where('service.store_id', storeId);
+
+export const getSearchResutlts = (keyword, storeId) =>
+  knex('product')
+    .where('name', 'like', `${keyword}%`)
+    .andWhere('store_id', storeId);

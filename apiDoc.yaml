@@ -290,6 +290,57 @@ paths:
         403:
           description: "Permission Denied"
 
+  /user/search:
+    get:
+      tags:
+      - "User"
+      summary: "Returns all results starting with provided keywors"
+      description: "Allows user to search for Items in store"
+      operationId: "userSearch"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "keyword"
+        in: "query"
+        description: "Keyword to search with"
+        required: true
+        type: "string"
+      security:
+        - x-access-token: [user]
+      responses:
+        200:
+          description: "Full Profile"
+          schema:
+            type: "object"
+            properties:
+              results:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "number"
+                    name:
+                      type: "string"
+                    price:
+                      type: "number"
+                    gem:
+                      type: "boolean"
+                    picture:
+                      type: "string"
+                    store_id:
+                      type: "number"
+                    description:
+                      type: "string"
+                    category_id:
+                      type: "number"
+        400:
+          description: "Wrong User token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
   /user/discover:
     get:
       tags:
