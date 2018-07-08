@@ -9,13 +9,14 @@ export const generateQR = async (text, cb) => {
   }
 };
 
-export const insertRefToken = (store_id, name, ref, token) =>
+export const insertRefToken = (store_id, name, ref, token, checkout_date) =>
   knex('checkin-token')
     .insert({
       store_id,
       name,
       ref,
       token,
+      checkout_date,
     })
     .returning('id');
 
@@ -221,7 +222,7 @@ export const retrieveCurrentOrders = store =>
 
 export const retrieveCheckInUsers = store =>
   knex
-    .select('id', 'name', 'email')
+    .select('id', 'name', 'email', 'facebook', 'gmail', 'checkout_date')
     .table('user')
     .where('checkin_store_id', store.id)
     .then(users => users);
@@ -258,4 +259,6 @@ export const setCheckOutUser = userId =>
     .update({
       checkin_store_id: null,
       checkin_store_name: null,
+      checkin_store_ref: null,
+      checkout_date: null,
     });

@@ -28,13 +28,13 @@ import {
 
 const router = express.Router();
 
-router.get('/generate/code', generateQRcode, (req, res) =>
+router.get('/generate/code/:date', generateQRcode, (req, res) =>
   res.status(200).json({
     code: req.code,
   }),
 );
 
-router.get('/generate/token/:ref', generateToken, (req, res) =>
+router.get('/generate/token/:ref/:date', generateToken, (req, res) =>
   res.status(200).json({
     token: req.token,
   }),

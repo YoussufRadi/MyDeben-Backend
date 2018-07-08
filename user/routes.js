@@ -8,6 +8,7 @@ import {
   viewCategory,
   viewProduct,
   userCheckInToken,
+  viewService,
 } from './controller';
 
 const router = express.Router();
@@ -52,6 +53,8 @@ router.get('/discover', discover, (req, res) => {
     gems: req.gems,
   });
 });
+
+router.get('/service', viewService, (req, res) => res.status(200).json({ services: req.services }));
 
 router.get('/category', viewCategory, (req, res) =>
   res.status(200).json({ categories: req.categories }),

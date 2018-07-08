@@ -414,11 +414,14 @@ paths:
           required:
           - "store_name"
           - "store_id"
+          - "checkout_date"
           properties:
             store_name:
               type: "string"
             store_id:
               type: "integer"
+            checkout_date:
+              type: "date"
       security:
         - x-access-token: [user]
       responses:
@@ -470,6 +473,40 @@ paths:
         404:
           description: "Token doesnot exist"
 
+  /user/service:
+    get:
+      tags:
+      - "User"
+      summary: "Retrives all store services with their corresponding providers for current checked in store"
+      description: "Shows all available services with their corresponding providers for the store user is currently checked in with all details"
+      operationId: "userShowServicesAndProviders"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "group"
+        in: "query"
+        description: "Grouping field to group fields with"
+        required: false
+        type: "string"
+      security:
+        - x-access-token: [user]
+      responses:
+        200:
+          description: "Array of Services and Providers"
+          schema:
+            type: "object"
+            properties:
+              categories:
+                type: "array"
+                items:
+                  $ref: "#/definitions/ServiceAndProvider"
+        400:
+          description: "Wrong User token Used / User didnot previously check in"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
   /user/category:
     get:
       tags:
@@ -479,6 +516,12 @@ paths:
       operationId: "userShowCategories"
       produces:
       - "application/json"
+      parameters:
+      - name: "providerId"
+        in: "query"
+        description: "Provider Id to retreive categories inside"
+        required: true
+        type: "string"
       security:
         - x-access-token: [user]
       responses:
@@ -497,6 +540,8 @@ paths:
           description: "Token expired or Malformed"
         403:
           description: "Permission Denied"
+        404:
+          description: "Provider ID not found"
 
   /user/product:
     get:
@@ -534,7 +579,7 @@ paths:
         404:
           description: "Category Id not found"
 
-  /store/generate/code:
+  /store/generate/code/{date}:
     get:
       tags:
       - "Store"
@@ -543,6 +588,12 @@ paths:
       operationId: "storeQR"
       produces:
       - "application/json"
+      parameters:
+      - in: "path"
+        name: "date"
+        description: "Checkout Date of the user"
+        required: true
+        type: "date"
       security:
         - x-access-token: [store]
       responses:
@@ -561,7 +612,7 @@ paths:
         403:
           description: "Permission Denied"
 
-  /store/generate/token/{ref}:
+  /store/generate/token/{ref}/{date}:
     get:
       tags:
       - "Store"
@@ -576,6 +627,11 @@ paths:
         description: "Refrence number to track user with latter"
         required: true
         type: "string"
+      - in: "path"
+        name: "date"
+        description: "Checkout Date of the user"
+        required: true
+        type: "date"
       security:
         - x-access-token: [store]
       responses:
@@ -593,6 +649,282 @@ paths:
         403:
           description: "Permission Denied"
 
+  /store/service:
+    get:
+      tags:
+      - "Store"
+      summary: "Retrives all store services"
+      description: "Shows all available services for the store with all details"
+      operationId: "storeShowServices"
+      produces:
+      - "application/json"
+      security:
+        - x-access-token: [store]
+      responses:
+        200:
+          description: "Array of services"
+          schema:
+            type: "object"
+            properties:
+              services:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Service"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+    post:
+      tags:
+      - "Store"
+      summary: "Adds a service to a store"
+      description: "Adds a new service to the store with all it's details"
+      operationId: "storeAddServices"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Required Fields for a services"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          properties:
+            name:
+              type: "string" 
+      security:
+        - x-access-token: [store]
+      responses:
+        200:
+          description: "Service Added Successfully"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong User token Used or store doesnot exist"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+  /store/service/{serviceId}:
+    patch:
+      tags:
+      - "Store"
+      summary: "Edits service details in a store"
+      description: "Edits service in the store with all it's details"
+      operationId: "storeEditServices"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service id to edit"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Optional Fields to edit a service"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            name:
+              type: "string" 
+            picture:
+              type: "string"
+            description:
+              type: "string"
+      security:
+        - x-access-token: [store]
+      responses:
+        204:
+          description: "Service Edited Successfully"
+        400:
+          description: "Wrong Store token Used "
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Service doesnot exist"
+    delete:
+      tags:
+      - "Store"
+      summary: "Deletes a service in a store"
+      operationId: "storeDeleteServices"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      security:
+        - x-access-token: [store]
+      responses:
+        204:
+          description: "Service Deleted Successfully"
+        400:
+          description: "Wrong Store token Used "
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Service doesnot exist"
+
+  /store/provider:
+    get:
+      tags:
+      - "Store"
+      summary: "Retrives all store service providers"
+      description: "Shows all available service providers for the store with all details"
+      operationId: "storeShowProviderss"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "query"
+        description: "Service Id to retreive providers inside"
+        required: true
+        type: "string"
+      security:
+        - x-access-token: [store]
+      responses:
+        200:
+          description: "Array of Providers"
+          schema:
+            type: "object"
+            properties:
+              providers:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Provider"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Provider Id not found"
+    post:
+      tags:
+      - "Store"
+      summary: "Adds a Provider to a Service in the store"
+      description: "Adds a new Provider to the service in the store with all it's details"
+      operationId: "storeAddProviders"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Required Fields for a Provider"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          - "price"
+          - "service_id"          
+          properties:
+            name:
+              type: "string" 
+            picture:
+              type: "string"
+            service_id:
+              type: "integer"
+      security:
+        - x-access-token: [store]
+      responses:
+        200:
+          description: "Provider Added Successfully"
+          schema:
+            $ref: "#/definitions/Success"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Service Id not found"
+
+  /store/provider/{providerId}:
+    patch:
+      tags:
+      - "Store"
+      summary: "Edits Provider details in a store"
+      description: "Edits Provider in the store with all it's details"
+      operationId: "storeEditProviders"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "Provider id to edit"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Required Fields for a Provider"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            name:
+              type: "string" 
+            picture:
+              type: "string"
+      security:
+        - x-access-token: [store]
+      responses:
+        204:
+          description: "Provider Edited Successfully"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Provider doesnot exist"
+    delete:
+      tags:
+      - "Store"
+      summary: "Deletes a Provider in a store"
+      operationId: "storeDeleteProvider"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "Provider id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      security:
+        - x-access-token: [store]
+      responses:
+        204:
+          description: "Provider Deleted Successfully"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "Provider doesnot exist"
+
   /store/category:
     get:
       tags:
@@ -602,6 +934,12 @@ paths:
       operationId: "storeShowCategories"
       produces:
       - "application/json"
+      parameters:
+      - name: "providerId"
+        in: "query"
+        description: "Provider Id to retreive categories inside"
+        required: true
+        type: "string"
       security:
         - x-access-token: [store]
       responses:
@@ -637,6 +975,7 @@ paths:
           type: "object"
           required:
           - "name"
+          - "provider_id"
           properties:
             name:
               type: "string" 
@@ -644,6 +983,8 @@ paths:
               type: "string"
             description:
               type: "string"
+            provider_id:
+              type: "number"
       security:
         - x-access-token: [store]
       responses:
@@ -699,7 +1040,7 @@ paths:
         403:
           description: "Permission Denied"
         404:
-          description: "Product doesnot exist"
+          description: "Category doesnot exist"
     delete:
       tags:
       - "Store"
@@ -726,7 +1067,7 @@ paths:
         403:
           description: "Permission Denied"
         404:
-          description: "Product doesnot exist"
+          description: "Category doesnot exist"
 
   /store/product:
     get:
@@ -1222,6 +1563,43 @@ definitions:
         type: "integer"
       checked_out:
         type: "boolean"
+  Service:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string" 
+  ServiceAndProvider:
+    type: "object"
+    properties:
+      services:
+        type: "object"
+        properties:
+          ${GROUPING_PARAMETER}:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                service_id:
+                  type: "number"
+                service_name:
+                  type: "string"
+                provider_id:
+                  type: "number"
+                provide_name:
+                  type: "string"
+                provider_picture:
+                  type: "string" 
+  Provider:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string" 
+      picture:
+        type: "string"
   Category:
     type: "object"
     properties:

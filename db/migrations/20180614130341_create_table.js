@@ -19,6 +19,7 @@ exports.up = function (knex, Promise) {
       table.string('password');
       table.string('checkin_store_name');
       table.string('checkin_store_ref');
+      table.date('checkout_date');
       table
         .integer('checkin_store_id')
         .references('id')
@@ -45,6 +46,7 @@ exports.up = function (knex, Promise) {
       table.string('ref').notNullable();
       table.string('token').notNullable();
       table.string('name').notNullable();
+      table.string('checkout_date').notNullable();
       table.unique(['ref', 'store_id']);
     }),
     knex.schema.createTable('service', (table) => {

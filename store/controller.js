@@ -59,28 +59,32 @@ const verfiyStore = (req, res, next) => {
 };
 
 const qRcode = (req, res, next) => {
-  generateQR(`{"store_id": "${req.id}", "store_name": "${req.store.name}}"`, (err, code) => {
-    if (err) {
-      res.status(400).json({
-        detail: err,
-      });
-      return;
-    }
-    req.code = code;
-    next();
-  });
+  generateQR(
+    `{"store_id": "${req.id}", "store_name": "${req.store.name}",
+    "checkout_date":"${req.params.date}"}`,
+    (err, code) => {
+      if (err) {
+        res.status(400).json({
+          detail: err,
+        });
+        return;
+      }
+      req.code = code;
+      next();
+    },
+  );
 };
 
 const refToken = (req, res, next) => {
   crypto.randomBytes(4, (err, buffer) => {
     req.token = buffer.toString('hex');
-    insertRefToken(req.id, req.store.name, req.params.ref, req.token)
+    insertRefToken(req.id, req.store.name, req.params.ref, req.token, req.params.date)
       .then((id) => {
-        console.log(id);
-
         next();
       })
       .catch((err) => {
+        console.log(err);
+
         res.status(400).json({ detail: err.detail, success: false });
       });
   });

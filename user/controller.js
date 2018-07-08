@@ -1,6 +1,6 @@
 import validate from 'express-validation';
-import nodemailer from 'nodemailer';
 import validation from './validation';
+import utilities from '../utilities';
 import { ensureAuthenticated } from '../auth/controller';
 import {
   getUserById,
@@ -11,8 +11,14 @@ import {
   getRefByToken,
   insertRefCheckIn,
   delToken,
+  retrieveStoreServices,
 } from './model';
-import { retrieveStoreCategories, getCategoryById, retrieveCategoryProducts } from '../store/model';
+import {
+  retrieveStoreCategories,
+  getCategoryById,
+  retrieveCategoryProducts,
+  getProviderById,
+} from '../store/model';
 
 const verfiyUser = (req, res, next) => {
   if (req.model !== 'user') {
@@ -74,7 +80,9 @@ const getToken = (req, res, next) => {
 };
 
 const consumeToken = (req, res, next) => {
-  insertRefCheckIn(req.user, req.ref.store_id, req.ref.name, req.ref.ref)
+  console.log(req.ref);
+
+  insertRefCheckIn(req.user, req.ref.store_id, req.ref.name, req.ref.ref, req.ref.checkout_date)
     .then(() => {
       delToken(req.ref.id)
         .then(() => {
@@ -137,11 +145,7 @@ const getGems = (req, res, next) => {
 };
 
 const getStoreCategories = (req, res, next) => {
-  if (!req.user.checkin_store_id) {
-    res.status(400).json({ detail: 'User didnot checkin into store' });
-    return;
-  }
-  retrieveStoreCategories(req.user.checkin_store_id)
+  retrieveStoreCategories(req.user.checkin_store_id, req.query.providerId)
     .then((categories) => {
       req.categories = categories;
       next();
@@ -151,11 +155,24 @@ const getStoreCategories = (req, res, next) => {
     });
 };
 
-const getCategoryProducts = (req, res, next) => {
+const getStoreServices = (req, res, next) => {
   if (!req.user.checkin_store_id) {
     res.status(400).json({ detail: 'User didnot checkin into store' });
     return;
   }
+  retrieveStoreServices(req.user.checkin_store_id)
+    .then((services) => {
+      req.services = services;
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const getCategoryProducts = (req, res, next) => {
   retrieveCategoryProducts(req.user.checkin_store_id, req.query.categoryId)
     .then((products) => {
       req.products = products;
@@ -163,6 +180,37 @@ const getCategoryProducts = (req, res, next) => {
     })
     .catch((err) => {
       res.status(400).json({ detail: err.detail });
+    });
+};
+
+const checkProvider = (req, res, next) => {
+  getProviderById(req.query.providerId)
+    .then((provider) => {
+      if (!provider) {
+        res.status(404).json({
+          detail: 'Provider Id not found',
+          success: false,
+        });
+        return;
+      }
+      if (!req.user.checkin_store_id) {
+        res.status(400).json({ detail: 'User didnot checkin into store' });
+        return;
+      }
+      if (provider.store_id !== req.user.checkin_store_id) {
+        res.status(403).json({
+          detail: 'Permission Denied',
+          success: false,
+        });
+        return;
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({
+        detail: err,
+        success: false,
+      });
     });
 };
 
@@ -174,6 +222,10 @@ const checkCategory = (req, res, next) => {
           detail: 'Category Id not found',
           success: false,
         });
+        return;
+      }
+      if (!req.user.checkin_store_id) {
+        res.status(400).json({ detail: 'User didnot checkin into store' });
         return;
       }
       if (category.store_id !== req.user.checkin_store_id) {
@@ -193,13 +245,31 @@ const checkCategory = (req, res, next) => {
     });
 };
 
+const groupServices = (req, res, next) => {
+  if (req.query.group) req.services = utilities.groupBy(req.services, req.query.group);
+  if (req.services.undefined) {
+    res.status(400).json({
+      detail: 'Grouping Parameter Invalid',
+    });
+    return;
+  }
+  next();
+};
+
 export const userCheckIn = [validate(validation.checkIn), ensureAuthenticated, verfiyUser, checkIn];
 export const userCheckInToken = [ensureAuthenticated, verfiyUser, getToken, consumeToken];
 export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
 export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
 export const profile = [ensureAuthenticated, verfiyUser, getHistory, getProfile];
 export const discover = [ensureAuthenticated, verfiyUser, getGems];
-export const viewCategory = [ensureAuthenticated, verfiyUser, getStoreCategories];
+export const viewService = [ensureAuthenticated, verfiyUser, getStoreServices, groupServices];
+export const viewCategory = [
+  validate(validation.viewCategory),
+  ensureAuthenticated,
+  verfiyUser,
+  checkProvider,
+  getStoreCategories,
+];
 export const viewProduct = [
   validate(validation.viewProduct),
   ensureAuthenticated,

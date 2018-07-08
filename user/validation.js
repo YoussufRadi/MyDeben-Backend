@@ -5,6 +5,12 @@ export default {
     body: {
       store_name: Joi.string().required(),
       store_id: Joi.number().required(),
+      checkout_date: Joi.date().required(),
+    },
+  },
+  viewCategory: {
+    query: {
+      providerId: Joi.number().required(),
     },
   },
   viewProduct: {

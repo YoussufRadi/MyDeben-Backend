@@ -1,5 +1,5 @@
 import knex from '../knex';
-
+import utilities from '../utilities';
 export const retrieveAll = () => knex.select('id', 'name', 'email').table('user');
 
 export const getUserById = id =>
@@ -12,13 +12,14 @@ export const getRefByToken = token =>
     .where('token', token)
     .then(refs => refs[0]);
 
-export const insertRefCheckIn = (user, store_id, store_name, ref) =>
+export const insertRefCheckIn = (user, store_id, store_name, ref, checkout_date) =>
   knex('user')
     .where({ id: user.id })
     .update({
       checkin_store_id: store_id,
       checkin_store_name: store_name,
       checkin_store_ref: ref,
+      checkout_date,
     });
 
 export const delToken = id =>
@@ -34,17 +35,12 @@ export const insertCheckIn = (user, store) =>
     .update({
       checkin_store_id: store.store_id,
       checkin_store_name: store.store_name,
+      checkout_date: store.checkout_date,
     });
-
-const asyncForEach = async (array, callback) => {
-  for (let index = 0; index < array.length; index += 1) {
-    await callback(array[index], index, array);
-  }
-};
 
 export const insertOrder = async (orders, userId, storeId) => {
   const mapped = [];
-  await asyncForEach(orders, async (order) => {
+  await utilities.asyncForEach(orders, async (order) => {
     const price = await knex('product')
       .where('id', order.product_id)
       .then(product => product[0].price);
@@ -94,3 +90,16 @@ export const getCategoryById = id =>
   knex('category')
     .where('id', id)
     .then(categories => categories[0]);
+
+export const retrieveStoreServices = storeId =>
+  knex
+    .select(
+      'service.id as service_id',
+      'service.name as service_name',
+      'provider.id as provider_id',
+      'provider.name as provide_name',
+      'provider.picture as provider_picture',
+    )
+    .from('service')
+    .leftJoin('provider', 'provider.service_id', 'service.id')
+    .where('service.store_id', storeId);
