@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js --exec babel-node",
+    "forever": "forever start -o out.log -e err.log -c node_modules/.bin/babel-node app.js",
     "test": "NODE_ENV=test mocha --compilers js:babel-core/register ./*/*.spec.js",
     "pretest": "eslint --ignore-path .gitignore .",
     "precommit": "lint-staged",
