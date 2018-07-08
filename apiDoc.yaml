@@ -789,6 +789,8 @@ paths:
               type: "string"
             description:
               type: "string"
+            category_id:
+              type: "integer"
             price:
               type: "integer"
             gem:

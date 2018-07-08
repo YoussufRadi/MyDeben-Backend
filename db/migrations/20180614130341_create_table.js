@@ -47,6 +47,32 @@ exports.up = function (knex, Promise) {
       table.string('name').notNullable();
       table.unique(['ref', 'store_id']);
     }),
+    knex.schema.createTable('service', (table) => {
+      table.increments();
+      table.string('name').notNullable();
+      table
+        .integer('store_id')
+        .references('id')
+        .inTable('store')
+        .notNullable();
+      table.unique(['name', 'store_id']);
+    }),
+    knex.schema.createTable('provider', (table) => {
+      table.increments();
+      table.string('name').notNullable();
+      table.string('picture');
+      table
+        .integer('store_id')
+        .references('id')
+        .inTable('store')
+        .notNullable();
+      table
+        .integer('service_id')
+        .references('id')
+        .inTable('service')
+        .notNullable();
+      table.unique(['name', 'store_id']);
+    }),
     knex.schema.createTable('category', (table) => {
       table.increments();
       table.string('name').notNullable();
@@ -56,6 +82,11 @@ exports.up = function (knex, Promise) {
         .integer('store_id')
         .references('id')
         .inTable('store')
+        .notNullable();
+      table
+        .integer('provider_id')
+        .references('id')
+        .inTable('provider')
         .notNullable();
       table.unique(['name', 'store_id']);
     }),
@@ -115,6 +146,8 @@ exports.down = function (knex, Promise) {
     knex.schema.dropTable('category'),
     knex.schema.dropTable('user'),
     knex.schema.dropTable('checkin-token'),
+    knex.schema.dropTable('provider'),
+    knex.schema.dropTable('service'),
     knex.schema.dropTable('store'),
     knex.schema.dropTable('reset-token'),
   ]);

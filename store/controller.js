@@ -23,6 +23,16 @@ import {
   setCheckOutUser,
   setCancelOrder,
   insertRefToken,
+  insertService,
+  retrieveStoreServices,
+  delService,
+  getServiceById,
+  updateService,
+  insertProvider,
+  retrieveServiceProviders,
+  delProvider,
+  updateProvider,
+  getProviderById,
 } from './model';
 import { getUserById } from '../user/model';
 import { ensureAuthenticated } from '../auth/controller';
@@ -76,6 +86,17 @@ const refToken = (req, res, next) => {
   });
 };
 
+const newService = (req, res, next) => {
+  insertService(req.body, req.id)
+    .then((service) => {
+      req.service = service;
+      next();
+    })
+    .catch((err) => {
+      res.status(409).json({ detail: err.detail, success: false });
+    });
+};
+
 const newCategory = (req, res, next) => {
   insertCategory(req.body, req.id)
     .then((category) => {
@@ -83,17 +104,32 @@ const newCategory = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      res.status(400).json({ detail: err.detail, success: false });
+      res.status(409).json({ detail: err.detail, success: false });
+    });
+};
+
+const getStoreServices = (req, res, next) => {
+  retrieveStoreServices(req.id)
+    .then((services) => {
+      req.services = services;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
     });
 };
 
 const getStoreCategories = (req, res, next) => {
-  retrieveStoreCategories(req.id)
+  console.log(req.id, req.query.providerId);
+
+  retrieveStoreCategories(req.id, req.query.providerId)
     .then((categories) => {
       req.categories = categories;
       next();
     })
     .catch((err) => {
+      console.log(err);
+
       res.status(400).json({ detail: err.detail });
     });
 };
@@ -126,8 +162,56 @@ const checkCategory = (req, res, next) => {
     });
 };
 
+const checkService = (req, res, next) => {
+  const serviceId = req.params.id || req.query.serviceId || req.body.service_id;
+  getServiceById(serviceId)
+    .then((service) => {
+      if (!service) {
+        res.status(404).json({
+          detail: 'Service Id not found',
+          success: false,
+        });
+        return;
+      }
+      if (service.store_id !== req.id) {
+        res.status(403).json({
+          detail: 'Permission Denied',
+          success: false,
+        });
+        return;
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({
+        detail: err,
+        success: false,
+      });
+    });
+};
+
+const removeStoreService = (req, res, next) => {
+  delService(req.id, req.params.id)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
 const removeStoreCategory = (req, res, next) => {
   delCategory(req.id, req.params.id)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const editStoreService = (req, res, next) => {
+  updateService(req.id, req.params.id, req.body)
     .then(() => {
       next();
     })
@@ -153,7 +237,18 @@ const newProduct = (req, res, next) => {
       next();
     })
     .catch((err) => {
-      res.status(400).json({ detail: err.detail, success: false });
+      res.status(409).json({ detail: err.detail, success: false });
+    });
+};
+
+const newProvider = (req, res, next) => {
+  insertProvider(req.body, req.id)
+    .then((provider) => {
+      req.provider = provider;
+      next();
+    })
+    .catch((err) => {
+      res.status(409).json({ detail: err.detail, success: false });
     });
 };
 
@@ -161,6 +256,17 @@ const getCategoryProducts = (req, res, next) => {
   retrieveCategoryProducts(req.id, req.query.categoryId)
     .then((products) => {
       req.products = products;
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const getServiceProviders = (req, res, next) => {
+  retrieveServiceProviders(req.id, req.query.serviceId)
+    .then((providers) => {
+      req.providers = providers;
       next();
     })
     .catch((err) => {
@@ -196,6 +302,45 @@ const checkProduct = (req, res, next) => {
     });
 };
 
+const checkProvider = (req, res, next) => {
+  const providerId = req.params.id || req.query.providerId || req.body.provider_id;
+  getProviderById(providerId)
+    .then((provider) => {
+      if (!provider) {
+        res.status(404).json({
+          detail: "Provider Id doesn't exist",
+          success: false,
+        });
+        return;
+      }
+      if (provider.store_id !== req.id) {
+        res.status(403).json({
+          detail: 'Permission Denied',
+          success: false,
+        });
+        return;
+      }
+
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({
+        detail: err.detail,
+        success: false,
+      });
+    });
+};
+
+const removeProvider = (req, res, next) => {
+  delProvider(req.id, req.params.id)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
 const removeProduct = (req, res, next) => {
   delProduct(req.id, req.params.id)
     .then(() => {
@@ -208,6 +353,16 @@ const removeProduct = (req, res, next) => {
 
 const editProduct = (req, res, next) => {
   updateProduct(req.id, req.params.id, req.body)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(400).json({ detail: err.detail, success: false });
+    });
+};
+
+const editProvider = (req, res, next) => {
+  updateProvider(req.id, req.params.id, req.body)
     .then(() => {
       next();
     })
@@ -360,13 +515,45 @@ const userOrdersCheckOut = (req, res, next) => {
 
 export const generateQRcode = [ensureAuthenticated, verfiyStore, qRcode];
 export const generateToken = [ensureAuthenticated, verfiyStore, refToken];
+export const addService = [
+  validate(validation.addService),
+  ensureAuthenticated,
+  verfiyStore,
+  newService,
+];
+export const viewService = [ensureAuthenticated, verfiyStore, getStoreServices];
+export const deleteService = [ensureAuthenticated, verfiyStore, checkService, removeStoreService];
+export const modifyService = [ensureAuthenticated, verfiyStore, checkService, editStoreService];
+export const addProvider = [
+  validate(validation.addProvider),
+  ensureAuthenticated,
+  verfiyStore,
+  checkService,
+  newProvider,
+];
+export const viewProvider = [
+  validate(validation.viewProvider),
+  ensureAuthenticated,
+  verfiyStore,
+  checkService,
+  getServiceProviders,
+];
+export const deleteProvider = [ensureAuthenticated, verfiyStore, checkProvider, removeProvider];
+export const modifyProvider = [ensureAuthenticated, verfiyStore, checkProvider, editProvider];
 export const addCategory = [
   validate(validation.addCategory),
   ensureAuthenticated,
   verfiyStore,
+  checkProvider,
   newCategory,
 ];
-export const viewCategory = [ensureAuthenticated, verfiyStore, getStoreCategories];
+export const viewCategory = [
+  validate(validation.viewCategory),
+  ensureAuthenticated,
+  verfiyStore,
+  checkProvider,
+  getStoreCategories,
+];
 export const deleteCategory = [
   ensureAuthenticated,
   verfiyStore,
@@ -388,20 +575,8 @@ export const viewProduct = [
   checkCategory,
   getCategoryProducts,
 ];
-export const deleteProduct = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkCategory,
-  checkProduct,
-  removeProduct,
-];
-export const modifyProduct = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkCategory,
-  checkProduct,
-  editProduct,
-];
+export const deleteProduct = [ensureAuthenticated, verfiyStore, checkProduct, removeProduct];
+export const modifyProduct = [ensureAuthenticated, verfiyStore, checkProduct, editProduct];
 export const viewOrders = [ensureAuthenticated, verfiyStore, getAllOrders, sortOrders];
 export const viewCurrentOrders = [ensureAuthenticated, verfiyStore, getCurrentOrders, sortOrders];
 export const viewCheckedInUsers = [ensureAuthenticated, verfiyStore, getCheckedInUsers];

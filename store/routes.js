@@ -16,6 +16,14 @@ import {
   checkOut,
   cancelOrder,
   generateToken,
+  viewService,
+  addService,
+  modifyService,
+  deleteService,
+  viewProvider,
+  addProvider,
+  modifyProvider,
+  deleteProvider,
 } from './controller';
 
 const router = express.Router();
@@ -31,6 +39,34 @@ router.get('/generate/token/:ref', generateToken, (req, res) =>
     token: req.token,
   }),
 );
+
+router.get('/service', viewService, (req, res) => res.status(200).json({ services: req.services }));
+
+router.post('/service', addService, (req, res) =>
+  res.status(200).json({
+    detail: `Service id: ${req.service} added successfully`,
+    success: true,
+  }),
+);
+
+router.patch('/service/:id', modifyService, (req, res) => res.status(204).send());
+
+router.delete('/service/:id', deleteService, (req, res) => res.status(204).send());
+
+router.get('/provider', viewProvider, (req, res) =>
+  res.status(200).json({ providers: req.providers }),
+);
+
+router.post('/provider', addProvider, (req, res) =>
+  res.status(200).json({
+    detail: `Provider id: ${req.provider} added successfully`,
+    success: true,
+  }),
+);
+
+router.patch('/provider/:id', modifyProvider, (req, res) => res.status(204).send());
+
+router.delete('/provider/:id', deleteProvider, (req, res) => res.status(204).send());
 
 router.get('/category', viewCategory, (req, res) =>
   res.status(200).json({ categories: req.categories }),
