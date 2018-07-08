@@ -1,10 +1,11 @@
 import express from "express";
 import multer from "multer";
+import config from "../config";
 import { accessFile, generateFileId } from "../utilities";
 
 const router = express.Router();
 
-const upload = multer({
+export const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => cb(null, process.env.HOST_PORTAL_DIR),
     filename: (req, file, cb) => cb(null, generateFileId(file.mimetype))
@@ -29,20 +30,14 @@ router.get("/:id", async (req, res) => {
 router.post("/", upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({
-      error: {
-        message: "Bad Request"
-      },
+      error: "Bad Request",
       data: null
     });
   }
 
   return res.status(201).json({
     error: null,
-    data: {
-      id: req.file.filename,
-      name: req.file.originalname,
-      type: req.file.mimetype
-    }
+    url: `${config.host}api/file/${req.file.filename}`
   });
 });
 

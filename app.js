@@ -48,7 +48,7 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api/user", user);
 app.use("/api/auth", auth);
-app.use("/api/storstore", store);
+app.use("/api/store", store);
 app.use("/api/file", file);
 
 app.use((req, res) => {

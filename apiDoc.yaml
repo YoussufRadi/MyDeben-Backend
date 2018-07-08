@@ -5,7 +5,7 @@ info:
   description: "API Documentation"
   contact:
     email: "youssuf.radi@deemalab.com"
-host: "mydeben.herokuapp.com"
+host: "localhost:3000"
 basePath: "/api"
 tags:
 - name: "Auth"
@@ -14,10 +14,63 @@ tags:
   description: "All APIs related to the user"
 - name: "Store"
   description: "All APIs related to the web admin"
+- name: "Image"
+  description: "Responsible for storing files and retrieving them"
 schemes:
-- "https"
+- "http"
 paths:
-  
+          
+  /file:
+    post:
+      tags:
+      - "Image"
+      summary: "Uploads a file to the server"
+      description: "Stores the file on the server and returns an ID to fetch file with later"
+      operationId: "imageUpload"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "file to upload on server"
+        required: true
+        type: "file"
+      responses:
+        201:
+          description: "File Uploaded"
+          type: "object"
+          properties:
+            err:
+              type: "null"
+            url:
+              type: "string"
+              format: "url"
+
+  /file/{id}:
+    get:
+      tags:
+      - "Image"
+      summary: "Retrives file with corresponding ID"
+      description: "Fetches file from the server with corresponding ID"
+      operationId: "imageFetch"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "ID of Image to fetch"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns File requested"
+        404:
+          description: "Not Found"
+
   /auth/user/signin:
     post:
       tags:
