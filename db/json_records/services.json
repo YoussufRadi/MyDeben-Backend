@@ -1,0 +1,34 @@
+[
+  {
+    "name": "cleaning",
+    "store_id": 1
+  },
+  {
+    "name": "drinks",
+    "store_id": 1
+  },
+  {
+    "name": "food",
+    "store_id": 1
+  },
+  {
+    "name": "Spa",
+    "store_id": 1
+  },
+  {
+    "name": "Cars",
+    "store_id": 1
+  },
+  {
+    "name": "Hotel",
+    "store_id": 2
+  },
+  {
+    "name": "drinks",
+    "store_id": 2
+  },
+  {
+    "name": "Spa",
+    "store_id": 2
+  }
+]

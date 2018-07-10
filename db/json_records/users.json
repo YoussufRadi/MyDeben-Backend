@@ -1,17 +1,56 @@
 [
   {
-    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
-    "name": "Hazem",
-    "email": "hazem@gmail"
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "name": "Test",
+    "email": "test@test.com",
+    "checkin_store_id": 3,
+    "checkin_store_name": "Sheraton",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "16"
   },
   {
-    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
-    "name": "Mohab",
-    "email": "mohab@gmail"
-  },
-  {
-    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
     "name": "Radi",
-    "email": "radi@gmail"
+    "email": "youssuf.radi@deemalab.com",
+    "checkin_store_id": 1,
+    "checkin_store_name": "4Stars",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "name": "Yasser Abou El Saad ",
+    "email": "yasser@deemalab.com",
+    "checkin_store_id": 1,
+    "checkin_store_name": "4Stars",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "name": "Nesreen Mamdouh",
+    "email": "nesreen@deemalab.com",
+    "checkin_store_id": 2,
+    "checkin_store_name": "Hilton",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "name": "Mohamed Abd El-Hafiz",
+    "email": "mabdelhafiz@deemalab.com",
+    "checkin_store_id": 1,
+    "checkin_store_name": "4Stars",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "name": "Mohamad Badr",
+    "email": "mbadr@deemalab.com",
+    "checkin_store_id": 2,
+    "checkin_store_name": "Hilton",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
   }
 ]

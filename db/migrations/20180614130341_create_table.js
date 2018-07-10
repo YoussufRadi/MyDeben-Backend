@@ -1,6 +1,6 @@
 exports.up = function (knex, Promise) {
   return Promise.all([
-    knex.schema.createTable('store', (table) => {
+    knex.schema.createTable('store', table => {
       table.increments();
       table
         .string('email')
@@ -10,7 +10,7 @@ exports.up = function (knex, Promise) {
       table.string('password').notNullable();
       table.timestamps(false, true);
     }),
-    knex.schema.createTable('user', (table) => {
+    knex.schema.createTable('user', table => {
       table.increments();
       table.string('facebook').unique();
       table.string('gmail').unique();
@@ -26,7 +26,7 @@ exports.up = function (knex, Promise) {
         .inTable('store');
       table.timestamps(false, true);
     }),
-    knex.schema.createTable('reset-token', (table) => {
+    knex.schema.createTable('reset-token', table => {
       table.increments();
       table.string('email').notNullable();
       table.string('name').notNullable();
@@ -36,7 +36,7 @@ exports.up = function (knex, Promise) {
       table.timestamp('expires_at');
       table.unique(['email', 'model']);
     }),
-    knex.schema.createTable('checkin-token', (table) => {
+    knex.schema.createTable('checkin-token', table => {
       table.increments();
       table
         .integer('store_id')
@@ -49,7 +49,7 @@ exports.up = function (knex, Promise) {
       table.string('checkout_date').notNullable();
       table.unique(['ref', 'store_id']);
     }),
-    knex.schema.createTable('service', (table) => {
+    knex.schema.createTable('service', table => {
       table.increments();
       table.string('name').notNullable();
       table
@@ -59,7 +59,7 @@ exports.up = function (knex, Promise) {
         .notNullable();
       table.unique(['name', 'store_id']);
     }),
-    knex.schema.createTable('provider', (table) => {
+    knex.schema.createTable('provider', table => {
       table.increments();
       table.string('name').notNullable();
       table.string('picture');
@@ -73,9 +73,9 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('service')
         .notNullable();
-      table.unique(['name', 'store_id']);
+      table.unique(['name', 'service_id']);
     }),
-    knex.schema.createTable('category', (table) => {
+    knex.schema.createTable('category', table => {
       table.increments();
       table.string('name').notNullable();
       table.string('picture');
@@ -90,9 +90,9 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('provider')
         .notNullable();
-      table.unique(['name', 'store_id']);
+      table.unique(['name', 'provider_id']);
     }),
-    knex.schema.createTable('product', (table) => {
+    knex.schema.createTable('product', table => {
       table.increments();
       table.string('name').notNullable();
       table.float('price').notNullable();
@@ -109,9 +109,9 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('category')
         .notNullable();
-      table.unique(['name', 'store_id']);
+      table.unique(['name', 'category_id']);
     }),
-    knex.schema.createTable('order', (table) => {
+    knex.schema.createTable('order', table => {
       table.increments();
       table.boolean('checked_out').defaultTo(false);
       table.boolean('served').defaultTo(false);

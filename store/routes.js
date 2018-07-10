@@ -24,11 +24,12 @@ import {
   addProvider,
   modifyProvider,
   deleteProvider,
+  userReport,
 } from './controller';
 
 const router = express.Router();
 
-router.get('/generate/code/:date', generateQRcode, (req, res) =>
+router.get('/generate/code/:ref/:date', generateQRcode, (req, res) =>
   res.status(200).json({
     code: req.code,
   }),
@@ -98,6 +99,13 @@ router.delete('/product/:id', deleteProduct, (req, res) => res.status(204).send(
 
 router.get('/users', viewCheckedInUsers, (req, res) => res.status(200).json({ users: req.users }));
 
+router.get('/users/:userId', userReport, (req, res) => {
+  res.status(200).json({
+    user: req.user,
+    total: req.total,
+    oredrs: req.orders,
+  });
+});
 router.get('/checkout', checkOut, (req, res) =>
   res.status(200).json({ detail: 'User Checked Out Successfully', success: true }),
 );

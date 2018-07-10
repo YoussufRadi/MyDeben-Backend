@@ -1,16 +1,16 @@
 [
   {
-    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
     "name": "4Stars",
     "email": "4stars@gmail"
   },
   {
-    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
     "name": "Hilton",
     "email": "hilton@gmail"
   },
   {
-    "password": "$2a$10$X5bEqf7ap5A/FHPNC7wkY.2yXB7WrWFTtyTlvwi0ZG.piVtqqfhaG",
+    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
     "name": "Sheraton",
     "email": "sheraton@gmail"
   }

@@ -1,17 +1,198 @@
 [
   {
-    "description": "full",
     "name": "cleaning",
-    "store_id": "1"
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 1,
+    "store_id": 1
   },
   {
-    "description": "full",
-    "name": "drinks",
-    "store_id": "1"
+    "name": "Hot Drinks",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 2,
+    "store_id": 1
   },
   {
-    "description": "full",
-    "name": "food",
-    "store_id": "1"
+    "name": "Cold Drinks",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 2,
+    "store_id": 1
+  },
+  {
+    "name": "Deserts",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 2,
+    "store_id": 1
+  },
+  {
+    "name": "Hot Drinks",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 3,
+    "store_id": 1
+  },
+  {
+    "name": "Cold Drinks",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 3,
+    "store_id": 1
+  },
+  {
+    "name": "Deserts",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 3,
+    "store_id": 1
+  },
+  {
+    "name": "Breakfast",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 4,
+    "store_id": 1
+  },
+  {
+    "name": "Burger",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 4,
+    "store_id": 1
+  },
+  {
+    "name": "Chicken",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 4,
+    "store_id": 1
+  },
+  {
+    "name": "Breakfast",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 5,
+    "store_id": 1
+  },
+  {
+    "name": "Burger",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 5,
+    "store_id": 1
+  },
+  {
+    "name": "Chicken",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 5,
+    "store_id": 1
+  },
+  {
+    "name": "SUV",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 6,
+    "store_id": 1
+  },
+  {
+    "name": "Sedan",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 6,
+    "store_id": 1
+  },
+  {
+    "name": "Taxi",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 6,
+    "store_id": 1
+  },
+  {
+    "name": "Laundary",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 7,
+    "store_id": 1
+  },
+  {
+    "name": "Crossfit",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 8,
+    "store_id": 2
+  },
+  {
+    "name": "PowerLifting",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 8,
+    "store_id": 2
+  },
+  {
+    "name": "HIIT",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 8,
+    "store_id": 2
+  },
+  {
+    "name": "SPA",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 9,
+    "store_id": 2
+  },
+  {
+    "name": "Sauna",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 9,
+    "store_id": 2
+  },
+  {
+    "name": "Pool",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 9,
+    "store_id": 2
+  },
+  {
+    "name": "Fool",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 10,
+    "store_id": 2
+  },
+  {
+    "name": "Ommlette",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 10,
+    "store_id": 2
+  },
+  {
+    "name": "Tadleek",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 11,
+    "store_id": 2
+  },
+  {
+    "name": "Hot Pool",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 11,
+    "store_id": 2
+  },
+  {
+    "name": "😉",
+    "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
+    "description": "Test Data",
+    "provider_id": 12,
+    "store_id": 2
   }
 ]

@@ -198,6 +198,24 @@ export const retrieveAllOrders = store =>
     .innerJoin('product', 'order.product_id', 'product.id')
     .where({ 'order.store_id': store.id });
 
+export const retrieveUserOrders = (storeId, userId) =>
+  knex
+    .select(
+      'order.id',
+      'product.name',
+      'product.price',
+      'order.total_price',
+      'order.quantity',
+      'order.total_price',
+      'order.store_id',
+      'order.user_id',
+      'order.checked_out',
+      'order.served',
+    )
+    .from('order')
+    .innerJoin('product', 'order.product_id', 'product.id')
+    .where({ 'order.store_id': storeId, user_id: userId, 'order.checked_out': false });
+
 export const retrieveCurrentOrders = store =>
   knex
     .select(

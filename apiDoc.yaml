@@ -262,7 +262,7 @@ paths:
             token:
               type: "string"
             password:
-              string: "string"
+              type: "string"
       responses:
         200:
           description: "Password reset successfully"
@@ -683,7 +683,7 @@ paths:
         404:
           description: "Category Id not found"
 
-  /store/generate/code/{date}:
+  /store/generate/code/{ref}/{date}:
     get:
       tags:
       - "Store"
@@ -693,6 +693,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - in: "path"
+        name: "ref"
+        description: "Refrence number to track user with latter"
+        required: true
+        type: "string"
       - in: "path"
         name: "date"
         description: "Checkout Date of the user"

@@ -1,6 +1,6 @@
-import validate from "express-validation";
-import crypto from "crypto";
-import validation from "./validation";
+import validate from 'express-validation';
+import crypto from 'crypto';
+import validation from './validation';
 import {
   generateQR,
   getStoreById,
@@ -32,23 +32,24 @@ import {
   retrieveServiceProviders,
   delProvider,
   updateProvider,
-  getProviderById
-} from "./model";
-import { getUserById } from "../user/model";
-import { ensureAuthenticated } from "../auth/controller";
-import { upload } from "../file";
+  getProviderById,
+  retrieveUserOrders,
+} from './model';
+import { getUserById } from '../user/model';
+import { ensureAuthenticated } from '../auth/controller';
+import { upload } from '../file';
 
 const verfiyStore = (req, res, next) => {
-  if (req.model !== "store") {
+  if (req.model !== 'store') {
     res.status(403).json({
-      detail: "Permision Denied"
+      detail: 'Permision Denied',
     });
     return;
   }
   getStoreById(req.id)
     .then(store => {
       if (!store) {
-        res.status(400).json({ detail: "Store doesnot exist" });
+        res.status(400).json({ detail: 'Store doesnot exist' });
         return;
       }
       req.store = store;
@@ -60,32 +61,24 @@ const verfiyStore = (req, res, next) => {
 };
 
 const qRcode = (req, res, next) => {
-  generateQR(
-    `{"store_id": "${req.id}", "store_name": "${req.store.name}",
-    "checkout_date":"${req.params.date}"}`,
-    (err, code) => {
-      if (err) {
-        res.status(400).json({
-          detail: err
-        });
-        return;
-      }
-      req.code = code;
-      next();
+  const input = `{"store_id": "${req.id}", "store_name": "${req.store.name}",
+    "checkout_date":"${req.params.date}", "ref":"${req.params.ref}"}`;
+  generateQR(input, (err, code) => {
+    if (err) {
+      res.status(400).json({
+        detail: err,
+      });
+      return;
     }
-  );
+    req.code = code;
+    next();
+  });
 };
 
 const refToken = (req, res, next) => {
   crypto.randomBytes(4, (err, buffer) => {
-    req.token = buffer.toString("hex");
-    insertRefToken(
-      req.id,
-      req.store.name,
-      req.params.ref,
-      req.token,
-      req.params.date
-    )
+    req.token = buffer.toString('hex');
+    insertRefToken(req.id, req.store.name, req.params.ref, req.token, req.params.date)
       .then(id => {
         next();
       })
@@ -140,21 +133,20 @@ const getStoreCategories = (req, res, next) => {
 };
 
 const checkCategory = (req, res, next) => {
-  const categoryId =
-    req.params.id || req.query.categoryId || req.body.category_id;
+  const categoryId = req.params.id || req.query.categoryId || req.body.category_id;
   getCategoryById(categoryId)
     .then(category => {
       if (!category) {
         res.status(404).json({
-          detail: "Category Id not found",
-          success: false
+          detail: 'Category Id not found',
+          success: false,
         });
         return;
       }
       if (category.store_id !== req.id) {
         res.status(403).json({
-          detail: "Permission Denied",
-          success: false
+          detail: 'Permission Denied',
+          success: false,
         });
         return;
       }
@@ -163,7 +155,7 @@ const checkCategory = (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         detail: err,
-        success: false
+        success: false,
       });
     });
 };
@@ -174,15 +166,15 @@ const checkService = (req, res, next) => {
     .then(service => {
       if (!service) {
         res.status(404).json({
-          detail: "Service Id not found",
-          success: false
+          detail: 'Service Id not found',
+          success: false,
         });
         return;
       }
       if (service.store_id !== req.id) {
         res.status(403).json({
-          detail: "Permission Denied",
-          success: false
+          detail: 'Permission Denied',
+          success: false,
         });
         return;
       }
@@ -191,7 +183,7 @@ const checkService = (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         detail: err,
-        success: false
+        success: false,
       });
     });
 };
@@ -286,14 +278,14 @@ const checkProduct = (req, res, next) => {
       if (!product) {
         res.status(404).json({
           detail: "Product Id doesn't exist",
-          success: false
+          success: false,
         });
         return;
       }
       if (product.store_id !== req.id) {
         res.status(403).json({
-          detail: "Permission Denied",
-          success: false
+          detail: 'Permission Denied',
+          success: false,
         });
         return;
       }
@@ -303,27 +295,26 @@ const checkProduct = (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         detail: err.detail,
-        success: false
+        success: false,
       });
     });
 };
 
 const checkProvider = (req, res, next) => {
-  const providerId =
-    req.params.id || req.query.providerId || req.body.provider_id;
+  const providerId = req.params.id || req.query.providerId || req.body.provider_id;
   getProviderById(providerId)
     .then(provider => {
       if (!provider) {
         res.status(404).json({
           detail: "Provider Id doesn't exist",
-          success: false
+          success: false,
         });
         return;
       }
       if (provider.store_id !== req.id) {
         res.status(403).json({
-          detail: "Permission Denied",
-          success: false
+          detail: 'Permission Denied',
+          success: false,
         });
         return;
       }
@@ -333,7 +324,7 @@ const checkProvider = (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         detail: err.detail,
-        success: false
+        success: false,
       });
     });
 };
@@ -401,12 +392,9 @@ const getCurrentOrders = (req, res, next) => {
 };
 
 const sortOrders = (req, res, next) => {
-  if (req.query.sort === "date")
-    req.orders.sort((a, b) => a.created_at - b.created_at);
-  if (req.query.sort === "category")
-    req.orders.sort((a, b) => a.category_id - b.category_id);
-  if (req.query.sort === "user")
-    req.orders.sort((a, b) => a.user_id - b.user_id);
+  if (req.query.sort === 'date') req.orders.sort((a, b) => a.created_at - b.created_at);
+  if (req.query.sort === 'category') req.orders.sort((a, b) => a.category_id - b.category_id);
+  if (req.query.sort === 'user') req.orders.sort((a, b) => a.user_id - b.user_id);
   next();
 };
 
@@ -427,35 +415,35 @@ const checkOrder = (req, res, next) => {
       if (!order) {
         res.status(404).json({
           detail: "Order Id doesn't exist",
-          success: false
+          success: false,
         });
         return;
       }
       if (order.checked_out) {
         res.status(400).json({
-          detail: "This is an old order",
-          success: false
+          detail: 'This is an old order',
+          success: false,
         });
         return;
       }
       if (order.served) {
         res.status(400).json({
-          detail: "This is order is previously served",
-          success: false
+          detail: 'This is order is previously served',
+          success: false,
         });
         return;
       }
       if (order.cancelled) {
         res.status(400).json({
-          detail: "This is order is previously cancelled",
-          success: false
+          detail: 'This is order is previously cancelled',
+          success: false,
         });
         return;
       }
       if (order.store_id !== req.id) {
         res.status(403).json({
-          detail: "Permission Denied",
-          success: false
+          detail: 'Permission Denied',
+          success: false,
         });
         return;
       }
@@ -464,7 +452,7 @@ const checkOrder = (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         detail: err.detail,
-        success: false
+        success: false,
       });
     });
 };
@@ -490,10 +478,10 @@ const orderCancel = (req, res, next) => {
 };
 
 const userConfirmCheckedIn = (req, res, next) => {
-  getUserById(req.query.userId)
+  getUserById(req.query.userId || req.params.userId)
     .then(user => {
       if (user.checkin_store_id !== req.id) {
-        res.status(403).json({ detail: "Permission Denied", success: false });
+        res.status(403).json({ detail: 'Permission Denied', success: false });
         return;
       }
       next();
@@ -523,139 +511,106 @@ const userOrdersCheckOut = (req, res, next) => {
     });
 };
 
+const getHistory = (req, res, next) => {
+  retrieveUserOrders(req.id, req.params.userId)
+    .then(orders => {
+      req.orders = orders;
+      next();
+    })
+    .catch(err => {
+      res.status(400).json({ detail: err });
+    });
+};
+
+const getProfile = (req, res, next) => {
+  req.total = 0;
+  req.orders.forEach(order => {
+    if (order.served) req.total += order.total_price;
+  });
+  next();
+};
+
 export const generateQRcode = [ensureAuthenticated, verfiyStore, qRcode];
 export const generateToken = [ensureAuthenticated, verfiyStore, refToken];
 export const addService = [
   validate(validation.addService),
   ensureAuthenticated,
   verfiyStore,
-  newService
+  newService,
 ];
 export const viewService = [ensureAuthenticated, verfiyStore, getStoreServices];
-export const deleteService = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkService,
-  removeStoreService
-];
-export const modifyService = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkService,
-  editStoreService
-];
+export const deleteService = [ensureAuthenticated, verfiyStore, checkService, removeStoreService];
+export const modifyService = [ensureAuthenticated, verfiyStore, checkService, editStoreService];
 export const addProvider = [
   validate(validation.addProvider),
   ensureAuthenticated,
   verfiyStore,
   checkService,
-  newProvider
+  newProvider,
 ];
 export const viewProvider = [
   validate(validation.viewProvider),
   ensureAuthenticated,
   verfiyStore,
   checkService,
-  getServiceProviders
+  getServiceProviders,
 ];
-export const deleteProvider = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkProvider,
-  removeProvider
-];
-export const modifyProvider = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkProvider,
-  editProvider
-];
+export const deleteProvider = [ensureAuthenticated, verfiyStore, checkProvider, removeProvider];
+export const modifyProvider = [ensureAuthenticated, verfiyStore, checkProvider, editProvider];
 export const addCategory = [
   validate(validation.addCategory),
   ensureAuthenticated,
   verfiyStore,
   checkProvider,
-  newCategory
+  newCategory,
 ];
 export const viewCategory = [
   validate(validation.viewCategory),
   ensureAuthenticated,
   verfiyStore,
   checkProvider,
-  getStoreCategories
+  getStoreCategories,
 ];
 export const deleteCategory = [
   ensureAuthenticated,
   verfiyStore,
   checkCategory,
-  removeStoreCategory
+  removeStoreCategory,
 ];
-export const modifyCategory = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkCategory,
-  editStoreCategory
-];
+export const modifyCategory = [ensureAuthenticated, verfiyStore, checkCategory, editStoreCategory];
 export const addProduct = [
   validate(validation.addProduct),
   ensureAuthenticated,
   verfiyStore,
   checkCategory,
-  newProduct
+  newProduct,
 ];
 export const viewProduct = [
   validate(validation.viewProduct),
   ensureAuthenticated,
   verfiyStore,
   checkCategory,
-  getCategoryProducts
+  getCategoryProducts,
 ];
-export const deleteProduct = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkProduct,
-  removeProduct
-];
-export const modifyProduct = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkProduct,
-  editProduct
-];
-export const viewOrders = [
-  ensureAuthenticated,
-  verfiyStore,
-  getAllOrders,
-  sortOrders
-];
-export const viewCurrentOrders = [
-  ensureAuthenticated,
-  verfiyStore,
-  getCurrentOrders,
-  sortOrders
-];
-export const viewCheckedInUsers = [
-  ensureAuthenticated,
-  verfiyStore,
-  getCheckedInUsers
-];
-export const serveOrder = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkOrder,
-  orderServe
-];
-export const cancelOrder = [
-  ensureAuthenticated,
-  verfiyStore,
-  checkOrder,
-  orderCancel
-];
+export const deleteProduct = [ensureAuthenticated, verfiyStore, checkProduct, removeProduct];
+export const modifyProduct = [ensureAuthenticated, verfiyStore, checkProduct, editProduct];
+export const viewOrders = [ensureAuthenticated, verfiyStore, getAllOrders, sortOrders];
+export const viewCurrentOrders = [ensureAuthenticated, verfiyStore, getCurrentOrders, sortOrders];
+export const viewCheckedInUsers = [ensureAuthenticated, verfiyStore, getCheckedInUsers];
+export const serveOrder = [ensureAuthenticated, verfiyStore, checkOrder, orderServe];
+export const cancelOrder = [ensureAuthenticated, verfiyStore, checkOrder, orderCancel];
 export const checkOut = [
   validate(validation.checkOut),
   ensureAuthenticated,
   verfiyStore,
   userConfirmCheckedIn,
   userCheckOut,
-  userOrdersCheckOut
+  userOrdersCheckOut,
+];
+export const userReport = [
+  ensureAuthenticated,
+  verfiyStore,
+  userConfirmCheckedIn,
+  getHistory,
+  getProfile,
 ];
