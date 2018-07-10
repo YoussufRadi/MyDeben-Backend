@@ -207,10 +207,9 @@ export const retrieveUserOrders = (storeId, userId) =>
       'order.total_price',
       'order.quantity',
       'order.total_price',
-      'order.store_id',
-      'order.user_id',
       'order.checked_out',
       'order.served',
+      'order.cancelled',
     )
     .from('order')
     .innerJoin('product', 'order.product_id', 'product.id')

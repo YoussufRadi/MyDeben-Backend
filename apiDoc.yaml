@@ -8,14 +8,14 @@ info:
 host: "localhost:3000"
 basePath: "/api"
 tags:
+- name: "Image"
+  description: "Responsible for storing files and retrieving them"
 - name: "Auth"
   description: "Used for user to retrieve access token needed for further identification"
 - name: "User"
   description: "All APIs related to the user"
 - name: "Store"
   description: "All APIs related to the web admin"
-- name: "Image"
-  description: "Responsible for storing files and retrieving them"
 schemes:
 - "http"
 paths:
@@ -1504,6 +1504,37 @@ paths:
         403:
           description: "Permission Denied"
 
+  /store/user/{userId}:
+    get:
+      tags:
+      - "Store"
+      summary: "Returns user total orders"
+      description: "View All orders and the total"
+      parameters:
+      - in: "path"
+        name: "userId"
+        description: "ID of User to get details"
+        required: true
+        type: "string"
+      operationId: "userReport"
+      produces:
+      - "application/json"
+      security:
+        - x-access-token: [user]
+      responses:
+        200:
+          description: "Full Profile"
+          schema:
+            $ref: "#/definitions/StoreUserReport"
+        400:
+          description: "Wrong User token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+        404:
+          description: "User Not found"
+
   /store/checkout:
     get:
       tags:
@@ -1647,6 +1678,32 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Order"
+  StoreUserReport:
+    type: "object"
+    properties:
+      total:
+        type: "integer"
+      orders:
+        type: "array"
+        items:       
+          type: "object"
+          properties:
+            id:
+              type: "string"
+            name:
+              type: "string" 
+            price:
+              type: "integer"
+            total_price:
+              type: "integer"
+            quantity:
+              type: "integer"
+            checked_out:
+              type: "boolean"
+            served:
+              type: "boolean"
+            cancelled:
+              type: "boolean"
   Gem:
     type: "object"
     properties:
