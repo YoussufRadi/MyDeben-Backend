@@ -702,7 +702,8 @@ paths:
         name: "date"
         description: "Checkout Date of the user"
         required: true
-        type: "date"
+        type: "string"
+        format: "date"
       security:
         - x-access-token: [store]
       responses:
