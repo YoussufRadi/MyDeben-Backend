@@ -1,6 +1,6 @@
 [
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Test",
     "email": "test@test.com",
     "checkin_store_id": 3,
@@ -9,7 +9,7 @@
     "checkin_store_ref": "16"
   },
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Radi",
     "email": "youssuf.radi@deemalab.com",
     "checkin_store_id": 1,
@@ -18,7 +18,7 @@
     "checkin_store_ref": "23A"
   },
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Yasser Abou El Saad ",
     "email": "yasser@deemalab.com",
     "checkin_store_id": 1,
@@ -27,7 +27,7 @@
     "checkin_store_ref": "23A"
   },
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Nesreen Mamdouh",
     "email": "nesreen@deemalab.com",
     "checkin_store_id": 2,
@@ -36,7 +36,7 @@
     "checkin_store_ref": "23A"
   },
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Mohamed Abd El-Hafiz",
     "email": "mabdelhafiz@deemalab.com",
     "checkin_store_id": 1,
@@ -45,7 +45,7 @@
     "checkin_store_ref": "23A"
   },
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Mohamad Badr",
     "email": "mbadr@deemalab.com",
     "checkin_store_id": 2,

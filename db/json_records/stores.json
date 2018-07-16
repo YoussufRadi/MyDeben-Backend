@@ -1,17 +1,17 @@
 [
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "4Stars",
-    "email": "4stars@gmail"
+    "email": "4stars@gmail.com"
   },
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Hilton",
-    "email": "hilton@gmail"
+    "email": "hilton@gmail.com"
   },
   {
-    "password": "$2a$10$0CdnoRzGPz1hQJ5IF/gS8.mbcWWcl.4Gsi0VgRP02q7u9wgue7ZMS",
+    "password": "test",
     "name": "Sheraton",
-    "email": "sheraton@gmail"
+    "email": "sheraton@gmail.com"
   }
 ]
