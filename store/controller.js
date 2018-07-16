@@ -402,6 +402,8 @@ const getCurrentOrders = (req, res, next) => {
       next();
     })
     .catch(err => {
+      console.log(err);
+
       res.status(400).json({ detail: err.detail });
     });
 };
