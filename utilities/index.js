@@ -1,6 +1,6 @@
-import uuid from "uuid";
-import mime from "mime";
-import Promise from "bluebird";
+import uuid from 'uuid';
+import mime from 'mime';
+import Promise from 'bluebird';
 
 export const groupBy = (xs, key) =>
   xs.reduce((rv, x) => {
@@ -13,7 +13,7 @@ export const asyncForEach = async (array, callback) => {
     await callback(array[index], index, array);
   }
 };
-const fs = Promise.promisifyAll(require("fs"));
+const fs = Promise.promisifyAll(require('fs'));
 
 export const accessFile = async path => {
   try {
@@ -25,5 +25,4 @@ export const accessFile = async path => {
   return true;
 };
 
-export const generateFileId = mimetype =>
-  `${uuid.v4()}.${mime.getExtension(mimetype)}`;
+export const generateFileId = mimetype => `${uuid.v4()}.${mime.getExtension(mimetype)}`;

@@ -1,6 +1,7 @@
 import validate from 'express-validation';
 import crypto from 'crypto';
 import validation from './validation';
+import { groupBy } from '../utilities';
 import {
   generateQR,
   getStoreById,
@@ -34,10 +35,11 @@ import {
   updateProvider,
   getProviderById,
   retrieveUserOrders,
+  retrieveAllStoreProviders,
 } from './model';
 import { getUserById } from '../user/model';
 import { ensureAuthenticated } from '../auth/controller';
-import { upload } from '../file';
+import { log } from 'util';
 
 const verfiyStore = (req, res, next) => {
   if (req.model !== 'store') {
@@ -263,6 +265,19 @@ const getCategoryProducts = (req, res, next) => {
 
 const getServiceProviders = (req, res, next) => {
   retrieveServiceProviders(req.id, req.query.serviceId)
+    .then(providers => {
+      console.log(providers);
+
+      req.providers = providers;
+      next();
+    })
+    .catch(err => {
+      res.status(400).json({ detail: err.detail });
+    });
+};
+
+const getAllStoreProviders = (req, res, next) => {
+  retrieveAllStoreProviders(req.id)
     .then(providers => {
       req.providers = providers;
       next();
@@ -530,6 +545,17 @@ const getProfile = (req, res, next) => {
   next();
 };
 
+const groupProviders = (req, res, next) => {
+  if (req.query.group) req.providers = groupBy(req.providers, req.query.group);
+  if (req.providers.undefined) {
+    res.status(400).json({
+      detail: 'Grouping Parameter Invalid',
+    });
+    return;
+  }
+  next();
+};
+
 export const generateQRcode = [ensureAuthenticated, verfiyStore, qRcode];
 export const generateToken = [ensureAuthenticated, verfiyStore, refToken];
 export const addService = [
@@ -554,6 +580,12 @@ export const viewProvider = [
   verfiyStore,
   checkService,
   getServiceProviders,
+];
+export const viewAllProvider = [
+  ensureAuthenticated,
+  verfiyStore,
+  getAllStoreProviders,
+  groupProviders,
 ];
 export const deleteProvider = [ensureAuthenticated, verfiyStore, checkProvider, removeProvider];
 export const modifyProvider = [ensureAuthenticated, verfiyStore, checkProvider, editProvider];

@@ -1,7 +1,7 @@
-import validate from "express-validation";
-import validation from "./validation";
-import { groupBy } from "../utilities";
-import { ensureAuthenticated } from "../auth/controller";
+import validate from 'express-validation';
+import validation from './validation';
+import { groupBy } from '../utilities';
+import { ensureAuthenticated } from '../auth/controller';
 import {
   getUserById,
   insertCheckIn,
@@ -12,26 +12,26 @@ import {
   insertRefCheckIn,
   delToken,
   retrieveStoreServices,
-  getSearchResutlts
-} from "./model";
+  getSearchResutlts,
+} from './model';
 import {
   retrieveStoreCategories,
   getCategoryById,
   retrieveCategoryProducts,
-  getProviderById
-} from "../store/model";
+  getProviderById,
+} from '../store/model';
 
 const verfiyUser = (req, res, next) => {
-  if (req.model !== "user") {
+  if (req.model !== 'user') {
     res.status(403).json({
-      detail: "Permision Denied"
+      detail: 'Permision Denied',
     });
     return;
   }
   getUserById(req.id)
     .then(user => {
       if (!user) {
-        res.status(404).json({ detail: "User doesnot exist" });
+        res.status(404).json({ detail: 'User doesnot exist' });
         return;
       }
       req.user = user;
@@ -47,9 +47,7 @@ const verfiyUser = (req, res, next) => {
 
 const checkIn = (req, res, next) => {
   if (req.user.checkin_store_id) {
-    res
-      .status(400)
-      .json({ detail: "Must Checkout from store first", success: false });
+    res.status(400).json({ detail: 'Must Checkout from store first', success: false });
     return;
   }
   insertCheckIn(req.user, req.body)
@@ -63,15 +61,13 @@ const checkIn = (req, res, next) => {
 
 const getToken = (req, res, next) => {
   if (req.user.checkin_store_id) {
-    res
-      .status(400)
-      .json({ detail: "Must Checkout from store first", success: false });
+    res.status(400).json({ detail: 'Must Checkout from store first', success: false });
     return;
   }
   getRefByToken(req.params.token)
     .then(ref => {
       if (!ref) {
-        res.status(404).json({ detail: "Token doesnot exist" });
+        res.status(404).json({ detail: 'Token doesnot exist' });
         return;
       }
       req.ref = ref;
@@ -83,13 +79,7 @@ const getToken = (req, res, next) => {
 };
 
 const consumeToken = (req, res, next) => {
-  insertRefCheckIn(
-    req.user,
-    req.ref.store_id,
-    req.ref.name,
-    req.ref.ref,
-    req.ref.checkout_date
-  )
+  insertRefCheckIn(req.user, req.ref.store_id, req.ref.name, req.ref.ref, req.ref.checkout_date)
     .then(() => {
       delToken(req.ref.id)
         .then(() => {
@@ -108,7 +98,7 @@ const consumeToken = (req, res, next) => {
 const newOrder = async (req, res, next) => {
   const storeId = req.user.checkin_store_id;
   if (!storeId || req.body.store_id !== storeId) {
-    res.status(400).json({ detail: "User didnot checkin into store" });
+    res.status(400).json({ detail: 'User didnot checkin into store' });
     return;
   }
   req.order = await insertOrder(req.body.order, req.id, storeId)
@@ -117,7 +107,7 @@ const newOrder = async (req, res, next) => {
       next();
     })
     .catch(err => {
-      res.status(400).json({ detail: "Product ID not valid", success: false });
+      res.status(400).json({ detail: 'Product ID not valid', success: false });
     });
 };
 
@@ -164,7 +154,7 @@ const getStoreCategories = (req, res, next) => {
 
 const getStoreServices = (req, res, next) => {
   if (!req.user.checkin_store_id) {
-    res.status(400).json({ detail: "User didnot checkin into store" });
+    res.status(400).json({ detail: 'User didnot checkin into store' });
     return;
   }
   retrieveStoreServices(req.user.checkin_store_id)
@@ -193,19 +183,19 @@ const checkProvider = (req, res, next) => {
     .then(provider => {
       if (!provider) {
         res.status(404).json({
-          detail: "Provider Id not found",
-          success: false
+          detail: 'Provider Id not found',
+          success: false,
         });
         return;
       }
       if (!req.user.checkin_store_id) {
-        res.status(400).json({ detail: "User didnot checkin into store" });
+        res.status(400).json({ detail: 'User didnot checkin into store' });
         return;
       }
       if (provider.store_id !== req.user.checkin_store_id) {
         res.status(403).json({
-          detail: "Permission Denied",
-          success: false
+          detail: 'Permission Denied',
+          success: false,
         });
         return;
       }
@@ -214,7 +204,7 @@ const checkProvider = (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         detail: err,
-        success: false
+        success: false,
       });
     });
 };
@@ -224,19 +214,19 @@ const checkCategory = (req, res, next) => {
     .then(category => {
       if (!category) {
         res.status(404).json({
-          detail: "Category Id not found",
-          success: false
+          detail: 'Category Id not found',
+          success: false,
         });
         return;
       }
       if (!req.user.checkin_store_id) {
-        res.status(400).json({ detail: "User didnot checkin into store" });
+        res.status(400).json({ detail: 'User didnot checkin into store' });
         return;
       }
       if (category.store_id !== req.user.checkin_store_id) {
         res.status(403).json({
-          detail: "Permission Denied",
-          success: false
+          detail: 'Permission Denied',
+          success: false,
         });
         return;
       }
@@ -245,7 +235,7 @@ const checkCategory = (req, res, next) => {
     .catch(err => {
       res.status(400).json({
         detail: err,
-        success: false
+        success: false,
       });
     });
 };
@@ -254,7 +244,7 @@ const groupServices = (req, res, next) => {
   if (req.query.group) req.services = groupBy(req.services, req.query.group);
   if (req.services.undefined) {
     res.status(400).json({
-      detail: "Grouping Parameter Invalid"
+      detail: 'Grouping Parameter Invalid',
     });
     return;
   }
@@ -263,7 +253,7 @@ const groupServices = (req, res, next) => {
 
 const viewSearchResults = (req, res, next) => {
   if (!req.user.checkin_store_id) {
-    res.status(400).json({ detail: "User didnot checkin into store" });
+    res.status(400).json({ detail: 'User didnot checkin into store' });
     return;
   }
   getSearchResutlts(req.query.keyword, req.user.checkin_store_id)
@@ -275,55 +265,30 @@ const viewSearchResults = (req, res, next) => {
       res.status(400).json({ detail: err.detail });
     });
 };
-export const userCheckIn = [
-  validate(validation.checkIn),
-  ensureAuthenticated,
-  verfiyUser,
-  checkIn
-];
-export const userCheckInToken = [
-  ensureAuthenticated,
-  verfiyUser,
-  getToken,
-  consumeToken
-];
-export const addOrder = [
-  validate(validation.makeOrder),
-  ensureAuthenticated,
-  verfiyUser,
-  newOrder
-];
+export const userCheckIn = [validate(validation.checkIn), ensureAuthenticated, verfiyUser, checkIn];
+export const userCheckInToken = [ensureAuthenticated, verfiyUser, getToken, consumeToken];
+export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
 export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
-export const profile = [
-  ensureAuthenticated,
-  verfiyUser,
-  getHistory,
-  getProfile
-];
+export const profile = [ensureAuthenticated, verfiyUser, getHistory, getProfile];
 export const discover = [ensureAuthenticated, verfiyUser, getGems];
-export const viewService = [
-  ensureAuthenticated,
-  verfiyUser,
-  getStoreServices,
-  groupServices
-];
+export const viewService = [ensureAuthenticated, verfiyUser, getStoreServices, groupServices];
 export const search = [
   validate(validation.search),
   ensureAuthenticated,
   verfiyUser,
-  viewSearchResults
+  viewSearchResults,
 ];
 export const viewCategory = [
   validate(validation.viewCategory),
   ensureAuthenticated,
   verfiyUser,
   checkProvider,
-  getStoreCategories
+  getStoreCategories,
 ];
 export const viewProduct = [
   validate(validation.viewProduct),
   ensureAuthenticated,
   verfiyUser,
   checkCategory,
-  getCategoryProducts
+  getCategoryProducts,
 ];

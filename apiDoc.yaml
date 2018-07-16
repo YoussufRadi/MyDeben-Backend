@@ -890,6 +890,41 @@ paths:
         404:
           description: "Service doesnot exist"
 
+  /store/provider/all:
+    get:
+      tags:
+      - "Store"
+      summary: "Retrives all store providers"
+      description: "Shows all available service providers for the store with all details"
+      operationId: "storeAllProviders"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "group"
+        in: "query"
+        description: "Grouping field to group fields with"
+        required: false
+        type: "string"
+      security:
+        - x-access-token: [user]
+      responses:
+        200:
+          description: "Array of Services and Providers"
+          schema:
+            type: "object"
+            properties:
+              categories:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Provider"
+        400:
+          description: "Wrong Store token Used"
+        401:
+          description: "Token expired or Malformed"
+        403:
+          description: "Permission Denied"
+
+
   /store/provider:
     get:
       tags:
@@ -1643,6 +1678,9 @@ definitions:
         type: "string" 
       checkin_store_id:
         type: "integer"
+      checkout_date:
+        type: "string"
+        format: "date"
   Order:
     type: "object"
     properties:
