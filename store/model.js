@@ -123,7 +123,7 @@ export const retrieveAllStoreProviders = storeId =>
     )
     .from('provider')
     .innerJoin('service', 'provider.service_id', 'service.id')
-    .where({ 'service.id': storeId });
+    .where({ 'service.store_id': storeId });
 
 export const getProviderById = id =>
   knex('provider')
