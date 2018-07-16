@@ -232,6 +232,7 @@ export const retrieveCurrentOrders = store =>
   knex
     .select(
       'order.id',
+      'product.id as product_id',
       'product.name as product_name',
       'product.picture as product_picture',
       'product.description as product_description',
