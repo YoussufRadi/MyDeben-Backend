@@ -249,6 +249,7 @@ export const retrieveCurrentOrders = store =>
       'provider.id as provide_id',
       'provider.name as provide_name',
       'user.name',
+      'user.checkin_store_ref',
     )
     .from('order')
     .innerJoin('product', 'order.product_id', 'product.id')
