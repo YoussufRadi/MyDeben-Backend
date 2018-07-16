@@ -114,9 +114,16 @@ export const retrieveServiceProviders = (storeId, serviceId) =>
 
 export const retrieveAllStoreProviders = storeId =>
   knex
-    .select('id', 'name', 'picture', 'service_id')
-    .table('provider')
-    .where({ store_id: storeId });
+    .select(
+      'provider.id',
+      'provider.name',
+      'provider.picture',
+      'provider.service_id',
+      'service.name as service_name',
+    )
+    .from('provider')
+    .innerJoin('service', 'provider.service_id', 'service.id')
+    .where({ 'service.id': storeId });
 
 export const getProviderById = id =>
   knex('provider')
