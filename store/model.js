@@ -248,12 +248,15 @@ export const retrieveCurrentOrders = store =>
       'provider.name as provide_name',
       'user.name as user_name',
       'user.checkin_store_ref',
+      'service.id as service_id',
+      'service.name as service_name',
     )
     .from('order')
     .innerJoin('product', 'order.product_id', 'product.id')
     .innerJoin('user', 'user.id', 'order.user_id')
     .innerJoin('category', 'category.id', 'product.category_id')
     .innerJoin('provider', 'provider.id', 'category.provider_id')
+    .innerJoin('service', 'service.id', 'provider.service_id')
     .where({ 'order.store_id': store.id, served: false, cancelled: false });
 
 export const retrieveCheckInUsers = store =>
