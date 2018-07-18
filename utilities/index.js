@@ -12,7 +12,7 @@ export const groupBy = (xs, key, flag) => {
   const keys = Object.keys(group);
   const out = [];
   for (let index = 0; index < keys.length; ++index) {
-    out.push({ service: keys[index], providers: [group[keys[index]]] });
+    out.push({ service: keys[index], providers: group[keys[index]] });
   }
   return out;
 };
