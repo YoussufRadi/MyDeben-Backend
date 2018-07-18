@@ -111,7 +111,7 @@ export const insertProvider = (provider, storeId) =>
 
 export const retrieveServiceProviders = (storeId, serviceId) =>
   knex
-    .select('id', 'name', 'picture', 'gem')
+    .select('id', 'name', 'picture', 'gem', 'service_id')
     .table('provider')
     .where({ store_id: storeId, service_id: serviceId });
 
