@@ -36,6 +36,8 @@ import {
   getProviderById,
   retrieveUserOrders,
   retrieveAllStoreProviders,
+  getUsersbyRef,
+  delRefToken,
 } from './model';
 import { getUserById } from '../user/model';
 import { ensureAuthenticated } from '../auth/controller';
@@ -63,8 +65,7 @@ const verfiyStore = (req, res, next) => {
 };
 
 const qRcode = (req, res, next) => {
-  const input = `{"store_id": "${req.id}", "store_name": "${req.store.name}",
-    "checkout_date":"${req.params.date}", "ref":"${req.params.ref}"}`;
+  const input = `{"token":"${req.token}"}`;
   generateQR(input, (err, code) => {
     if (err) {
       res.status(400).json({
@@ -88,6 +89,26 @@ const refToken = (req, res, next) => {
         res.status(400).json({ detail: err.detail, success: false });
       });
   });
+};
+
+const confirmRef = (req, res, next) => {
+  getUsersbyRef(req.params.ref)
+    .then(token => {
+      if (token[0]) {
+        res.status(409).json({
+          detail: 'There is user still checked in with same token',
+        });
+        return;
+      }
+      next();
+    })
+    .catch(() => {
+      if (err) {
+        res.status(400).json({
+          detail: err,
+        });
+      }
+    });
 };
 
 const newService = (req, res, next) => {
@@ -558,8 +579,8 @@ const groupProviders = (req, res, next) => {
   next();
 };
 
-export const generateQRcode = [ensureAuthenticated, verfiyStore, qRcode];
-export const generateToken = [ensureAuthenticated, verfiyStore, refToken];
+export const generateQRcode = [ensureAuthenticated, verfiyStore, confirmRef, refToken, qRcode];
+export const generateToken = [ensureAuthenticated, verfiyStore, confirmRef, refToken];
 export const addService = [
   validate(validation.addService),
   ensureAuthenticated,

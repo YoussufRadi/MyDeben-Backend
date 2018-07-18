@@ -34,7 +34,6 @@ exports.up = function (knex, Promise) {
       table.string('token').notNullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('expires_at');
-      table.unique(['email', 'model']);
     }),
     knex.schema.createTable('checkin-token', table => {
       table.increments();
@@ -68,6 +67,8 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('store')
         .notNullable();
+      table.boolean('gem').defaultTo(false);
+
       table
         .integer('service_id')
         .references('id')
@@ -96,7 +97,6 @@ exports.up = function (knex, Promise) {
       table.increments();
       table.string('name').notNullable();
       table.float('price').notNullable();
-      table.boolean('gem').defaultTo(false);
       table.string('picture');
       table
         .integer('store_id')

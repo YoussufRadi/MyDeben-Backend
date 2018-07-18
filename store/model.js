@@ -20,6 +20,8 @@ export const insertRefToken = (store_id, name, ref, token, checkout_date) =>
     })
     .returning('id');
 
+export const getUsersbyRef = ref => knex('user').where('checkin_store_ref', ref);
+
 export const getStoreById = id =>
   knex('store')
     .where('id', id)
@@ -115,14 +117,14 @@ export const retrieveServiceProviders = (storeId, serviceId) =>
 export const retrieveAllStoreProviders = storeId =>
   knex
     .select(
+      'service.id as service_id',
+      'service.name as service_name',
       'provider.id',
       'provider.name',
       'provider.picture',
-      'provider.service_id',
-      'service.name as service_name',
     )
-    .from('provider')
-    .innerJoin('service', 'provider.service_id', 'service.id')
+    .from('service')
+    .leftJoin('provider', 'provider.service_id', 'service.id')
     .where({ 'service.store_id': storeId });
 
 export const getProviderById = id =>
@@ -262,7 +264,7 @@ export const retrieveCurrentOrders = store =>
 
 export const retrieveCheckInUsers = store =>
   knex
-    .select('id', 'name', 'email', 'facebook', 'gmail', 'checkout_date')
+    .select('id', 'name', 'email', 'facebook', 'gmail', 'checkout_date', 'checkin_store_ref')
     .table('user')
     .where('checkin_store_id', store.id)
     .then(users => users);

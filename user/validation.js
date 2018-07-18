@@ -8,6 +8,11 @@ export default {
       checkout_date: Joi.date().required(),
     },
   },
+  token: {
+    body: {
+      token: Joi.string().required(),
+    },
+  },
   viewCategory: {
     query: {
       providerId: Joi.number().required(),

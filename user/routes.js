@@ -14,14 +14,14 @@ import {
 
 const router = express.Router();
 
-router.post('/checkin/', userCheckIn, (req, res) => {
-  res.status(200).json({
-    success: true,
-    detail: 'Checked In Successfully',
-  });
-});
+// router.post('/checkin/', userCheckIn, (req, res) => {
+//   res.status(200).json({
+//     success: true,
+//     detail: 'Checked In Successfully',
+//   });
+// });
 
-router.get('/checkin/:token', userCheckInToken, (req, res) => {
+router.post('/checkin/', userCheckInToken, (req, res) => {
   res.status(200).json({
     success: true,
     detail: 'Checked In Successfully',

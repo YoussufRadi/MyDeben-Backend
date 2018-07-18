@@ -45,26 +45,27 @@ const verfiyUser = (req, res, next) => {
     });
 };
 
-const checkIn = (req, res, next) => {
-  if (req.user.checkin_store_id) {
-    res.status(400).json({ detail: 'Must Checkout from store first', success: false });
-    return;
-  }
-  insertCheckIn(req.user, req.body)
-    .then(() => {
-      next();
-    })
-    .catch(err => {
-      res.status(400).json({ detail: err.detail, success: false });
-    });
-};
+// Old
+// const checkIn = (req, res, next) => {
+//   if (req.user.checkin_store_id) {
+//     res.status(400).json({ detail: 'Must Checkout from store first', success: false });
+//     return;
+//   }
+//   insertCheckIn(req.user, req.body)
+//     .then(() => {
+//       next();
+//     })
+//     .catch(err => {
+//       res.status(400).json({ detail: err.detail, success: false });
+//     });
+// };
 
 const getToken = (req, res, next) => {
   if (req.user.checkin_store_id) {
     res.status(400).json({ detail: 'Must Checkout from store first', success: false });
     return;
   }
-  getRefByToken(req.params.token)
+  getRefByToken(req.body.token)
     .then(ref => {
       if (!ref) {
         res.status(404).json({ detail: 'Token doesnot exist' });
@@ -241,7 +242,7 @@ const checkCategory = (req, res, next) => {
 };
 
 const groupServices = (req, res, next) => {
-  if (req.query.group) req.services = groupBy(req.services, req.query.group);
+  if (req.query.group) req.services = groupBy(req.services, req.query.group, true);
   if (req.services.undefined) {
     res.status(400).json({
       detail: 'Grouping Parameter Invalid',
@@ -265,8 +266,14 @@ const viewSearchResults = (req, res, next) => {
       res.status(400).json({ detail: err.detail });
     });
 };
-export const userCheckIn = [validate(validation.checkIn), ensureAuthenticated, verfiyUser, checkIn];
-export const userCheckInToken = [ensureAuthenticated, verfiyUser, getToken, consumeToken];
+// export const userCheckIn = [validate(validation.checkIn), ensureAuthenticated, verfiyUser, checkIn];
+export const userCheckInToken = [
+  validate(validation.token),
+  ensureAuthenticated,
+  verfiyUser,
+  getToken,
+  consumeToken,
+];
 export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
 export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
 export const profile = [ensureAuthenticated, verfiyUser, getHistory, getProfile];
