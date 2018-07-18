@@ -377,8 +377,6 @@ paths:
                       type: "string"
                     price:
                       type: "number"
-                    gem:
-                      type: "boolean"
                     picture:
                       type: "string"
                     store_id:
@@ -516,16 +514,10 @@ paths:
         schema:
           type: "object"
           required:
-          - "store_name"
-          - "store_id"
-          - "checkout_date"
+          - "token"
           properties:
-            store_name:
+            token:
               type: "string"
-            store_id:
-              type: "integer"
-            checkout_date:
-              type: "date"
       security:
         - x-access-token: [user]
       responses:
@@ -541,41 +533,6 @@ paths:
           description: "Permission Denied"
         404:
           description: "Store doesnot exist"
-
-
-  /user/checkin/{token}:
-    get:
-      tags:
-      - "User"
-      summary: "User Check in to store using code"
-      description: "Travellers can enter code given by hotel manager once he arrives at hotel so that 
-                he can checkin the hotel services on Deben"
-      operationId: "checkInCode"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "token"
-        description: "Token given by hotel admin for user to checkin"
-        required: true
-        type: "string"
-      security:
-        - x-access-token: [user]
-      responses:
-        200:
-          description: "Checked In Successfully"
-          schema:
-            $ref: "#/definitions/Success"
-        400:
-          description: "Wrong User token Used or Already checked_in"
-        401:
-          description: "Token expired or Malformed"
-        403:
-          description: "Permission Denied"
-        404:
-          description: "Token doesnot exist"
 
   /user/service:
     get:
@@ -986,6 +943,8 @@ paths:
               type: "string"
             service_id:
               type: "integer"
+            gem:
+              type: "boolean"
       security:
         - x-access-token: [store]
       responses:
@@ -1029,6 +988,8 @@ paths:
               type: "string" 
             picture:
               type: "string"
+            gem:
+              type: "boolean"
       security:
         - x-access-token: [store]
       responses:
@@ -1279,8 +1240,6 @@ paths:
               type: "integer"
             price:
               type: "integer"
-            gem:
-              type: "boolean"
       security:
         - x-access-token: [store]
       responses:
@@ -1328,8 +1287,6 @@ paths:
               type: "string"
             price:
               type: "integer"
-            gem:
-              type: "boolean"
       security:
         - x-access-token: [store]
       responses:
@@ -1750,24 +1707,14 @@ definitions:
         type: "string"
       name:
         type: "string" 
-      price:
-        type: "integer"
       gem:
         type: "boolean"
       picture:
         type: "string"
       store_id:
         type: "integer"
-      description:
-        type: "string"
-      category_id:
+      service_id:
         type: "integer"
-      quantity:
-        type: "integer"
-      user_id:
-        type: "integer"
-      checked_out:
-        type: "boolean"
   Service:
     type: "object"
     properties:
@@ -1805,6 +1752,8 @@ definitions:
         type: "string" 
       picture:
         type: "string"
+      gem:
+        type: "boolean"
   Category:
     type: "object"
     properties:
@@ -1829,8 +1778,6 @@ definitions:
         type: "string"
       price:
         type: "integer"
-      gem:
-        type: "boolean"
 
 securityDefinitions:
   x-access-token:
