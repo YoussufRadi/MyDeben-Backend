@@ -46,7 +46,6 @@ exports.up = function (knex, Promise) {
       table.string('token').notNullable();
       table.string('name').notNullable();
       table.string('checkout_date').notNullable();
-      table.unique(['ref', 'store_id']);
     }),
     knex.schema.createTable('service', table => {
       table.increments();
