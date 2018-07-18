@@ -108,5 +108,5 @@ export const retrieveStoreServices = storeId =>
 
 export const getSearchResutlts = (keyword, storeId) =>
   knex('product')
-    .where('name', 'like', `${keyword}%`)
+    .whereRaw('LOWER(name) LIKE ?', [`${keyword}%`])
     .andWhere('store_id', storeId);
