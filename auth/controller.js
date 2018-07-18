@@ -101,9 +101,8 @@ const userVerify = (req, res, next) => {
           }
         }
       }
-      req.token = jwt.sign({ id: user.id, model: 'user' }, config.jwtSecret, {
-        expiresIn: config.jwtExpiry,
-      });
+      req.token = jwt.sign({ id: user.id, model: 'user' }, config.jwtSecret);
+      req.checkin = user.checkin_store_id !== null;
       next();
     })
     .catch(err => {
@@ -149,9 +148,7 @@ const storeVerify = (req, res, next) => {
           return;
         }
       }
-      req.token = jwt.sign({ id: store.id, model: 'store' }, config.jwtSecret, {
-        expiresIn: config.jwtExpiry,
-      });
+      req.token = jwt.sign({ id: store.id, model: 'store' }, config.jwtSecret);
       next();
     })
     .catch(err => {

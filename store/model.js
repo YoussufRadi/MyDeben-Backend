@@ -105,12 +105,13 @@ export const insertProvider = (provider, storeId) =>
       picture: provider.picture,
       store_id: storeId,
       service_id: provider.service_id,
+      gem: provider.gem,
     })
     .returning('id');
 
 export const retrieveServiceProviders = (storeId, serviceId) =>
   knex
-    .select('id', 'name', 'picture')
+    .select('id', 'name', 'picture', 'gem')
     .table('provider')
     .where({ store_id: storeId, service_id: serviceId });
 
@@ -122,6 +123,7 @@ export const retrieveAllStoreProviders = storeId =>
       'provider.id',
       'provider.name',
       'provider.picture',
+      'provider.gem',
     )
     .from('service')
     .leftJoin('provider', 'provider.service_id', 'service.id')
@@ -146,6 +148,7 @@ export const updateProvider = (storeId, providerId, provider) =>
     .update({
       name: provider.name,
       picture: provider.picture,
+      gem: provider.gem,
     });
 
 export const insertProduct = (product, storeId) =>
@@ -156,14 +159,13 @@ export const insertProduct = (product, storeId) =>
       description: product.description,
       store_id: storeId,
       category_id: product.category_id,
-      gem: product.gem,
       price: product.price,
     })
     .returning('id');
 
 export const retrieveCategoryProducts = (storeId, categoryId) =>
   knex
-    .select('id', 'name', 'picture', 'description', 'price', 'gem')
+    .select('id', 'name', 'picture', 'description', 'price')
     .table('product')
     .where({ store_id: storeId, category_id: categoryId });
 
@@ -187,7 +189,6 @@ export const updateProduct = (storeId, productId, product) =>
       name: product.name,
       picture: product.picture,
       description: product.description,
-      gem: product.gem,
       price: product.price,
     });
 

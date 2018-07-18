@@ -68,7 +68,6 @@ exports.up = function (knex, Promise) {
         .inTable('store')
         .notNullable();
       table.boolean('gem').defaultTo(false);
-
       table
         .integer('service_id')
         .references('id')

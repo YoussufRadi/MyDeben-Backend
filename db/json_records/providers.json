@@ -3,7 +3,8 @@
     "name": "Hotel",
     "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
     "service_id": 1,
-    "store_id": 1
+    "store_id": 1,
+    "gem": true
   },
   {
     "name": "Starbucks",
@@ -21,7 +22,8 @@
     "name": "Mac",
     "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
     "service_id": 3,
-    "store_id": 1
+    "store_id": 1,
+    "gem": true
   },
   {
     "name": "Burger King",
@@ -39,7 +41,8 @@
     "name": "Hotel",
     "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
     "service_id": 4,
-    "store_id": 1
+    "store_id": 1,
+    "gem": true
   },
   {
     "name": "Gym",
@@ -57,7 +60,8 @@
     "name": "3am ahmed",
     "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
     "service_id": 7,
-    "store_id": 2
+    "store_id": 2,
+    "gem": true
   },
   {
     "name": "XOXO",
@@ -69,6 +73,7 @@
     "name": "💋",
     "picture": "http://172.104.209.122:3000/api/file/d6de8e84-f81a-4d8c-ac10-a0063a531f71.jpeg",
     "service_id": 8,
-    "store_id": 2
+    "store_id": 2,
+    "gem": true
   }
 ]

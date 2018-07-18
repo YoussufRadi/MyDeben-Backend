@@ -80,7 +80,7 @@ export const retrieveAllOrders = user =>
     .innerJoin('product', 'order.product_id', 'product.id')
     .where({ 'order.store_id': user.checkin_store_id, user_id: user.id });
 
-export const retrieveGems = storeId => knex('product').where({ store_id: storeId, gem: true });
+export const retrieveGems = storeId => knex('provider').where({ store_id: storeId, gem: true });
 
 export const retrieveStoreCategories = storeId =>
   knex
