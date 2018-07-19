@@ -437,7 +437,7 @@ paths:
           schema:
             type: "object"
             properties:
-              oredrs:
+              orders:
                 type: "array"
                 items:
                   $ref: "#/definitions/Order"
@@ -1355,7 +1355,7 @@ paths:
           schema:
             type: "object"
             properties:
-              oredrs:
+              orders:
                 type: "array"
                 items:
                   $ref: "#/definitions/Order"
@@ -1393,7 +1393,7 @@ paths:
           schema:
             type: "object"
             properties:
-              oredrs:
+              orders:
                 type: "array"
                 items:
                   $ref: "#/definitions/Order"

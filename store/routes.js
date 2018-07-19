@@ -113,7 +113,7 @@ router.get('/users/:userId', userReport, (req, res) => {
   res.status(200).json({
     user: req.user,
     total: req.total,
-    oredrs: req.orders,
+    orders: req.orders,
   });
 });
 router.get('/checkout', checkOut, (req, res) =>

@@ -37,7 +37,7 @@ router.post('/order', addOrder, (req, res) => {
 
 router.get('/order', viewHistory, (req, res) => {
   res.status(200).json({
-    oredrs: req.orders,
+    orders: req.orders,
   });
 });
 
@@ -45,7 +45,7 @@ router.get('/profile', profile, (req, res) => {
   res.status(200).json({
     user: req.user,
     total: req.total,
-    oredrs: req.orders,
+    orders: req.orders,
   });
 });
 
