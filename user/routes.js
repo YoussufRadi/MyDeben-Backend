@@ -25,6 +25,10 @@ router.post('/checkin/', userCheckInToken, (req, res) => {
   res.status(200).json({
     success: true,
     detail: 'Checked In Successfully',
+    store_id: req.store_id,
+    ref_number: req.ref_number,
+    store_name: req.store_name,
+    checkout_date: req.checkout_date,
   });
 });
 

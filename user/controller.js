@@ -72,6 +72,10 @@ const getToken = (req, res, next) => {
         return;
       }
       req.ref = ref;
+      req.store_id = ref.store_id;
+      req.ref_number = ref.ref;
+      req.store_name = ref.name;
+      req.checkout_date = ref.checkout_date;
       next();
     })
     .catch(err => {
@@ -272,7 +276,7 @@ export const userCheckInToken = [
   ensureAuthenticated,
   verfiyUser,
   getToken,
-  consumeToken,
+  // consumeToken,
 ];
 export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
 export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
