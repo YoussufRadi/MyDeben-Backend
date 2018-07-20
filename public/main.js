@@ -1084,15 +1084,16 @@ var AuthGuardService = /** @class */ (function () {
         this.router = router;
     }
     AuthGuardService.prototype.canActivate = function () {
-        if (this.authentication.isAuthenticated()) {
-            this.redirectToLoginPage();
+        var token = this.authentication.isAuthenticated();
+        if (!token) {
+            console.error("User is not authenticated.");
+            this.router.navigate(["/login"]);
+            return false;
+        }
+        else {
+            // this.router.navigate(["/order/generate"]);
             return true;
         }
-        else
-            return false;
-    };
-    AuthGuardService.prototype.redirectToLoginPage = function () {
-        this.router.navigate(["/login"]);
     };
     AuthGuardService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
@@ -1141,7 +1142,7 @@ var AuthenticationService = /** @class */ (function () {
     }
     AuthenticationService.prototype.login = function (token) {
         this.setToken(token);
-        this.router.navigate(["panel", "dashboard"]);
+        this.router.navigate(["order", "generate"]);
     };
     AuthenticationService.prototype.logout = function () {
         this.removeToken();
