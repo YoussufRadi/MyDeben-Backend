@@ -287,8 +287,6 @@ const getCategoryProducts = (req, res, next) => {
 const getServiceProviders = (req, res, next) => {
   retrieveServiceProviders(req.id, req.query.serviceId)
     .then(providers => {
-      console.log(providers);
-
       req.providers = providers;
       next();
     })
@@ -436,6 +434,14 @@ const sortOrders = (req, res, next) => {
   next();
 };
 
+const sort = (req, res, next) => {
+  if (req.services) req.services.sort((a, b)(`${a.name}`).localeCompare(b.name));
+  if (req.providers) req.providers.sort((a, b) => `${a.name}`.localeCompare(b.name));
+  if (req.categories) req.categories.sort((a, b) => `${a.name}`.localeCompare(b.name));
+  if (req.products) req.products.sort((a, b) => `${a.name}`.localeCompare(b.name));
+
+  next();
+};
 const getCheckedInUsers = (req, res, next) => {
   retrieveCheckInUsers(req.store)
     .then(users => {
@@ -587,7 +593,7 @@ export const addService = [
   verfiyStore,
   newService,
 ];
-export const viewService = [ensureAuthenticated, verfiyStore, getStoreServices];
+export const viewService = [ensureAuthenticated, verfiyStore, getStoreServices, sort];
 export const deleteService = [ensureAuthenticated, verfiyStore, checkService, removeStoreService];
 export const modifyService = [ensureAuthenticated, verfiyStore, checkService, editStoreService];
 export const addProvider = [
@@ -603,6 +609,7 @@ export const viewProvider = [
   verfiyStore,
   checkService,
   getServiceProviders,
+  sort,
 ];
 export const viewAllProvider = [
   ensureAuthenticated,
@@ -625,6 +632,7 @@ export const viewCategory = [
   verfiyStore,
   checkProvider,
   getStoreCategories,
+  sort,
 ];
 export const deleteCategory = [
   ensureAuthenticated,
@@ -646,6 +654,7 @@ export const viewProduct = [
   verfiyStore,
   checkCategory,
   getCategoryProducts,
+  sort,
 ];
 export const deleteProduct = [ensureAuthenticated, verfiyStore, checkProduct, removeProduct];
 export const modifyProduct = [ensureAuthenticated, verfiyStore, checkProduct, editProduct];

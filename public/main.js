@@ -1090,10 +1090,8 @@ var AuthGuardService = /** @class */ (function () {
             this.router.navigate(["/login"]);
             return false;
         }
-        else {
-            // this.router.navigate(["/order/generate"]);
+        else
             return true;
-        }
     };
     AuthGuardService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
@@ -1251,6 +1249,8 @@ var SidebarComponent = /** @class */ (function () {
     SidebarComponent.prototype.ngOnInit = function () {
         if (this.authentication.isAuthenticated())
             this.account = "Logout";
+        else
+            this.selected = 5;
     };
     SidebarComponent.prototype.isLoggedIn = function () {
         return this.authentication.isAuthenticated();

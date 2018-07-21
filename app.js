@@ -33,7 +33,6 @@ const options = {
 // Swagger Setup
 const swaggerDocument = YAML.load('./apiDoc.yaml');
 
-app.use(express.static('public'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 app.use(bodyParser.json());
@@ -48,9 +47,10 @@ app.use('/api/user', user);
 app.use('/api/auth', auth);
 app.use('/api/store', store);
 app.use('/api/file', file);
+app.use(express.static(`${__dirname}/public`)); // set the static files location /public/img will be /img for users
 
-app.use((req, res) => {
-  res.status(404).json({ detail: "route doesn't exist" });
+app.get('*', (req, res) => {
+  res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
 app.use((err, req, res, next) => {

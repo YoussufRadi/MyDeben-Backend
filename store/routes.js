@@ -61,8 +61,6 @@ router.get('/provider', viewProvider, (req, res) =>
 );
 
 router.get('/provider/all', viewAllProvider, (req, res) => {
-  console.log(req.providers);
-
   res.status(200).json({ providers: req.providers });
 });
 
@@ -72,8 +70,6 @@ router.post('/provider', addProvider, (req, res) =>
     success: true,
   }),
 );
-
-// curl -X GET "http://localhost:3000/api/store/provider/all?group=id" -H "accept: application/json" -H "x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibW9kZWwiOiJzdG9yZSIsImlhdCI6MTUzMTczODc4NCwiZXhwIjoxNTMxODI1MTg0fQ.iZFNFMDqnGfnbZKa3aiFHaLJQXXjBzo8SjL9dXZTP4U"
 
 router.patch('/provider/:id', modifyProvider, (req, res) => res.status(204).send());
 
