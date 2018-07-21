@@ -435,7 +435,7 @@ const sortOrders = (req, res, next) => {
 };
 
 const sort = (req, res, next) => {
-  if (req.services) req.services.sort((a, b)(`${a.name}`).localeCompare(b.name));
+  if (req.services) req.services.sort((a, b) => `${a.name}`.localeCompare(b.name));
   if (req.providers) req.providers.sort((a, b) => `${a.name}`.localeCompare(b.name));
   if (req.categories) req.categories.sort((a, b) => `${a.name}`.localeCompare(b.name));
   if (req.products) req.products.sort((a, b) => `${a.name}`.localeCompare(b.name));

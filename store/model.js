@@ -39,26 +39,26 @@ export const retrieveStoreServices = storeId =>
   knex
     .select('id', 'name')
     .table('service')
-    .where('store_id', storeId);
+    .where({ store_id: storeId, deleted: false });
 
 export const getServiceById = id =>
   knex('service')
-    .where('id', id)
+    .where({ id, deleted: false })
     .then(services => services[0]);
 
 export const delService = (storeId, serviceId) =>
   knex('service')
-    .del()
     .where({
       store_id: storeId,
       id: serviceId,
-    });
+    })
+    .update('deleted', true);
 
 export const updateService = (storeId, serviceId, service) =>
   knex('service')
     .where({ store_id: storeId, id: serviceId })
     .update({
-      ...service,
+      name: service.name,
     });
 
 export const insertCategory = (category, storeId) =>
@@ -76,26 +76,28 @@ export const retrieveStoreCategories = (storeId, providerId) =>
   knex
     .select('id', 'name', 'picture', 'description')
     .table('category')
-    .where({ store_id: storeId, provider_id: providerId });
+    .where({ store_id: storeId, provider_id: providerId, deleted: false });
 
 export const getCategoryById = id =>
   knex('category')
-    .where('id', id)
+    .where({ id, deleted: false })
     .then(categories => categories[0]);
 
 export const delCategory = (storeId, categoryId) =>
   knex('category')
-    .del()
     .where({
       store_id: storeId,
       id: categoryId,
-    });
+    })
+    .update('deleted', true);
 
 export const updateCategory = (storeId, categoryId, category) =>
   knex('category')
     .where({ store_id: storeId, id: categoryId })
     .update({
-      ...category,
+      name: category.name,
+      picture: category.picture,
+      description: category.description,
     });
 
 export const insertProvider = (provider, storeId) =>
@@ -113,7 +115,7 @@ export const retrieveServiceProviders = (storeId, serviceId) =>
   knex
     .select('id', 'name', 'picture', 'gem', 'service_id')
     .table('provider')
-    .where({ store_id: storeId, service_id: serviceId });
+    .where({ store_id: storeId, service_id: serviceId, deleted: false });
 
 export const retrieveAllStoreProviders = storeId =>
   knex
@@ -127,20 +129,20 @@ export const retrieveAllStoreProviders = storeId =>
     )
     .from('service')
     .leftJoin('provider', 'provider.service_id', 'service.id')
-    .where({ 'service.store_id': storeId });
+    .where({ 'service.store_id': storeId, 'service.deleted': false, 'provider.deleted': false });
 
 export const getProviderById = id =>
   knex('provider')
-    .where('id', id)
+    .where({ id, deleted: false })
     .then(providers => providers[0]);
 
 export const delProvider = (storeId, providerId) =>
   knex('provider')
-    .del()
     .where({
       store_id: storeId,
       id: providerId,
-    });
+    })
+    .update('deleted', true);
 
 export const updateProvider = (storeId, providerId, provider) =>
   knex('provider')
@@ -167,20 +169,20 @@ export const retrieveCategoryProducts = (storeId, categoryId) =>
   knex
     .select('id', 'name', 'picture', 'description', 'price')
     .table('product')
-    .where({ store_id: storeId, category_id: categoryId });
+    .where({ store_id: storeId, category_id: categoryId, deleted: false });
 
 export const getProductById = id =>
   knex('product')
-    .where('id', id)
+    .where({ id, deleted: false })
     .then(products => products[0]);
 
 export const delProduct = (storeId, productId) =>
   knex('product')
-    .del()
     .where({
       store_id: storeId,
       id: productId,
-    });
+    })
+    .update('deleted', true);
 
 export const updateProduct = (storeId, productId, product) =>
   knex('product')

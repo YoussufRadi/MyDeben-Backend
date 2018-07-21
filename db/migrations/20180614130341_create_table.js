@@ -55,6 +55,7 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('store')
         .notNullable();
+      table.boolean('deleted').defaultTo(false);
       table.unique(['name', 'store_id']);
     }),
     knex.schema.createTable('provider', table => {
@@ -72,6 +73,7 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('service')
         .notNullable();
+      table.boolean('deleted').defaultTo(false);
       table.unique(['name', 'service_id']);
     }),
     knex.schema.createTable('category', table => {
@@ -89,6 +91,7 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('provider')
         .notNullable();
+      table.boolean('deleted').defaultTo(false);
       table.unique(['name', 'provider_id']);
     }),
     knex.schema.createTable('product', table => {
@@ -107,6 +110,7 @@ exports.up = function (knex, Promise) {
         .references('id')
         .inTable('category')
         .notNullable();
+      table.boolean('deleted').defaultTo(false);
       table.unique(['name', 'category_id']);
     }),
     knex.schema.createTable('order', table => {

@@ -44,7 +44,7 @@ export const insertOrder = async (orders, userId, storeId) => {
   const mapped = [];
   await asyncForEach(orders, async order => {
     const price = await knex('product')
-      .where('id', order.product_id)
+      .where({ id: order.product_id, deleted: false, store_id: storeId })
       .then(product => product[0].price);
     mapped.push({
       total_price: price * order.quantity,
@@ -80,7 +80,8 @@ export const retrieveAllOrders = user =>
     .innerJoin('product', 'order.product_id', 'product.id')
     .where({ 'order.store_id': user.checkin_store_id, user_id: user.id });
 
-export const retrieveGems = storeId => knex('provider').where({ store_id: storeId, gem: true });
+export const retrieveGems = storeId =>
+  knex('provider').where({ store_id: storeId, gem: true, deleted: false });
 
 export const retrieveStoreCategories = storeId =>
   knex
@@ -90,7 +91,7 @@ export const retrieveStoreCategories = storeId =>
 
 export const getCategoryById = id =>
   knex('category')
-    .where('id', id)
+    .where({ id, deleted: false })
     .then(categories => categories[0]);
 
 export const retrieveStoreServices = storeId =>
@@ -104,9 +105,10 @@ export const retrieveStoreServices = storeId =>
     )
     .from('service')
     .leftJoin('provider', 'provider.service_id', 'service.id')
-    .where('service.store_id', storeId);
+    .where({ 'service.store_id': storeId, 'service.deleted': false, 'provider.deleted': false });
 
 export const getSearchResutlts = (keyword, storeId) =>
   knex('product')
     .whereRaw('LOWER(name) LIKE ?', [`${keyword}%`])
-    .andWhere('store_id', storeId);
+    .andWhere('store_id', storeId)
+    .andWhere('deleted', false);
