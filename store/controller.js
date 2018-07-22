@@ -298,10 +298,16 @@ const getServiceProviders = (req, res, next) => {
 const getAllStoreProviders = (req, res, next) => {
   retrieveAllStoreProviders(req.id)
     .then(providers => {
+      providers = Object.values(providers).reduce((ac, v) => {
+        if (!v.deleted) ac.push(v);
+        return ac;
+      }, []);
       req.providers = providers;
       next();
     })
     .catch(err => {
+      console.log(err);
+
       res.status(400).json({ detail: err.detail });
     });
 };

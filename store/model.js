@@ -126,10 +126,11 @@ export const retrieveAllStoreProviders = storeId =>
       'provider.name',
       'provider.picture',
       'provider.gem',
+      'provider.deleted',
     )
     .from('service')
     .leftOuterJoin('provider', 'provider.service_id', 'service.id')
-    .where({ 'service.store_id': storeId, 'service.deleted': false, 'provider.deleted': false });
+    .where({ 'service.store_id': storeId, 'service.deleted': false });
 
 export const getProviderById = id =>
   knex('provider')

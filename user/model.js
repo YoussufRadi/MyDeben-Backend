@@ -100,12 +100,13 @@ export const retrieveStoreServices = storeId =>
       'service.id as service_id',
       'service.name as service_name',
       'provider.id as provider_id',
+      'provider.deleted',
       'provider.name as provide_name',
       'provider.picture as provider_picture',
     )
     .from('service')
     .leftOuterJoin('provider', 'provider.service_id', 'service.id')
-    .where({ 'service.store_id': storeId, 'service.deleted': false, 'provider.deleted': false });
+    .where({ 'service.store_id': storeId, 'service.deleted': false });
 
 export const getSearchResutlts = (keyword, storeId) =>
   knex('product')

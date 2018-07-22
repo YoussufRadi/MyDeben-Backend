@@ -164,6 +164,10 @@ const getStoreServices = (req, res, next) => {
   }
   retrieveStoreServices(req.user.checkin_store_id)
     .then(services => {
+      services = Object.values(services).reduce((ac, v) => {
+        if (!v.deleted) ac.push(v);
+        return ac;
+      }, []);
       req.services = services;
       next();
     })
@@ -276,7 +280,7 @@ export const userCheckInToken = [
   ensureAuthenticated,
   verfiyUser,
   getToken,
-  // consumeToken,
+  consumeToken,
 ];
 export const addOrder = [validate(validation.makeOrder), ensureAuthenticated, verfiyUser, newOrder];
 export const viewHistory = [ensureAuthenticated, verfiyUser, getHistory];
