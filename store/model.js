@@ -128,7 +128,7 @@ export const retrieveAllStoreProviders = storeId =>
       'provider.gem',
     )
     .from('service')
-    .leftJoin('provider', 'provider.service_id', 'service.id')
+    .leftOuterJoin('provider', 'provider.service_id', 'service.id')
     .where({ 'service.store_id': storeId, 'service.deleted': false, 'provider.deleted': false });
 
 export const getProviderById = id =>

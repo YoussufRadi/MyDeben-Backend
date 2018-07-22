@@ -104,7 +104,7 @@ export const retrieveStoreServices = storeId =>
       'provider.picture as provider_picture',
     )
     .from('service')
-    .leftJoin('provider', 'provider.service_id', 'service.id')
+    .leftOuterJoin('provider', 'provider.service_id', 'service.id')
     .where({ 'service.store_id': storeId, 'service.deleted': false, 'provider.deleted': false });
 
 export const getSearchResutlts = (keyword, storeId) =>
