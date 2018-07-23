@@ -587,7 +587,7 @@ var LoginComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  not-found works!\n</p>\n"
+module.exports = "<link href='https://fonts.googleapis.com/css?family=Anton|Passion+One|PT+Sans+Caption' rel='stylesheet' type='text/css'>\n\n<body>\n\n  <!-- Error Page -->\n  <div class=\"error\">\n    <div class=\"container-floud\">\n      <div class=\"col-xs-12 ground-color text-center\">\n        <div class=\"container-error-404\">\n          <div class=\"clip\">\n            <div class=\"shadow\">\n              <span class=\"digit thirdDigit\"></span>\n            </div>\n          </div>\n          <div class=\"clip\">\n            <div class=\"shadow\">\n              <span class=\"digit secondDigit\"></span>\n            </div>\n          </div>\n          <div class=\"clip\">\n            <div class=\"shadow\">\n              <span class=\"digit firstDigit\"></span>\n            </div>\n          </div>\n          <div class=\"msg\">OH!\n            <span class=\"triangle\"></span>\n          </div>\n        </div>\n        <h2 class=\"h1\">Sorry! Page not found</h2>\n      </div>\n    </div>\n  </div>\n  <!-- Error Page -->\n</body>"
 
 /***/ }),
 
@@ -598,7 +598,7 @@ module.exports = "<p>\n  not-found works!\n</p>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "* {\n  font-family: \"PT Sans Caption\", sans-serif, \"arial\", \"Times New Roman\"; }\n\n/* Error Page */\n\n.error .clip .shadow {\n  height: 180px;\n  /*Contrall*/ }\n\n.error .clip:nth-of-type(2) .shadow {\n  width: 130px;\n  /*Contrall play with javascript*/ }\n\n.error .clip:nth-of-type(1) .shadow,\n.error .clip:nth-of-type(3) .shadow {\n  width: 250px;\n  /*Contrall*/ }\n\n.error .digit {\n  width: 150px;\n  /*Contrall*/\n  height: 150px;\n  /*Contrall*/\n  line-height: 150px;\n  /*Contrall*/\n  font-size: 120px;\n  font-weight: bold; }\n\n.error h2 {\n  font-size: 32px; }\n\n.error .msg {\n  top: -190px;\n  left: 30%;\n  width: 80px;\n  height: 80px;\n  line-height: 80px;\n  font-size: 32px; }\n\n.error span.triangle {\n  top: 70%;\n  right: 0%;\n  border-left: 20px solid #535353;\n  border-top: 15px solid transparent;\n  border-bottom: 15px solid transparent; }\n\n.error .container-error-404 {\n  margin-top: 10%;\n  position: relative;\n  height: 250px;\n  padding-top: 40px; }\n\n.error .container-error-404 .clip {\n  display: inline-block;\n  -webkit-transform: skew(-45deg);\n          transform: skew(-45deg); }\n\n.error .clip .shadow {\n  overflow: hidden; }\n\n.error .clip:nth-of-type(2) .shadow {\n  overflow: hidden;\n  position: relative;\n  box-shadow: inset 20px 0px 20px -15px rgba(150, 150, 150, 0.8), 20px 0px 20px -15px rgba(150, 150, 150, 0.8); }\n\n.error .clip:nth-of-type(3) .shadow:after,\n.error .clip:nth-of-type(1) .shadow:after {\n  content: \"\";\n  position: absolute;\n  right: -8px;\n  bottom: 0px;\n  z-index: 9999;\n  height: 100%;\n  width: 10px;\n  background: linear-gradient(90deg, transparent, rgba(173, 173, 173, 0.8), transparent);\n  border-radius: 50%; }\n\n.error .clip:nth-of-type(3) .shadow:after {\n  left: -8px; }\n\n.error .digit {\n  position: relative;\n  top: 8%;\n  color: white;\n  background: #74c11d;\n  border-radius: 50%;\n  display: inline-block;\n  -webkit-transform: skew(45deg);\n          transform: skew(45deg); }\n\n.error .clip:nth-of-type(2) .digit {\n  left: -10%; }\n\n.error .clip:nth-of-type(1) .digit {\n  right: -20%; }\n\n.error .clip:nth-of-type(3) .digit {\n  left: -20%; }\n\n.error h2 {\n  color: #a2a2a2;\n  font-weight: bold;\n  padding-bottom: 20px; }\n\n.error .msg {\n  position: relative;\n  z-index: 9999;\n  display: block;\n  background: #535353;\n  color: #a2a2a2;\n  border-radius: 50%;\n  font-style: italic; }\n\n.error .triangle {\n  position: absolute;\n  z-index: 999;\n  -webkit-transform: rotate(45deg);\n          transform: rotate(45deg);\n  content: \"\";\n  width: 0;\n  height: 0; }\n\n/* Error Page */\n\n@media (max-width: 767px) {\n  /* Error Page */\n  .error .clip .shadow {\n    height: 100px;\n    /*Contrall*/ }\n  .error .clip:nth-of-type(2) .shadow {\n    width: 80px;\n    /*Contrall play with javascript*/ }\n  .error .clip:nth-of-type(1) .shadow,\n  .error .clip:nth-of-type(3) .shadow {\n    width: 100px;\n    /*Contrall*/ }\n  .error .digit {\n    width: 80px;\n    /*Contrall*/\n    height: 80px;\n    /*Contrall*/\n    line-height: 80px;\n    /*Contrall*/\n    font-size: 52px; }\n  .error h2 {\n    font-size: 24px; }\n  .error .msg {\n    top: -110px;\n    left: 15%;\n    width: 40px;\n    height: 40px;\n    line-height: 40px;\n    font-size: 18px; }\n  .error span.triangle {\n    top: 70%;\n    right: -3%;\n    border-left: 10px solid #535353;\n    border-top: 8px solid transparent;\n    border-bottom: 8px solid transparent; }\n  .error .container-error-404 {\n    height: 150px; }\n  /* Error Page */ }\n\n/*--------------------------------------------Framework --------------------------------*/\n\n.overlay {\n  position: relative;\n  z-index: 20; }\n\n/*done*/\n\n.ground-color {\n  background: white; }\n\n/*done*/\n\n.item-bg-color {\n  background: #eaeaea; }\n\n/*done*/\n\n/* Padding Section*/\n\n.padding-top {\n  padding-top: 10px; }\n\n/*done*/\n\n.padding-bottom {\n  padding-bottom: 10px; }\n\n/*done*/\n\n.padding-vertical {\n  padding-top: 10px;\n  padding-bottom: 10px; }\n\n.padding-horizontal {\n  padding-left: 10px;\n  padding-right: 10px; }\n\n.padding-all {\n  padding: 10px; }\n\n/*done*/\n\n.no-padding-left {\n  padding-left: 0px; }\n\n/*done*/\n\n.no-padding-right {\n  padding-right: 0px; }\n\n/*done*/\n\n.no-vertical-padding {\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n.no-horizontal-padding {\n  padding-left: 0px;\n  padding-right: 0px; }\n\n.no-padding {\n  padding: 0px; }\n\n/*done*/\n\n/* Padding Section*/\n\n/* Margin section */\n\n.margin-top {\n  margin-top: 10px; }\n\n/*done*/\n\n.margin-bottom {\n  margin-bottom: 10px; }\n\n/*done*/\n\n.margin-right {\n  margin-right: 10px; }\n\n/*done*/\n\n.margin-left {\n  margin-left: 10px; }\n\n/*done*/\n\n.margin-horizontal {\n  margin-left: 10px;\n  margin-right: 10px; }\n\n/*done*/\n\n.margin-vertical {\n  margin-top: 10px;\n  margin-bottom: 10px; }\n\n/*done*/\n\n.margin-all {\n  margin: 10px; }\n\n/*done*/\n\n.no-margin {\n  margin: 0px; }\n\n/*done*/\n\n.no-vertical-margin {\n  margin-top: 0px;\n  margin-bottom: 0px; }\n\n.no-horizontal-margin {\n  margin-left: 0px;\n  margin-right: 0px; }\n\n.inside-col-shrink {\n  margin: 0px 20px; }\n\n/*done - For the inside sections that has also Title section*/\n\n/* Margin section */\n\nhr {\n  margin: 0px;\n  padding: 0px;\n  border-top: 1px dashed #999; }\n\n/*--------------------------------------------FrameWork------------------------*/\n"
 
 /***/ }),
 
@@ -625,12 +625,51 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var NotFoundComponent = /** @class */ (function () {
     function NotFoundComponent() {
+        var _this = this;
+        this.time = 30;
+        this.i = 0;
+        this.randomNum = function () {
+            return Math.floor(Math.random() * 9) + 1;
+        };
+        this.loop3 = setInterval(function () {
+            if (_this.i > 40) {
+                clearInterval(_this.loop3);
+                _this.selector3.textContent = 4;
+            }
+            else {
+                _this.selector3.textContent = _this.randomNum();
+                _this.i++;
+            }
+        }, this.time);
+        this.loop2 = setInterval(function () {
+            if (_this.i > 80) {
+                clearInterval(_this.loop2);
+                _this.selector2.textContent = 0;
+            }
+            else {
+                _this.selector2.textContent = _this.randomNum();
+                _this.i++;
+            }
+        }, this.time);
+        this.loop1 = setInterval(function () {
+            if (_this.i > 100) {
+                clearInterval(_this.loop1);
+                _this.selector1.textContent = 4;
+            }
+            else {
+                _this.selector1.textContent = _this.randomNum();
+                _this.i++;
+            }
+        }, this.time);
     }
     NotFoundComponent.prototype.ngOnInit = function () {
+        this.selector3 = document.querySelector(".thirdDigit");
+        this.selector2 = document.querySelector(".secondDigit");
+        this.selector1 = document.querySelector(".firstDigit");
     };
     NotFoundComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-not-found',
+            selector: "app-not-found",
             template: __webpack_require__(/*! ./not-found.component.html */ "./src/app/core/not-found/not-found.component.html"),
             styles: [__webpack_require__(/*! ./not-found.component.scss */ "./src/app/core/not-found/not-found.component.scss")]
         }),
