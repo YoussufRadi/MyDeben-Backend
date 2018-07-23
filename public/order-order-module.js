@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"orderHeader\" class=\"row\">\n  <div class=\"col\">\n    <h5>Checkout</h5>\n    <div>\n      Sort:\n    </div>\n    <div style=\"width: 14%;\">\n      <select class=\"minimal\">\n        <option value=\"\" selected style=\"display:none\" disabled>Sort</option>\n        <option>Name</option>\n        <option>Price</option>\n      </select>\n    </div>\n    <div>\n      <input class=\"collapse search\" id=\"search\" type=\"text\" />\n    </div>\n    <div>\n      <a id=\"hover\" data-toggle=\"collapse\" data-target=\"#search\">\n        <i class=\"fas fa-search\"></i>\n      </a>\n    </div>\n  </div>\n</div>\n\n<div id=\"checkOutHead\">\n  <div class=\"right\">\n    <a>Name</a>\n  </div>\n  <div class=\"middle\">\n    <a>Date</a>\n  </div>\n  <div class=\"leftUp\">\n    <a>Response</a>\n  </div>\n</div>\n\n<div *ngFor=\"let user of users\">\n  <div id=\"checkOutBody\">\n    <div class=\"right\">\n      <a>{{user.name | titlecase}}- Ref: {{user.checkin_store_ref | uppercase}}</a>\n    </div>\n    <div class=\"middle\">\n      <a>{{user.checkout_date | date:'mediumDate'}}</a>\n    </div>\n    <div class=\"left\">\n      <a data-toggle=\"modal\" (click)=\"selectUser(user)\" data-target=\"#recieptModal\">View Receipt</a>\n    </div>\n  </div>\n</div>\n\n<div id=\"recieptModal\" class=\"modal fade\" role=\"dialog\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <p>Price Breakdown</p>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"row\">\n          <div class=\"col-lg-3\">\n            <p>Name: </p>\n          </div>\n          <div class=\"col-lg-9\">\n            <p>{{selectedUser.name}}</p>\n          </div>\n        </div>\n\n        <!-- <div class=\"row\">\n          <div class=\"col-lg-3\">\n            <p>Room: </p>\n          </div>\n          <div class=\"col-lg-9\">\n            <p>[Room Number]</p>\n          </div>\n        </div> -->\n\n        <div class=\"row\">\n          <div class=\"col-lg-3\">\n            <p>Price Details: </p>\n          </div>\n\n          <div class=\"col-lg-9\">\n\n            <div class=\"row\" *ngFor=\"let order of selectedUserOrders\">\n              <div class=\"col-lg-3\">\n                <p>{{order.name}}</p>\n              </div>\n              <div class=\"col-lg-3\">\n                <p>{{order.price}}</p>\n              </div>\n            </div>\n\n            <hr>\n\n            <div class=\"row\">\n              <div class=\"col-lg-3\">\n                <p>Total</p>\n              </div>\n              <div class=\"col-lg-3\">\n                <p>{{selectedUserTotal}}</p>\n              </div>\n            </div>\n\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <div class=\"col-lg-12 print-reciept\">\n            <button class=\"btn\">Print Reciept</button>\n          </div>\n        </div>\n\n      </div>\n\n    </div>\n\n  </div>\n</div>"
+module.exports = "<div id=\"orderHeader\" class=\"row\">\n  <div class=\"col\">\n    <h5>Checkout</h5>\n    <div>\n      Sort:\n    </div>\n    <div style=\"width: 21%;font-size: 13px;\">\n      <select class=\"minimal\" [(ngModel)]=\"sort\">\n        <option value=\"\" selected style=\"display:none\" disabled>Sort</option>\n        <option value=\"name\">Name</option>\n        <option value=\"checkout_date\">Date</option>\n      </select>\n    </div>\n    <div>\n      <input class=\"collapse search\" id=\"search\" type=\"text\" [(ngModel)]=\"searchText\" placeholder=\"Search\" />\n    </div>\n    <div>\n      <a id=\"hover\" data-toggle=\"collapse\" data-target=\"#search\">\n        <i class=\"fas fa-search\"></i>\n      </a>\n    </div>\n  </div>\n</div>\n\n<div id=\"checkOutHead\">\n  <div class=\"right\">\n    <a>Name</a>\n  </div>\n  <div class=\"middle\">\n    <a>Date</a>\n  </div>\n  <div class=\"leftUp\">\n    <a>Response</a>\n  </div>\n</div>\n\n<div *ngFor=\"let user of users | search : 'name':searchText | sort:sort:true\">\n  <div id=\"checkOutBody\">\n    <div class=\"right\">\n      <a>{{user.name | titlecase}}- Ref: {{user.checkin_store_ref | uppercase}}</a>\n    </div>\n    <div class=\"middle\">\n      <a>{{user.checkout_date | date:'mediumDate'}}</a>\n    </div>\n    <!-- <div class=\"left\"> -->\n    <button class=\"btn-success left\" data-toggle=\"modal\" (click)=\"selectUser(user)\" data-target=\"#recieptModal\">View Receipt</button>\n    <!-- </div> -->\n  </div>\n</div>\n\n<div id=\"recieptModal\" class=\"modal fade\" role=\"dialog\">\n  <div class=\"modal-dialog\" id=\"print-section\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <a class=\"modal-title\" style=\"margin-left: 35%;\">Price Breakdown</a>\n        <button type=\"button\" class=\"close chover\" data-dismiss=\"modal\">&times;</button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"row\">\n          <div class=\"col-lg-4\">\n            <p>Name: </p>\n          </div>\n          <div class=\"col-lg-8\">\n            <p>{{selectedUser.name}}</p>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-lg-4\">\n            <p>Ref: </p>\n          </div>\n          <div class=\"col-lg-8\">\n            <p>{{selectedUser.checkin_store_ref}}</p>\n          </div>\n        </div>\n        <hr>\n        <div class=\"row\">\n          <div class=\"col-lg-4\">\n            <p>Price Details: </p>\n          </div>\n          <div class=\"col-lg-8\">\n            <div class=\"row\" *ngFor=\"let order of selectedUserOrders\">\n              <div class=\"col-lg-6\">\n                <p>{{order.name}}</p>\n              </div>\n              <div class=\"col-lg-3\">\n                <p>{{order.price | currency:'USD'}}</p>\n              </div>\n            </div>\n\n            <hr>\n            <div class=\"row\">\n              <div class=\"col-lg-6\">\n                <p>Orders Total</p>\n              </div>\n              <div class=\"col-lg-3\">\n                <p>{{selectedUserTotal | currency:'USD'}}</p>\n              </div>\n            </div>\n            <div class=\"row\">\n              <div class=\"col-lg-6\">\n                <p>Total Due</p>\n              </div>\n              <div class=\"col-lg-3\">\n                <p>{{selectedUserTotalDue | currency:'USD'}}</p>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"col-lg-12 print-reciept\">\n          <button style=\"margin-bottom: 10px;\" type=\"button\" class=\"btn btn-outline-danger\" data-dismiss=\"modal\" (click)=\"checkout(selectedUser.id)\">Checkout</button>\n          <button type=\"button\" class=\"btn btn-primary\" (click)=\"print()\">Print Reciept</button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -18,7 +18,7 @@ module.exports = "<div id=\"orderHeader\" class=\"row\">\n  <div class=\"col\">\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "#orderHeader {\n  margin-bottom: 2%; }\n\n#orderHeader div h5 {\n  float: left;\n  margin-right: 10%;\n  margin-left: 2%;\n  padding-top: 0.5%; }\n\n#orderHeader div div {\n  margin-left: 2%;\n  display: inline-block;\n  vertical-align: middle;\n  line-height: normal; }\n\nselect {\n  width: 100%;\n  background-color: white;\n  border: thin solid #dfdfdf;\n  border-radius: 4px;\n  display: inline-block;\n  font: inherit;\n  line-height: 1.5em;\n  padding: 0.5em 0.5em 0.5em 1em;\n  /* reset */\n  margin: 0;\n  box-sizing: border-box;\n  -webkit-appearance: none;\n  -moz-appearance: none; }\n\nselect.minimal {\n  background-image: linear-gradient(45deg, transparent 50%, black 50%), linear-gradient(135deg, black 50%, transparent 50%);\n  background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;\n  background-size: 5px 5px, 5px 5px, 1px 1.5em;\n  background-repeat: no-repeat; }\n\nselect.minimal:hover,\nselect.minimal:focus {\n  cursor: pointer;\n  background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);\n  background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;\n  background-size: 5px 5px, 5px 5px, 1px 1.5em;\n  background-repeat: no-repeat;\n  border-color: #74c11d;\n  outline: 0; }\n\nselect:-moz-focusring {\n  color: transparent;\n  text-shadow: 0 0 0 #000; }\n\n#hover:hover,\n#hover:focus {\n  cursor: pointer;\n  color: #74c11d !important;\n  color: inherit;\n  text-decoration: none;\n  transition: all 0.3s; }\n\n.search {\n  padding: 3%; }\n\n#checkOutHead {\n  height: 55px;\n  margin-bottom: 2%;\n  background-color: #f2f2f2;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding-left: 5%;\n  flex-direction: row; }\n\n#checkOutHead a {\n  font-family: AvenirNext;\n  font-size: 18px; }\n\n#checkOutBody {\n  margin-bottom: 2%;\n  background-color: #ffffff;\n  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);\n  height: 55px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding-left: 5%;\n  flex-direction: row; }\n\n#checkOutBody a {\n  font-family: AvenirNext;\n  font-size: 17px; }\n\n.left {\n  background-color: #74c11d;\n  width: 40%;\n  text-align: center; }\n\n.leftUp {\n  width: 40%; }\n\n.left a {\n  line-height: 55px;\n  color: #ffffff; }\n\n.leftUp a {\n  line-height: 55px; }\n\n.left:hover {\n  cursor: pointer; }\n\n.middle {\n  width: 20%; }\n\n.right {\n  width: 40%; }\n\n.modal-header {\n  text-align: center;\n  background-color: #f2f2f2; }\n\n.modal-header p {\n  color: #74c11d; }\n\n.modal-body {\n  padding: 20px 50px 20px 50px; }\n\n.print-reciept {\n  text-align: center; }\n\n.print-reciept .btn {\n  background-color: #085cfc;\n  color: #fff;\n  border-radius: 0;\n  width: 80%; }\n"
+module.exports = "#orderHeader {\n  margin-bottom: 2%; }\n\n#orderHeader div h5 {\n  float: left;\n  margin-right: 10%;\n  margin-left: 2%;\n  padding-top: 0.5%; }\n\n#orderHeader div div {\n  margin-left: 2%;\n  display: inline-block;\n  vertical-align: middle;\n  line-height: normal; }\n\nselect {\n  width: 100%;\n  background-color: white;\n  border: thin solid #dfdfdf;\n  border-radius: 4px;\n  display: inline-block;\n  font: inherit;\n  line-height: 1.5em;\n  padding: 0.5em 0.5em 0.5em 1em;\n  /* reset */\n  margin: 0;\n  box-sizing: border-box;\n  -webkit-appearance: none;\n  -moz-appearance: none; }\n\nselect.minimal {\n  background-image: linear-gradient(45deg, transparent 50%, black 50%), linear-gradient(135deg, black 50%, transparent 50%);\n  background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;\n  background-size: 5px 5px, 5px 5px, 1px 1.5em;\n  background-repeat: no-repeat; }\n\nselect.minimal:hover,\nselect.minimal:focus {\n  cursor: pointer;\n  background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);\n  background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;\n  background-size: 5px 5px, 5px 5px, 1px 1.5em;\n  background-repeat: no-repeat;\n  border-color: #74c11d;\n  outline: 0; }\n\nselect:-moz-focusring {\n  color: transparent;\n  text-shadow: 0 0 0 #000; }\n\n#hover:hover,\n#hover:focus {\n  cursor: pointer;\n  color: #74c11d !important;\n  color: inherit;\n  text-decoration: none;\n  transition: all 0.3s; }\n\n.search {\n  padding: 3%; }\n\n#checkOutHead {\n  height: 55px;\n  margin-bottom: 2%;\n  background-color: #f2f2f2;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding-left: 5%;\n  flex-direction: row; }\n\n#checkOutHead a {\n  font-family: AvenirNext;\n  font-size: 18px; }\n\n#checkOutBody {\n  margin-bottom: 2%;\n  background-color: #ffffff;\n  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);\n  height: 55px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding-left: 5%;\n  flex-direction: row; }\n\n#checkOutBody a {\n  font-family: AvenirNext;\n  font-size: 17px; }\n\n.left {\n  background-color: #74c11d;\n  width: 40%;\n  line-height: 50px; }\n\n.leftUp {\n  width: 40%; }\n\n.leftUp a {\n  line-height: 55px; }\n\n.left:hover {\n  cursor: pointer;\n  background: #6c973b; }\n\n.middle {\n  width: 20%; }\n\n.right {\n  width: 40%; }\n\n.modal-header {\n  text-align: center;\n  background-color: #f2f2f2; }\n\n.modal-header p {\n  color: #74c11d; }\n\n.modal-body {\n  padding: 20px 50px 20px 50px; }\n\n.print-reciept {\n  text-align: center; }\n\n.print-reciept .btn {\n  border-radius: 0;\n  width: 100%;\n  margin-bottom: 1%; }\n\n.modal-header {\n  font-family: AvenirNext;\n  font-size: 20px !important;\n  font-weight: bold;\n  color: #fff;\n  background-color: #000000 !important; }\n\n.chover {\n  color: white; }\n\n.chover:hover {\n  color: red; }\n"
 
 /***/ }),
 
@@ -37,6 +37,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ng2-bootstrap-modal */ "./node_modules/ng2-bootstrap-modal/index.js");
 /* harmony import */ var ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _core_text_modal_text_modal_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../core/text-modal/text-modal.component */ "./src/app/core/text-modal/text-modal.component.ts");
+/* harmony import */ var _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../core/services/authentication.service */ "./src/app/core/services/authentication.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -50,20 +51,22 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var CheckoutComponent = /** @class */ (function () {
-    function CheckoutComponent(api, dialogService) {
+    function CheckoutComponent(api, dialogService, auth) {
         var _this = this;
         this.api = api;
         this.dialogService = dialogService;
+        this.auth = auth;
         this.selectedUser = {
             name: ""
         };
         this.selectedUserTotal = 0;
+        this.selectedUserTotalDue = 0;
         this.fetch = function () {
             _this.api
                 .checkedInUsers()
                 .then(function (data) {
-                console.log(data);
                 _this.users = data.users;
             })
                 .catch(function (err) {
@@ -78,29 +81,60 @@ var CheckoutComponent = /** @class */ (function () {
             message: message
         });
     };
+    CheckoutComponent.prototype.showConfirm = function () {
+        return this.dialogService.addDialog(_core_text_modal_text_modal_component__WEBPACK_IMPORTED_MODULE_3__["TextModalComponent"], {
+            title: "Are you sure?",
+            message: "Press YES if you want to delete selected",
+            confirm: true
+        });
+    };
     CheckoutComponent.prototype.ngOnInit = function () {
+        this.auth.setSidebarValue(3);
         this.fetch();
     };
     CheckoutComponent.prototype.getTotal = function () {
         var total = 0;
-        if (this.selectedUserOrders.length > 0) {
-            this.selectedUserOrders.forEach(function (x) { return (total += x.total_price); });
-        }
+        this.selectedUserOrders.forEach(function (x) { return (total += x.total_price); });
         return total;
     };
     CheckoutComponent.prototype.selectUser = function (user) {
         var _this = this;
         this.selectedUser = user;
-        console.log(this.selectedUser);
         this.api
             .getUserTotalOrders(this.selectedUser.id)
             .then(function (data) {
-            _this.selectedUserOrders = data.oredrs; // to be corrected!
+            _this.selectedUserOrders = data.orders;
+            _this.selectedUserTotalDue = data.total;
             _this.selectedUserTotal = _this.getTotal();
         })
             .catch(function (err) {
-            _this.showError("error", "error");
+            console.log(err);
+            _this.showError("Fetching User Details Failed", err);
         });
+    };
+    CheckoutComponent.prototype.checkout = function (id) {
+        var _this = this;
+        this.showConfirm().subscribe(function (res) {
+            if (res)
+                _this.api
+                    .checkoutUser(id)
+                    .then(function (data) {
+                    _this.showError("Checkout Succeded", "User was successfuly checkout");
+                    _this.fetch();
+                })
+                    .catch(function (err) {
+                    console.log(err);
+                    _this.showError("Checkout Failed", err);
+                });
+        });
+    };
+    CheckoutComponent.prototype.print = function () {
+        var printContents, popupWin;
+        printContents = document.getElementById("print-section").innerHTML;
+        popupWin = window.open("", "_blank", "top=0,left=0,height=100%,width=auto");
+        popupWin.document.open();
+        popupWin.document.write("\n      <html>\n        <head>\n          <title>Reciept</title>\n          <style>\n            .modal-title{\n                  display: none;\n            }\n            .print-reciept{\n              display: none\n            }\n            .row {\n                  display: flex;\n                justify-content: space-around;\n            }\n            .col-lg-3 {\n                flex: 0 0 25%;\n                max-width: 25%;\n            }\n            .col-lg-6 {\n                flex: 0 0 50%;\n                max-width: 50%;\n            }\n            .col-lg-4 {\n                flex: 0 0 33.333333%;\n                max-width: 33.333333%;\n            .col-lg-8 {\n                flex: 0 0 66.666667%;\n                max-width: 66.666667%;\n            }\n            .modal-body[_ngcontent-c11] {\n                padding: 20px 50px 20px 50px;\n            }\n            .modal-body {\n                flex: 1 1 auto;\n                padding: 1rem;\n            }\n          </style>\n        </head>\n    <body onload=\"window.print();window.close()\">" + printContents + "</body>\n      </html>");
+        popupWin.document.close();
     };
     CheckoutComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -109,7 +143,8 @@ var CheckoutComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./checkout.component.scss */ "./src/app/order/checkout/checkout.component.scss")]
         }),
         __metadata("design:paramtypes", [_services_order_api_service__WEBPACK_IMPORTED_MODULE_1__["OrderApiService"],
-            ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["DialogService"]])
+            ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["DialogService"],
+            _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_4__["AuthenticationService"]])
     ], CheckoutComponent);
     return CheckoutComponent;
 }());
@@ -156,6 +191,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _services_order_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/order-api.service */ "./src/app/order/services/order-api.service.ts");
 /* harmony import */ var _core_text_modal_text_modal_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../core/text-modal/text-modal.component */ "./src/app/core/text-modal/text-modal.component.ts");
+/* harmony import */ var _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../core/services/authentication.service */ "./src/app/core/services/authentication.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -170,11 +206,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var GenerateComponent = /** @class */ (function () {
-    function GenerateComponent(fb, dialogService, api) {
+    function GenerateComponent(fb, dialogService, api, auth) {
         this.fb = fb;
         this.dialogService = dialogService;
         this.api = api;
+        this.auth = auth;
         this.minDate = new Date();
     }
     GenerateComponent.prototype.showError = function (title, message) {
@@ -184,6 +222,7 @@ var GenerateComponent = /** @class */ (function () {
         });
     };
     GenerateComponent.prototype.ngOnInit = function () {
+        this.auth.setSidebarValue(0);
         this.generateForm = this.fb.group({
             ref: ["", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required]],
             date: ["", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required]]
@@ -210,7 +249,6 @@ var GenerateComponent = /** @class */ (function () {
             this.api
                 .generate("code", value.ref, value.date)
                 .then(function (data) {
-                console.log(data);
                 _this.image = data.code;
             })
                 .catch(function (err) {
@@ -220,7 +258,6 @@ var GenerateComponent = /** @class */ (function () {
             this.api
                 .generate("token", value.ref, value.date)
                 .then(function (data) {
-                console.log(data);
                 _this.code = data.token;
             })
                 .catch(function (err) {
@@ -237,7 +274,8 @@ var GenerateComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"],
             ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["DialogService"],
-            _services_order_api_service__WEBPACK_IMPORTED_MODULE_3__["OrderApiService"]])
+            _services_order_api_service__WEBPACK_IMPORTED_MODULE_3__["OrderApiService"],
+            _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_5__["AuthenticationService"]])
     ], GenerateComponent);
     return GenerateComponent;
 }());
@@ -253,7 +291,7 @@ var GenerateComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"orderHeader\" class=\"row\">\n  <div class=\"col\">\n    <h5>Requests</h5>\n    <div>\n      Sort:\n    </div>\n    <div style=\"width: 14%;\">\n      <select class=\"minimal\">\n        <option value=\"\" selected style=\"display:none\" disabled>Sort</option>\n        <option>Date</option>\n        <option>Service</option>\n        <option>Service Provider</option>\n        <option>Item number</option>\n        <option>Quantity</option>\n      </select>\n    </div>\n    <div>\n      <input class=\"collapse search\" id=\"search\" type=\"text\" />\n    </div>\n    <div>\n      <a id=\"hover\" data-toggle=\"collapse\" data-target=\"#search\">\n        <i class=\"fas fa-search\"></i>\n      </a>\n    </div>\n  </div>\n</div>\n<div *ngFor=\"let order of orders\">\n  <div id=\"currentOrderBody\" class=\"row\">\n    <div class=\"col-s-2 col-md-2 col-lg-2\">\n      <a>\n        <p>Service</p>\n      </a>\n      <p>{{order.service_name | titlecase}}</p>\n    </div>\n    <div class=\" col-md-6 col-lg-6\">\n      <div class=\"upper\">\n        <p> {{order.user_name | titlecase}}- Ref: {{order.checkin_store_ref | uppercase}}</p>\n        <a>\n          <p>{{order.created_at | date:'medium'}}</p>\n        </a>\n      </div>\n      <div class=\"choice\">\n        <div class=\"lowerleft\">\n          <a>\n            <p>Service Provider</p>\n          </a>\n          <p>{{order.provide_name | titlecase}}</p>\n        </div>\n        <div class=\"lowerright\">\n          <a>\n            <p>Item number</p>\n          </a>\n          <p>{{order.product_id}}</p>\n        </div>\n        <div class=\"lowerright\">\n          <a>\n            <p>Quantity</p>\n          </a>\n          <p>{{order.quantity}}</p>\n        </div>\n      </div>\n    </div>\n    <div class=\"col-s-4 col-md-4 col-lg-4\">\n      <div class=\"row choice\">\n        <i class=\"fas fa-check-circle\" style=\"color :#74c11d;\" (click)=\"serve(order.id)\"></i>\n        <i class=\"fas fa-times-circle\" style=\"color :#c13712;\" (click)=\"cancel(order.id)\"></i>\n      </div>\n    </div>\n  </div>\n</div>"
+module.exports = "<div id=\"orderHeader\" class=\"row\">\n  <div class=\"col\">\n    <h5>Requests</h5>\n    <div>\n      Sort:\n    </div>\n    <div style=\"width: 21%;font-size: 13px;\">\n      <select class=\"minimal\" [(ngModel)]=\"sort\">\n        <option value=\"\" selected style=\"display:none\" disabled>Sort</option>\n        <option value=\"user_name\">User</option>\n        <option value=\"created_at\">Date</option>\n        <option value=\"service_name\">Service</option>\n        <option value=\"provide_name\">Service Provider</option>\n        <option value=\"product_id\">Item number</option>\n        <option value=\"quantity\">Quantity</option>\n      </select>\n    </div>\n    <div>\n      <input class=\"collapse search\" id=\"search\" type=\"text\" [(ngModel)]=\"searchText\" placeholder=\"Search\" />\n    </div>\n    <div>\n      <a id=\"hover\" data-toggle=\"collapse\" data-target=\"#search\">\n        <i class=\"fas fa-search\"></i>\n      </a>\n    </div>\n  </div>\n</div>\n<div *ngFor=\"let order of orders | search : 'user_name':searchText | sort:sort:true\">\n  <div id=\"currentOrderBody\" class=\"row\">\n    <div class=\"col-s-2 col-md-2 col-lg-2\">\n      <a>\n        <p>Service</p>\n      </a>\n      <p>{{order.service_name | titlecase}}</p>\n    </div>\n    <div class=\" col-md-6 col-lg-6\">\n      <div class=\"upper\">\n        <p> {{order.user_name | titlecase}}- Ref: {{order.checkin_store_ref | uppercase}}</p>\n        <a>\n          <p>{{order.created_at | date:'medium'}}</p>\n        </a>\n      </div>\n      <div class=\"choice\">\n        <div class=\"lowerleft\">\n          <a>\n            <p>Service Provider</p>\n          </a>\n          <p>{{order.provide_name | titlecase}}</p>\n        </div>\n        <div class=\"lowerright\">\n          <a>\n            <p>Item number</p>\n          </a>\n          <p>{{order.product_id}}</p>\n        </div>\n        <div class=\"lowerright\">\n          <a>\n            <p>Quantity</p>\n          </a>\n          <p>{{order.quantity}}</p>\n        </div>\n      </div>\n    </div>\n    <div class=\"col-s-4 col-md-4 col-lg-4\">\n      <div class=\"row choice\">\n        <i class=\"fas fa-check-circle\" style=\"color :#74c11d;\" (click)=\"serve(order.id)\"></i>\n        <i class=\"fas fa-times-circle\" style=\"color :#c13712;\" (click)=\"cancel(order.id)\"></i>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -283,6 +321,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ng2-bootstrap-modal */ "./node_modules/ng2-bootstrap-modal/index.js");
 /* harmony import */ var ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _core_text_modal_text_modal_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../core/text-modal/text-modal.component */ "./src/app/core/text-modal/text-modal.component.ts");
+/* harmony import */ var _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../core/services/authentication.service */ "./src/app/core/services/authentication.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -296,11 +335,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var OrderRequestsComponent = /** @class */ (function () {
-    function OrderRequestsComponent(api, dialogService) {
+    function OrderRequestsComponent(api, dialogService, auth) {
         var _this = this;
         this.api = api;
         this.dialogService = dialogService;
+        this.auth = auth;
         this.fetch = function () {
             _this.api
                 .currentOrders()
@@ -346,6 +387,7 @@ var OrderRequestsComponent = /** @class */ (function () {
         });
     };
     OrderRequestsComponent.prototype.ngOnInit = function () {
+        this.auth.setSidebarValue(1);
         this.fetch();
     };
     OrderRequestsComponent = __decorate([
@@ -355,7 +397,8 @@ var OrderRequestsComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./order-requests.component.scss */ "./src/app/order/order-requests/order-requests.component.scss")]
         }),
         __metadata("design:paramtypes", [_services_order_api_service__WEBPACK_IMPORTED_MODULE_1__["OrderApiService"],
-            ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["DialogService"]])
+            ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["DialogService"],
+            _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_4__["AuthenticationService"]])
     ], OrderRequestsComponent);
     return OrderRequestsComponent;
 }());
@@ -450,7 +493,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkout_checkout_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./checkout/checkout.component */ "./src/app/order/checkout/checkout.component.ts");
 /* harmony import */ var _reports_reports_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reports/reports.component */ "./src/app/order/reports/reports.component.ts");
 /* harmony import */ var _generate_generate_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./generate/generate.component */ "./src/app/order/generate/generate.component.ts");
-/* harmony import */ var _node_modules_angular_forms__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../node_modules/@angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -476,8 +519,8 @@ var OrderModule = /** @class */ (function () {
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
                 _order_routing_module__WEBPACK_IMPORTED_MODULE_2__["OrderRoutingModule"],
                 _shared_shared_module__WEBPACK_IMPORTED_MODULE_3__["SharedModule"],
-                _node_modules_angular_forms__WEBPACK_IMPORTED_MODULE_9__["FormsModule"],
-                _node_modules_angular_forms__WEBPACK_IMPORTED_MODULE_9__["ReactiveFormsModule"]
+                _angular_forms__WEBPACK_IMPORTED_MODULE_9__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_9__["ReactiveFormsModule"]
             ],
             declarations: [
                 _order_requests_order_requests_component__WEBPACK_IMPORTED_MODULE_4__["OrderRequestsComponent"],
@@ -502,7 +545,7 @@ var OrderModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"orderHeader\" class=\"row\">\n  <div class=\"col\">\n    <h5>Reports</h5>\n    <div>\n      Sort:\n    </div>\n    <div style=\"width: 14%;\">\n      <select class=\"minimal\">\n        <option value=\"\" selected style=\"display:none\" disabled>Sort</option>\n        <option>Date</option>\n        <option>Price</option>\n        <option>Quantity</option>\n        <option>Total Price</option>\n      </select>\n    </div>\n    <div>\n      <input class=\"collapse search\" id=\"search\" type=\"text\" />\n    </div>\n    <div>\n      <a id=\"hover\" data-toggle=\"collapse\" data-target=\"#search\">\n        <i class=\"fas fa-search\"></i>\n      </a>\n    </div>\n  </div>\n</div>\n\n<div id=\"checkOutHead\">\n  <div class=\"left\">\n    <a>Name</a>\n  </div>\n  <div class=\"leftmiddle\">\n    <a>Date</a>\n  </div>\n  <div class=\"middle\">\n    <a>Price</a>\n  </div>\n  <div class=\"rightmiddle\">\n    <a>Quantity</a>\n  </div>\n  <div class=\"right\">\n    <a>Total Price</a>\n  </div>\n</div>\n\n<div *ngFor=\"let order of orders\">\n  <div id=\"checkOutBody\">\n    <div class=\"left\" style=\"width: 17%;\">\n      <a>{{order.name | titlecase}}</a>\n    </div>\n    <div class=\"leftmiddle\">\n      <a>{{order.created_at | date}}</a>\n    </div>\n    <div class=\"middle\">\n      <a>{{order.price}}</a>\n    </div>\n    <div class=\"rightmiddle\">\n      <a>{{order.quantity}}</a>\n    </div>\n    <div class=\"right\">\n      <a>{{order.total_price}}</a>\n    </div>\n  </div>\n</div>"
+module.exports = "<div id=\"orderHeader\" class=\"row\">\n  <div class=\"col\">\n    <h5>Reports</h5>\n    <div>\n      Sort:\n    </div>\n    <div style=\"width: 21%;font-size: 13px;\">\n      <select class=\"minimal\" [(ngModel)]=\"sort\">\n        <option value=\"sort\" selected style=\"display:none\" disabled>Sort</option>\n        <option value=\"created_at\">Date</option>\n        <option value=\"price\">Price</option>\n        <option value=\"quantity\">Quantity</option>\n        <option value=\"total_price\">Total Price</option>\n      </select>\n    </div>\n    <div>\n      <input class=\"collapse search\" id=\"search\" type=\"text\" [(ngModel)]=\"searchText\" placeholder=\"Search\" />\n    </div>\n    <div>\n      <a id=\"hover\" data-toggle=\"collapse\" data-target=\"#search\">\n        <i class=\"fas fa-search\"></i>\n      </a>\n    </div>\n  </div>\n</div>\n\n<div id=\"checkOutHead\">\n  <div class=\"left\">\n    <a>Name</a>\n  </div>\n  <div class=\"leftmiddle\">\n    <a>Date</a>\n  </div>\n  <div class=\"middle\">\n    <a>Price</a>\n  </div>\n  <div class=\"rightmiddle\">\n    <a>Quantity</a>\n  </div>\n  <div class=\"right\">\n    <a>Total Price</a>\n  </div>\n</div>\n\n<div *ngFor=\"let order of orders | search : 'name':searchText | sort:sort:true\">\n  <div id=\"checkOutBody\">\n    <div class=\"left\" style=\"width: 17%;\">\n      <a>{{order.name | titlecase}}</a>\n    </div>\n    <div class=\"leftmiddle\">\n      <a>{{order.created_at | date}}</a>\n    </div>\n    <div class=\"middle\">\n      <a>{{order.price}}</a>\n    </div>\n    <div class=\"rightmiddle\">\n      <a>{{order.quantity}}</a>\n    </div>\n    <div class=\"right\">\n      <a>{{order.total_price}}</a>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -532,6 +575,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ng2-bootstrap-modal */ "./node_modules/ng2-bootstrap-modal/index.js");
 /* harmony import */ var ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _core_text_modal_text_modal_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../core/text-modal/text-modal.component */ "./src/app/core/text-modal/text-modal.component.ts");
+/* harmony import */ var _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../core/services/authentication.service */ "./src/app/core/services/authentication.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -545,11 +589,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ReportsComponent = /** @class */ (function () {
-    function ReportsComponent(api, dialogService) {
+    function ReportsComponent(api, dialogService, auth) {
         var _this = this;
         this.api = api;
         this.dialogService = dialogService;
+        this.auth = auth;
         this.fetch = function () {
             _this.api
                 .allOrders()
@@ -569,6 +615,7 @@ var ReportsComponent = /** @class */ (function () {
         });
     };
     ReportsComponent.prototype.ngOnInit = function () {
+        this.auth.setSidebarValue(4);
         this.fetch();
     };
     ReportsComponent = __decorate([
@@ -578,7 +625,8 @@ var ReportsComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./reports.component.scss */ "./src/app/order/reports/reports.component.scss")]
         }),
         __metadata("design:paramtypes", [_services_order_api_service__WEBPACK_IMPORTED_MODULE_1__["OrderApiService"],
-            ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["DialogService"]])
+            ng2_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["DialogService"],
+            _core_services_authentication_service__WEBPACK_IMPORTED_MODULE_4__["AuthenticationService"]])
     ], ReportsComponent);
     return ReportsComponent;
 }());
@@ -626,6 +674,9 @@ var OrderApiService = /** @class */ (function () {
         this.cancel = function (id) { return _this.http.get("/api/store/order/cancel/" + id).toPromise(); };
         this.getUserTotalOrders = function (userId) {
             return _this.http.get("/api/store/users/" + userId).toPromise();
+        };
+        this.checkoutUser = function (userId) {
+            return _this.http.get("/api/store/checkout?userId=" + userId).toPromise();
         };
     }
     OrderApiService = __decorate([

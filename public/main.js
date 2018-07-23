@@ -511,6 +511,7 @@ var LoginComponent = /** @class */ (function () {
         var disposable = this.dialogService.addDialog(_text_modal_text_modal_component__WEBPACK_IMPORTED_MODULE_3__["TextModalComponent"], {
             title: title,
             message: message
+            // confirm: true
         });
     };
     LoginComponent.prototype.ngOnInit = function () {
@@ -765,6 +766,7 @@ var RegisterComponent = /** @class */ (function () {
                 _this.authentication.login(data.token);
                 _this.authentication.setAccountText("Log Out");
                 _this.authentication.setSidebarValue(0);
+                _this.showError("Sign Up Succeded", "Account now created, please login with your new account");
             })
                 .catch(function (err) {
                 console.log(err);
@@ -895,7 +897,7 @@ var ResetPasswordComponent = /** @class */ (function () {
                 password: this.user.password.pwd
             })
                 .then(function (data) {
-                console.log(data);
+                _this.showError("Reset Password Succeded", "Please Login with your new password");
             })
                 .catch(function (err) {
                 console.log(err);
@@ -1022,25 +1024,58 @@ var ApiManagerService = /** @class */ (function () {
     ApiManagerService.prototype.forget = function (data) {
         return this.http.post("/api/auth/forget/store", data).toPromise();
     };
-    ApiManagerService.prototype.getServices = function () {
-        return this.http.get("/api/store/service").toPromise();
-    };
     ApiManagerService.prototype.getProvidersByService = function () {
         return this.http
             .get("/api/store/provider/all?group=service_name")
             .toPromise();
     };
-    ApiManagerService.prototype.addAService = function (data) {
+    ApiManagerService.prototype.getService = function () {
+        return this.http.get("/api/store/service").toPromise();
+    };
+    ApiManagerService.prototype.addService = function (data) {
         return this.http.post("/api/store/service", data).toPromise();
     };
-    ApiManagerService.prototype.getProviders = function (id) {
+    ApiManagerService.prototype.editService = function (id, data) {
+        return this.http.patch("/api/store/service/" + id, data).toPromise();
+    };
+    ApiManagerService.prototype.deleteService = function (id) {
+        return this.http.delete("/api/store/service/" + id).toPromise();
+    };
+    ApiManagerService.prototype.getProvider = function (id) {
         return this.http.get("/api/store/provider?serviceId=" + id).toPromise();
     };
-    ApiManagerService.prototype.getCategories = function (id) {
+    ApiManagerService.prototype.addProvider = function (data) {
+        return this.http.post("/api/store/provider", data).toPromise();
+    };
+    ApiManagerService.prototype.editProvider = function (id, data) {
+        return this.http.patch("/api/store/provider/" + id, data).toPromise();
+    };
+    ApiManagerService.prototype.deleteProvider = function (id) {
+        return this.http.delete("/api/store/provider/" + id).toPromise();
+    };
+    ApiManagerService.prototype.getCategory = function (id) {
         return this.http.get("/api/store/category?providerId=" + id).toPromise();
     };
-    ApiManagerService.prototype.getProducts = function (id) {
+    ApiManagerService.prototype.addCategory = function (data) {
+        return this.http.post("/api/store/category", data).toPromise();
+    };
+    ApiManagerService.prototype.editCategory = function (id, data) {
+        return this.http.patch("/api/store/category/" + id, data).toPromise();
+    };
+    ApiManagerService.prototype.deleteCategory = function (id) {
+        return this.http.delete("/api/store/category/" + id).toPromise();
+    };
+    ApiManagerService.prototype.getProduct = function (id) {
         return this.http.get("/api/store/product?categoryId=" + id).toPromise();
+    };
+    ApiManagerService.prototype.addProduct = function (data) {
+        return this.http.post("/api/store/product", data).toPromise();
+    };
+    ApiManagerService.prototype.editProduct = function (id, data) {
+        return this.http.patch("/api/store/product/" + id, data).toPromise();
+    };
+    ApiManagerService.prototype.deleteProduct = function (id) {
+        return this.http.delete("/api/store/product/" + id).toPromise();
     };
     ApiManagerService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
@@ -1289,7 +1324,7 @@ var SidebarComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".click {\n  margin-right: 10%;\n  width: 40%;\n}\n"
 
 /***/ }),
 
@@ -1300,7 +1335,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-dialog\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h4 class=\"modal-title\">{{title || 'Confirm'}}</h4>\n      <button type=\"button\" class=\"close\" (click)=\"close()\">&times;</button>\n    </div>\n    <div class=\"modal-body\">\n      <p>{{message || 'Are you sure?'}}</p>\n    </div>\n    <div class=\"modal-footer\">\n      <button type=\"button\" class=\"btn btn-default\" (click)=\"close()\">OK</button>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"modal-dialog\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h4 class=\"modal-title\">{{title || 'Confirm'}}</h4>\n      <button type=\"button\" class=\"close\" (click)=\"close()\">&times;</button>\n    </div>\n    <div class=\"modal-body\">\n      <p>{{message || 'Are you sure?'}}</p>\n    </div>\n    <div class=\"modal-footer\">\n      <div *ngIf=\"confirm\" style=\"width: 50%\">\n        <button type=\"button\" class=\"btn btn-outline-danger danger click\" (click)=\"okay()\">Yes</button>\n        <button type=\"button\" class=\"btn btn-outline-secondary click\" (click)=\"close()\">Cancel</button>\n      </div>\n      <button type=\"button\" *ngIf=\"!confirm\" class=\"btn btn-outline-dark\" (click)=\"close()\">Close</button>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -1344,6 +1379,12 @@ var TextModalComponent = /** @class */ (function (_super) {
         return _super.call(this, dialogService) || this;
     }
     TextModalComponent.prototype.ngOnInit = function () { };
+    TextModalComponent.prototype.okay = function () {
+        // we set dialog result as true on click on confirm button,
+        // then we can get dialog result from caller code
+        this.result = true;
+        this.close();
+    };
     TextModalComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: "app-text-modal",
