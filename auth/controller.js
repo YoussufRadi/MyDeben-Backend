@@ -196,8 +196,12 @@ const findByEmail = (req, res, next) => {
         res.status(404).json({ detail: 'Store e-mail Not found', success: false });
       });
   } else if (req.params.model === 'user') {
-    getUserByEmail(req.body.email)
+    console.log('USSSERRRRR');
+
+    getUserByEmail({ email: req.body.email })
       .then(user => {
+        console.log(user);
+
         if (!user) {
           res.status(404).json({
             detail: 'Invalid Email',
@@ -211,7 +215,11 @@ const findByEmail = (req, res, next) => {
         req.name = user.name;
         next();
       })
-      .catch(err => res.status(404).json({ detail: 'User e-mail Not found', success: false }));
+      .catch(err => {
+        console.log(err);
+
+        res.status(404).json({ detail: 'User e-mail Not found', success: false });
+      });
   } else res.status(404).json({ detail: 'Model Not found', success: false });
 };
 
