@@ -1,12 +1,56 @@
 [
   {
-    "id": 1,
-    "name": "Hazem",
-    "email": "hazem@gmail"
+    "password": "test",
+    "name": "Test",
+    "email": "test@test.com",
+    "checkin_store_id": 3,
+    "checkin_store_name": "Sheraton",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "16"
   },
   {
-    "id": 2,
-    "name": "Mohab",
-    "email": "mohab@gmail"
+    "password": "test",
+    "name": "Radi",
+    "email": "youssuf.radi@deemalab.com",
+    "checkin_store_id": 1,
+    "checkin_store_name": "4Stars",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "test",
+    "name": "Yasser Abou El Saad ",
+    "email": "yasser@deemalab.com",
+    "checkin_store_id": 1,
+    "checkin_store_name": "4Stars",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "test",
+    "name": "Nesreen Mamdouh",
+    "email": "nesreen@deemalab.com",
+    "checkin_store_id": 2,
+    "checkin_store_name": "Hilton",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "test",
+    "name": "Mohamed Abd El-Hafiz",
+    "email": "mabdelhafiz@deemalab.com",
+    "checkin_store_id": 1,
+    "checkin_store_name": "4Stars",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
+  },
+  {
+    "password": "test",
+    "name": "Mohamad Badr",
+    "email": "mbadr@deemalab.com",
+    "checkin_store_id": 2,
+    "checkin_store_name": "Hilton",
+    "checkout_date": "12/09/2018",
+    "checkin_store_ref": "23A"
   }
 ]

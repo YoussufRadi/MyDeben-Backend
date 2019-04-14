@@ -1,35 +1,73 @@
-import express from "express";
-import bodyParser from "body-parser";
-import morgan from "morgan";
-import dotenv from "dotenv";
+import express from 'express';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import expressValidation from 'express-validation';
+import cors from 'cors';
 
-import swaggerUi from "swagger-ui-express";
-import YAML from "yamljs";
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
-import user from "./user/routes";
-import auth from "./auth/routes";
+import user from './user/routes';
+import auth from './auth/routes';
+import store from './store/routes';
+import file from './file';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 80;
 const app = express();
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
 
-//Swagger Setup
-const swaggerDocument = YAML.load("./swagger.yaml");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+  if (isNaN(port)) return val;
+  if (port >= 0) return port;
+  return false;
+}
+
+const options = {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+};
+// Swagger Setup
+const swaggerDocument = YAML.load('./apiDoc.yaml');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
-//Application Logger
-app.use(morgan("dev"));
+// Application Logger
+app.use(morgan('dev'));
 
-//Routes
-app.use("/user", user);
-app.use("/auth", auth);
+// Routes
+app.use('/api/user', user);
+app.use('/api/auth', auth);
+app.use('/api/store', store);
+app.use('/api/file', file);
+app.use(express.static(`${__dirname}/public`)); // set the static files location /public/img will be /img for users
 
-app.listen(PORT, () => {
-  console.log("myDeben Listening on: " + PORT);
+app.get('*', (req, res) => {
+  res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+});
+
+app.use((err, req, res, next) => {
+  if (err instanceof expressValidation.ValidationError) {
+    res.status(err.status).json({ detail: err.errors });
+  } else {
+    console.log(err);
+
+    res.status(500).json({
+      status: err.status,
+      message: err.message,
+    });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`myDeben Listening on: ${port}`);
 });
 
 export default app;
